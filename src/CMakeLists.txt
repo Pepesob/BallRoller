@@ -3,6 +3,12 @@ set(BALLROLLER_SOURCE_FILES
         Gameloop.hpp
         PhysicsEngine.cpp
         PhysicsEngine.hpp
+        MainBall.cpp
+        MainBall.hpp
+        Camera.cpp
+        Camera.hpp
+        Screen.cpp
+        Screen.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

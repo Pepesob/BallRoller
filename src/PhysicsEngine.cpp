@@ -60,7 +60,7 @@ void test_engine() {
 	b2Rot rotation = b2Body_GetRotation( bodyId );
 
 	// This is our little game loop.
-	for ( int i = 0; i < 10000; ++i )
+	for ( int i = 0; i < 1000; ++i )
 	{
 		// Instruct the world to perform a single step of simulation.
 		// It is generally best to keep the time step and iterations fixed.

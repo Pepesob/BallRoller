@@ -4,6 +4,6 @@
 
 int main()
 {
-    test_engine();
-    // gameloop();
+    // test_engine();
+    gameloop();
 }
