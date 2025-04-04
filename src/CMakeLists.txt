@@ -9,6 +9,12 @@ set(BALLROLLER_SOURCE_FILES
         Camera.hpp
         Screen.cpp
         Screen.hpp
+        MainBallPhysics.cpp
+        MainBallPhysics.hpp
+        StaticRect.cpp
+        StaticRect.hpp
+        StaticRectPhysics.cpp
+        StaticRectPhysics.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

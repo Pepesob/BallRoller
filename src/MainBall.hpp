@@ -9,36 +9,48 @@ class MainBall {
 
 private:
     sf::CircleShape shape;
-    int x = 0;
-    int y = 0;
-
-
-    b2BodyId ballId;
-    sf::Transform t1;
+    float x_m = 0;
+    float y_m = 1;
+    float radius_m = 0.1;
+    float pixel_scale_factor = 720;
 
     // Set shape radius in meters and then scale it by appropriate factor, this will ensure modularity and easy changable
 public:
-    explicit MainBall(b2WorldId worldId): shape(0.1f) {
-        shape.setFillColor(sf::Color::Red);
-        shape.setPosition({0, 0});
+    explicit MainBall(float psf) {
+        // Screen drawing init
+        this->pixel_scale_factor = psf;
+        this->shape.setRadius(this->radius_m);
+        this->shape.setFillColor(sf::Color::Red);
+        this->shape.setPosition({this->x_m, this->y_m});
+        this->shape.setOrigin({this->radius_m, this->radius_m});
+        this->shape.setScale({this->pixel_scale_factor, this->pixel_scale_factor});
+    }
+
+    void setXY(float x, float y) {
+        this->x_m = x;
+        this->y_m = y;
+    }
+
+    void setPixelScaleFactor(float s) {
+        this->pixel_scale_factor = s;
+    }
 
 
-        b2BodyDef bodyDef = b2DefaultBodyDef();
-        bodyDef.type = b2_dynamicBody;
-        bodyDef.position = {0.0f, 1.0f};
-        this->ballId = b2CreateBody(worldId, &bodyDef);
-        b2Polygon dynamicBox = b2MakeRoundedBox(0.1f, 0.1f, 0.1f);
-        b2ShapeDef shapeDef = b2DefaultShapeDef();
-        shapeDef.density = 1.0f;
-        shapeDef.friction = 1.f;
-        b2CreatePolygonShape(this->ballId, &shapeDef, &dynamicBox);
+    float getX() {
+        return this->x_m;
+    }
+
+    float getY() {
+        return this->y_m;
+    }
+
+    float getRatius() {
+        return this->radius_m;
     }
 
     void draw(sf::RenderWindow& window, sf::Transform& transform) {
-        b2Vec2 pos = b2Body_GetPosition(this->ballId);
-        sf::Vector2f v = transform.transformPoint({pos.x,pos.y});
-        std::cout << v.x << " " << v.y << std::endl;
-        shape.setPosition(v);
+        sf::Vector2f v = transform.transformPoint({this->x_m, this->y_m});
+        this->shape.setPosition(v);
         window.draw(shape);
     }
 
