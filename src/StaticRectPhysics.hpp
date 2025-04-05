@@ -27,11 +27,12 @@ public:
     }
 
     void update() {
-        b2Vec2 v = b2Body_GetPosition(this->body_id);
-
+        b2Polygon polygon = b2Shape_GetPolygon(this->shape_id);
         std::cout << "Rect position" << std::endl;
-        std::cout << v.x << " " << v.y << std::endl;
 
+        for (int i=0; i < polygon.count; i++) {
+            std::cout << polygon.vertices[i].x << " " << polygon.vertices[i].y << std::endl;
+        }
     }
 
 private:

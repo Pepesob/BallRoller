@@ -32,8 +32,8 @@ public:
         this->needs_update = true;
     }
 
-    void setScale(float scale) {
-        this->zoom = scale;
+    void setScale(float zoom) {
+        this->zoom = zoom;
         this->needs_update = true;
     }
 
