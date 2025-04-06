@@ -4,15 +4,56 @@
 
 #ifndef SCREEN_HPP
 #define SCREEN_HPP
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <stdexcept>
+#include <stdlib.h>
 
 
 class Screen {
 public:
-    Screen(int width, int height) {
+    Screen(unsigned int width, unsigned int height, int psf) {
         this->width = width;
         this->height = height;
+        this->window = nullptr;
+        this->pixel_scale_factor = psf;
         this->needs_update = true;
+        this->window_name = "BallRoller";
+    }
+
+    ~Screen() {
+        delete this->window;
+    }
+
+    void createWindow() {
+        if (this->window == nullptr) {
+            this->window = new sf::RenderWindow();
+            this->window->create(sf::VideoMode({this->width, this->height}), this->window_name);
+        }
+        else {
+            throw std::runtime_error("Window already exists");
+        }
+    }
+
+    void destroyWindow() {
+        if (this->window != nullptr) {
+            this->window->close();
+            delete this->window;
+            this->window = nullptr;
+        }
+        else {
+            throw std::runtime_error("Window does not exist");
+        }
+    }
+
+    void handleWindowEvents() {
+        if (this->window == nullptr) {
+            throw std::runtime_error("Window does not exist");
+        }
+        while (const std::optional event = this->window->pollEvent()) {
+            if (event->is<sf::Event::Closed>()) {
+                this->destroyWindow();
+            }
+        }
     }
 
     sf::Transform& getScreenMatrix() {
@@ -33,16 +74,34 @@ public:
         needs_update = false;
     }
 
-    void setSize(int width, int height) {
+    void setSize(unsigned int width, unsigned int height) {
         this->width = width;
         this->height = height;
+        if (this->window != nullptr) {
+            this->window->setSize({this->width, this->height});
+        }
         needs_update = true;
+    }
+
+    [[nodiscard]] int getPixelScaleFactor() const {
+        return this->pixel_scale_factor;
+    }
+
+    [[nodiscard]] sf::RenderWindow* getWindow() const {
+        return this->window;
+    }
+
+    bool isWindowOpen() const {
+        return this->window != nullptr;
     }
 
 
 private:
     sf::Transform screen_matrix;
-    int width, height;
+    sf::RenderWindow* window = nullptr;
+    unsigned int width, height;
+    std::string window_name;
+    int pixel_scale_factor;
     bool needs_update;
 };
 

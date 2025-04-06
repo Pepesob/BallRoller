@@ -7,32 +7,37 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Camera.hpp"
+#include "Screen.hpp"
 #include "StaticRect.hpp"
 
 class StaticRectDrawer {
 public:
-    StaticRectDrawer(StaticRect* static_rect, float psf, float zoom=1) {
+    StaticRectDrawer(StaticRect* static_rect, Screen* screen, Camera* camera) {
         this->static_rect = static_rect;
-        this->pixel_scale_factor = psf;
-        this->zoom = zoom;
+        this->screen = screen;
+        this->camera = camera;
         this->shape.setFillColor(sf::Color(222,184,135));
     }
 
-    void draw(sf::RenderWindow& window, sf::Transform& transform) {
+    // TODO - i don't think that parameters specific to backend should be passed to draw() function, if passed in constructor it removes dependency form draw() function and reduces dependency on drawing backend
+    void draw() {
         float x = this->static_rect->getX();
         float y = this->static_rect->getY();
         float w = this->static_rect->getW();
         float h = this->static_rect->getH();
-        this->shape.setSize({w*this->pixel_scale_factor*this->zoom, h*this->pixel_scale_factor*this->zoom});
-        sf::Vector2f v = transform.transformPoint({x - w/2, y + h/2});
+        float zoom = this->camera->getZoom();
+        float psf = this->screen->getPixelScaleFactor();
+        this->shape.setSize({w*psf*zoom, h*psf*zoom});
+        sf::Vector2f v = (this->screen->getScreenMatrix() * this->camera->getCameraMatrix()).transformPoint({x - w/2, y + h/2});
         this->shape.setPosition(v);
-        window.draw(shape);
+        this->screen->getWindow()->draw(shape);
     }
 private:
     sf::RectangleShape shape;
     StaticRect* static_rect;
-    float pixel_scale_factor;
-    float zoom;
+    Screen* screen;
+    Camera* camera;
 };
 
 

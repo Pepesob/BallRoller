@@ -39,9 +39,13 @@ public:
 
     void updateCameraMatrix() {
         camera_matrix = sf::Transform::Identity;
-        camera_matrix.translate({this->x, this->y});
+        camera_matrix.translate({-this->x, -this->y});
         camera_matrix.scale({this->zoom, this->zoom});
         this->needs_update = false;
+    }
+
+    [[nodiscard]] float getZoom() const{
+        return zoom;
     }
 
 
