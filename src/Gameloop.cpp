@@ -11,7 +11,6 @@
 #include "StaticRect.hpp"
 #include "StaticRectDrawer.hpp"
 #include "StaticRectPhysics.hpp"
-#include "box2d/box2d.h"
 
 
 void debug_lines(sf::RenderWindow& window) {
