@@ -15,6 +15,10 @@ set(BALLROLLER_SOURCE_FILES
         StaticRect.hpp
         StaticRectPhysics.cpp
         StaticRectPhysics.hpp
+        MainBallDrawer.cpp
+        MainBallDrawer.hpp
+        StaticRectDrawer.cpp
+        StaticRectDrawer.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

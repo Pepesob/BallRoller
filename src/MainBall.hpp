@@ -7,37 +7,11 @@
 
 class MainBall {
 
-private:
-    sf::CircleShape shape;
-    float x_m = 0;
-    float y_m = 1;
-    float radius_m = 0.1;
-    float pixel_scale_factor = 720;
-    float zoom = 1;
-
-    // Set shape radius in meters and then scale it by appropriate factor, this will ensure modularity and easy changable
 public:
-    explicit MainBall(float radius, float psf) {
-        // Screen drawing init
-        this->pixel_scale_factor = psf;
+    explicit MainBall(float x, float y, float radius) {
+        this->x_m = x;
+        this->y_m = y;
         this->radius_m = radius;
-        this->shape.setFillColor(sf::Color::Red);
-        this->updateShape();
-        // this->shape.setRadius(this->radius_m);
-        // this->shape.setFillColor(sf::Color::Red);
-        // this->shape.setPosition({this->x_m, this->y_m});
-        // this->shape.setOrigin({this->radius_m, this->radius_m});
-        // this->shape.setScale({this->pixel_scale_factor, this->pixel_scale_factor});
-    }
-
-    void setZoom(float zoom) {
-        this->zoom = zoom;
-        this->updateShape();
-    }
-
-    void updateShape() {
-        this->shape.setRadius(this->radius_m * pixel_scale_factor * zoom);
-        // this->shape.setPosition({this->x_m, this->y_m});
     }
 
     void setXY(float x, float y) {
@@ -45,28 +19,22 @@ public:
         this->y_m = y;
     }
 
-    void setPixelScaleFactor(float s) {
-        this->pixel_scale_factor = s;
-    }
 
-
-    float getX() {
+    [[nodiscard]] float getX() const {
         return this->x_m;
     }
 
-    float getY() {
+    [[nodiscard]] float getY() const {
         return this->y_m;
     }
 
-    float getRatius() {
+    [[nodiscard]] float getRadius() const {
         return this->radius_m;
     }
 
-    void draw(sf::RenderWindow& window, sf::Transform& transform) {
-        sf::Vector2f v = transform.transformPoint({this->x_m-this->radius_m*this->zoom, this->y_m+this->radius_m*this->zoom});
-        this->shape.setPosition(v);
-        window.draw(shape);
-    }
-
+private:
+    float x_m = 0;
+    float y_m = 0;
+    float radius_m = 0.1;
 };
 

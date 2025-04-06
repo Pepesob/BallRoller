@@ -20,7 +20,7 @@ public:
         bodyDef.type = b2_dynamicBody;
         bodyDef.position = {this->main_ball->getX(), this->main_ball->getY()};
         this->body_id = b2CreateBody(world_id, &bodyDef);
-        b2Circle circle = {{0, 0}, this->main_ball->getRatius()};
+        b2Circle circle = {{0, 0}, this->main_ball->getRadius()};
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = 1.0f;
         shapeDef.friction = 0.f;
@@ -31,8 +31,6 @@ public:
     void update() {
         b2Vec2 v = b2Body_GetPosition(this->body_id);
         this->main_ball->setXY(v.x, v.y);
-        std::cout << "Ball position" << std::endl;
-        std::cout << v.x << " " << v.y << std::endl;
     }
 
 private:
