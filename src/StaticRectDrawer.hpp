@@ -20,7 +20,6 @@ public:
         this->shape.setFillColor(sf::Color(222,184,135));
     }
 
-    // TODO - i don't think that parameters specific to backend should be passed to draw() function, if passed in constructor it removes dependency form draw() function and reduces dependency on drawing backend
     void draw() {
         float x = this->static_rect->getX();
         float y = this->static_rect->getY();
