@@ -12,42 +12,13 @@ class Camera {
 
 public:
     // Currently camera window is 2m x 2m, transforms to coordinates (-1,1) x (-1,1)
-    Camera(float x, float y, float zoom): x(x), y(y) {
-        this->x = x;
-        this->y = y;
-        this->zoom = zoom;
-        this->needs_update = true;
-    }
+    Camera(float x, float y, float zoom);
 
-    sf::Transform& getCameraMatrix() {
-        if (this->needs_update) {
-            this->updateCameraMatrix();
-        }
-        return camera_matrix;
-    }
-
-    void setPosition(float x, float y) {
-        this->x = x;
-        this->y = y;
-        this->needs_update = true;
-    }
-
-    void setScale(float zoom) {
-        this->zoom = zoom;
-        this->needs_update = true;
-    }
-
-    void updateCameraMatrix() {
-        camera_matrix = sf::Transform::Identity;
-        camera_matrix.translate({-this->x, -this->y});
-        camera_matrix.scale({this->zoom, this->zoom});
-        this->needs_update = false;
-    }
-
-    [[nodiscard]] float getZoom() const{
-        return zoom;
-    }
-
+    sf::Transform& getCameraMatrix();
+    void setPosition(float x, float y);
+    void setScale(float zoom);
+    void updateCameraMatrix();
+    [[nodiscard]] float getZoom() const;
 
 private:
     sf::Transform camera_matrix;

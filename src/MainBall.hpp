@@ -8,33 +8,18 @@
 class MainBall {
 
 public:
-    explicit MainBall(float x, float y, float radius) {
-        this->x_m = x;
-        this->y_m = y;
-        this->radius_m = radius;
-    }
+    MainBall(float x, float y, float radius);
 
-    void setXY(float x, float y) {
-        this->x_m = x;
-        this->y_m = y;
-    }
-
-
-    [[nodiscard]] float getX() const {
-        return this->x_m;
-    }
-
-    [[nodiscard]] float getY() const {
-        return this->y_m;
-    }
-
-    [[nodiscard]] float getRadius() const {
-        return this->radius_m;
-    }
+    void setXY(float x, float y);
+    void setX(float x);
+    void setY(float y);
+    [[nodiscard]] float getX() const;
+    [[nodiscard]] float getY() const;
+    [[nodiscard]] float getRadius() const;
 
 private:
-    float x_m = 0;
-    float y_m = 0;
-    float radius_m = 0.1;
+    float x_m;
+    float y_m;
+    float radius_m;
 };
 
