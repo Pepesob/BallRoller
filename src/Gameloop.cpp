@@ -18,6 +18,7 @@ void debug_lines(sf::RenderWindow* window) {
     float cellWidth = window->getSize().x * 0.05f;
     float cellHeight = window->getSize().y * 0.05f;
 
+
     sf::Vertex line[2];
     line[0].color = sf::Color::White;
     line[1].color = sf::Color::White;
@@ -50,20 +51,15 @@ void debug_lines(sf::RenderWindow* window) {
 }
 
 void gameloop() {
-    float window_size = 720;
-
-    float psf = window_size / 2;
-    float zoom = 0.5;
-
     PhysicsEngine physics_engine(0.f, -2.f);
-    Camera camera(-0.3,-0.5,zoom);
-    Screen screen(window_size, window_size, psf);
+    Camera camera(0,0,1);
+    Screen screen(720, 720);
 
     MainBall ball(0, 1, 0.1);
     MainBallPhysics ball_physics(&ball, physics_engine.getWorldId());
     MainBallDrawer ball_drawer(&ball, &screen, &camera);
 
-    StaticRect static_rect(0.51, 0, 1, 0.2);
+    StaticRect static_rect(0, 0, 1, 0.2);
     StaticRectPhysics static_rect_physics(&static_rect, physics_engine.getWorldId());
     StaticRectDrawer static_rect_drawer(&static_rect, &screen, &camera);
 
@@ -73,6 +69,8 @@ void gameloop() {
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     while (screen.isWindowOpen()) {
         screen.handleWindowEvents();
+
+        camera.setScreenRatio(static_cast<float>(screen.getWidth()) / static_cast<float>(screen.getHeight()));
         // if (std::rand() % 4 == 0) {
         //     sf::sleep(sf::milliseconds(48));
         // }

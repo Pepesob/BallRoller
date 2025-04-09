@@ -4,6 +4,8 @@
 
 #include "StaticRectDrawer.hpp"
 
+#include <iostream>
+
 StaticRectDrawer::StaticRectDrawer(StaticRect *static_rect, Screen *screen, Camera *camera) {
     this->static_rect = static_rect;
     this->screen = screen;

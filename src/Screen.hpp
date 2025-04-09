@@ -9,7 +9,7 @@
 
 class Screen {
 public:
-    Screen(unsigned int width, unsigned int height, int psf);
+    Screen(unsigned int width, unsigned int height);
 
     ~Screen();
 
@@ -17,6 +17,8 @@ public:
     void destroyWindow();
     void handleWindowEvents();
     sf::Transform& getScreenMatrix();
+    unsigned int getWidth() const;
+    unsigned int getHeight() const;
     void updateScreenMatrix();
     void setSize(unsigned int width, unsigned int height);
     [[nodiscard]] int getPixelScaleFactor() const;

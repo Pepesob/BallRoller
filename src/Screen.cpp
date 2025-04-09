@@ -4,11 +4,13 @@
 
 #include "Screen.hpp"
 
-Screen::Screen(unsigned int width, unsigned int height, int psf) {
+#include <iostream>
+
+Screen::Screen(unsigned int width, unsigned int height) {
     this->width = width;
     this->height = height;
     this->window = nullptr;
-    this->pixel_scale_factor = psf;
+    this->pixel_scale_factor = height/2;
     this->needs_update = true;
     this->window_name = "BallRoller";
 }
@@ -46,6 +48,14 @@ void Screen::handleWindowEvents() {
         if (event->is<sf::Event::Closed>()) {
             this->destroyWindow();
         }
+        else if (const auto* resized = event->getIf<sf::Event::Resized>()) {
+            this->width = resized->size.x;
+            this->height = resized->size.y;
+            sf::View v(sf::FloatRect({0.f, 0.f}, {static_cast<float>(this->width), static_cast<float>(this->height)}));
+            this->window->setView(v);
+            this->pixel_scale_factor = this->height/2;
+            this->needs_update = true;
+        }
     }
 }
 
@@ -54,6 +64,14 @@ sf::Transform & Screen::getScreenMatrix() {
         this->updateScreenMatrix();
     }
     return this->screen_matrix;
+}
+
+unsigned int Screen::getWidth() const {
+    return this->width;
+}
+
+unsigned int Screen::getHeight() const {
+    return this->height;
 }
 
 void Screen::updateScreenMatrix() {

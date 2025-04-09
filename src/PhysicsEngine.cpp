@@ -3,6 +3,7 @@
 #include <thread>
 
 #include <Box2D/box2d.h>
+#include <iostream>
 
 PhysicsEngine::PhysicsEngine(float gravity_x, float gravity_y) {
 	this->gravity = {gravity_x, gravity_y};
@@ -34,11 +35,12 @@ void PhysicsEngine::update() {
 	std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
 	std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(current - this->prev_time);
 	int possible_step_count = static_cast<float>(diff.count()) / (this->timeStep * 1000.);
-	std::cout << "----------------------------" << std::endl;
-	std::cout << possible_step_count << " possible steps" << std::endl;
+
 	int actual_step_count = std::ceil(std::sqrt(possible_step_count));
-	std::cout << actual_step_count << " steps" << std::endl;
-	std::cout << "----------------------------" << std::endl;
+	// std::cout << "----------------------------" << std::endl;
+	// std::cout << possible_step_count << " possible steps" << std::endl;
+	// std::cout << actual_step_count << " steps" << std::endl;
+	// std::cout << "----------------------------" << std::endl;
 	for (int i = 0; i < actual_step_count; i++) {
 		b2World_Step(worldId, timeStep, subStepCount);
 	}

@@ -1,14 +1,6 @@
-//
-// Created by sp on 02.04.2025.
-//
-
 #include "Camera.hpp"
 
-Camera::Camera(float x, float y, float zoom): x(x), y(y) {
-    this->x = x;
-    this->y = y;
-    this->zoom = zoom;
-    this->needs_update = true;
+Camera::Camera(float x, float y, float zoom, float screen_ratio): x(x), y(y), zoom(zoom), screen_ratio(screen_ratio), needs_update(true) {
 }
 
 sf::Transform & Camera::getCameraMatrix() {
@@ -29,9 +21,15 @@ void Camera::setScale(float zoom) {
     this->needs_update = true;
 }
 
+void Camera::setScreenRatio(float ratio) {
+    this->screen_ratio = ratio;
+    this->needs_update = true;
+}
+
 void Camera::updateCameraMatrix() {
     camera_matrix = sf::Transform::Identity;
     camera_matrix.translate({-this->x, -this->y});
+    camera_matrix.scale({1/this->screen_ratio, 1});
     camera_matrix.scale({this->zoom, this->zoom});
     this->needs_update = false;
 }

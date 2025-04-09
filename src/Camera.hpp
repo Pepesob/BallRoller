@@ -9,14 +9,14 @@
 
 
 class Camera {
-
 public:
     // Currently camera window is 2m x 2m, transforms to coordinates (-1,1) x (-1,1)
-    Camera(float x, float y, float zoom);
+    Camera(float x, float y, float zoom, float screen_ratio = 1);
 
-    sf::Transform& getCameraMatrix();
+    sf::Transform &getCameraMatrix();
     void setPosition(float x, float y);
     void setScale(float zoom);
+    void setScreenRatio(float ratio);
     void updateCameraMatrix();
     [[nodiscard]] float getZoom() const;
 
@@ -26,9 +26,9 @@ private:
     float x;
     float y;
     float zoom;
-    bool needs_update = true;
+    float screen_ratio;
+    bool needs_update;
 };
-
 
 
 #endif //CAMERA_HPP
