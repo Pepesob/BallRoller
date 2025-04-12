@@ -1,9 +1,15 @@
 #pragma once
 
+#include "CollisionObserver.hpp"
+
 #include <Box2d/box2d.h>
 #include <chrono>
 
 void test_engine();
+
+enum EventType {
+    BallContactEvent,
+};
 
 class PhysicsEngine {
 
@@ -16,17 +22,24 @@ public:
     PhysicsEngine(float gravity_x, float gravity_y);
     ~PhysicsEngine();
 
+    // void subscribe(CollisionObserver* observer);
+    // void unsubscribe(CollisionObserver* observer);
+
     void start();
     void stop();
     void update();
     [[nodiscard]] b2WorldId getWorldId() const;
 
 private:
+    // void collisionNotify();
+    //
+    // std::vector<CollisionObserver*> collision_observers;
     b2WorldId worldId;
     b2Vec2 gravity;
     float timeStep = 1.0f / 60.0f;
     int subStepCount = 4;
     bool started = false;
     std::chrono::steady_clock::time_point prev_time;
+
 };
 

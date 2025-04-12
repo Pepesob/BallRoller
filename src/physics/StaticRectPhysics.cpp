@@ -18,6 +18,6 @@ StaticRectPhysics::StaticRectPhysics(StaticRect *static_rect, b2WorldId world_id
     this->shape_id = b2CreatePolygonShape(this->body_id, &shapeDef, &dynamicBox);
 }
 
-void StaticRectPhysics::update() {
+void StaticRectPhysics::step() {
     b2Polygon polygon = b2Shape_GetPolygon(this->shape_id);
 }

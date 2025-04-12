@@ -1,24 +1,30 @@
 set(BALLROLLER_SOURCE_FILES
         Gameloop.cpp
         Gameloop.hpp
-        PhysicsEngine.cpp
-        PhysicsEngine.hpp
+        physics/PhysicsEngine.cpp
+        physics/PhysicsEngine.hpp
         MainBall.cpp
         MainBall.hpp
         Camera.cpp
         Camera.hpp
         Screen.cpp
         Screen.hpp
-        MainBallPhysics.cpp
-        MainBallPhysics.hpp
+        physics/MainBallPhysics.cpp
+        physics/MainBallPhysics.hpp
         StaticRect.cpp
         StaticRect.hpp
-        StaticRectPhysics.cpp
-        StaticRectPhysics.hpp
+        physics/StaticRectPhysics.cpp
+        physics/StaticRectPhysics.hpp
         MainBallDrawer.cpp
         MainBallDrawer.hpp
         StaticRectDrawer.cpp
         StaticRectDrawer.hpp
+        physics/LauncherPhysics.cpp
+        physics/LauncherPhysics.hpp
+        physics/CollisionObserver.hpp
+        physics/ObjectPhysics.hpp
+        physics/CollisionManager.cpp
+        physics/CollisionManager.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

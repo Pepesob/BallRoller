@@ -19,7 +19,19 @@ MainBallPhysics::MainBallPhysics(MainBall *main_ball, b2WorldId world_id):body_i
     this->shape_id = b2CreateCircleShape(this->body_id, &shapeDef, &circle);
 }
 
-void MainBallPhysics::update() const {
+b2BodyId MainBallPhysics::getBodyId() const {
+    return this->body_id;
+}
+
+b2ShapeId MainBallPhysics::getShapeId() const {
+    return this->shape_id;
+}
+
+b2BodyId MainBallPhysics::getBodyId() {
+    return this->body_id;
+}
+
+void MainBallPhysics::step() {
     b2Vec2 v = b2Body_GetPosition(this->body_id);
     this->main_ball->setXY(v.x, v.y);
 }

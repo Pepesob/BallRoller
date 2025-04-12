@@ -19,6 +19,15 @@ PhysicsEngine::~PhysicsEngine() {
 	b2DestroyWorld(this->worldId);
 }
 
+// void PhysicsEngine::subscribe(CollisionObserver *observer) {
+// 	this->collision_observers.push_back(observer);
+// }
+//
+// void PhysicsEngine::unsubscribe(CollisionObserver *observer) {
+// 	std::vector<CollisionObserver*>::iterator newEnd = std::ranges::remove(collision_observers, observer).begin();
+// 	this->collision_observers.erase(newEnd);
+// }
+
 void PhysicsEngine::start() {
 	this->prev_time = prev_time = std::chrono::steady_clock::now();
 	this->started = true;
@@ -44,6 +53,7 @@ void PhysicsEngine::update() {
 	for (int i = 0; i < actual_step_count; i++) {
 		b2World_Step(worldId, timeStep, subStepCount);
 	}
+	// this->collisionNotify();
 	std::chrono::milliseconds delta_ms(static_cast<long long>(actual_step_count * this->timeStep * 1000.0));
 	this->prev_time += delta_ms;
 }
@@ -51,3 +61,17 @@ void PhysicsEngine::update() {
 b2WorldId PhysicsEngine::getWorldId() const {
 	return worldId;
 }
+
+// void PhysicsEngine::collisionNotify() {
+// 	b2ContactEvents contactEvents = b2World_GetContactEvents(this->getWorldId());
+// 	for (int i = 0; i < contactEvents.beginCount; ++i)
+// 	{
+// 		b2ContactBeginTouchEvent* beginEvent = contactEvents.beginEvents + i;
+// 		// std::cout << "++++++++++++++++++++++++++" << std::endl;
+// 		// std::cout << beginEvent->shapeIdA.index1 << std::endl;
+// 		// std::cout << beginEvent->shapeIdB.index1 << std::endl;
+// 		for (const auto obs: this->collision_observers) {
+// 			obs->update(beginEvent->shapeIdA, beginEvent->shapeIdB);
+// 		}
+// 	}
+// }

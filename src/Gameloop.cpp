@@ -3,14 +3,16 @@
 #include <SFML/Graphics.hpp>
 
 #include "Camera.hpp"
+#include "physics/LauncherPhysics.hpp"
 #include "MainBall.hpp"
 #include "MainBallDrawer.hpp"
-#include "MainBallPhysics.hpp"
-#include "PhysicsEngine.hpp"
+#include "physics/MainBallPhysics.hpp"
+#include "physics/PhysicsEngine.hpp"
 #include "Screen.hpp"
 #include "StaticRect.hpp"
 #include "StaticRectDrawer.hpp"
-#include "StaticRectPhysics.hpp"
+#include "physics/CollisionManager.hpp"
+#include "physics/StaticRectPhysics.hpp"
 
 
 void debug_lines(sf::RenderWindow* window) {
@@ -51,20 +53,28 @@ void debug_lines(sf::RenderWindow* window) {
 }
 
 void gameloop() {
-    PhysicsEngine physics_engine(0.f, -2.f);
+    PhysicsEngine physics_engine(0.f, -6.f);
+
     Camera camera(0,0,1);
     Screen screen(720, 720);
 
-    MainBall ball(0, 1, 0.1);
+    MainBall ball(0, 2, 0.1);
     MainBallPhysics ball_physics(&ball, physics_engine.getWorldId());
     MainBallDrawer ball_drawer(&ball, &screen, &camera);
+    //
+    // StaticRect static_rect(0, 0, 1, 0.2);
+    // StaticRectPhysics static_rect_physics(&static_rect, physics_engine.getWorldId());
+    // StaticRectDrawer static_rect_drawer(&static_rect, &screen, &camera);
 
-    StaticRect static_rect(0, 0, 1, 0.2);
-    StaticRectPhysics static_rect_physics(&static_rect, physics_engine.getWorldId());
-    StaticRectDrawer static_rect_drawer(&static_rect, &screen, &camera);
+    StaticRect launcher(0, -0.5, 0.5, 0.1);
+    LauncherPhysics launcher_physics(&launcher, physics_engine.getWorldId());
+    StaticRectDrawer launcher_drawer(&launcher, &screen, &camera);
 
-    physics_engine.start();
+    CollisionManager collision_manager(physics_engine.getWorldId(), &ball_physics);
+    collision_manager.collisionSubscribe(&launcher_physics);
+
     screen.createWindow();
+    physics_engine.start();
 
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     while (screen.isWindowOpen()) {
@@ -76,14 +86,17 @@ void gameloop() {
         // }
 
         physics_engine.update();
+        collision_manager.collisionNotify();
         
-        ball_physics.update();
-        static_rect_physics.update();
+        ball_physics.step();
+        // static_rect_physics.update();
+        launcher_physics.step();
 
         screen.getWindow()->clear();
 
         ball_drawer.draw();
-        static_rect_drawer.draw();
+        // static_rect_drawer.draw();
+        launcher_drawer.draw();
         debug_lines(screen.getWindow());
 
         screen.getWindow()->display();

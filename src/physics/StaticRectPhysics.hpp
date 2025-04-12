@@ -5,18 +5,28 @@
 #ifndef STATICRECTPHYSICS_HPP
 #define STATICRECTPHYSICS_HPP
 
+#include "ObjectPhysics.hpp"
 #include "StaticRect.hpp"
 #include "box2d/box2d.h"
 
 
-class StaticRectPhysics {
+class StaticRectPhysics: public ObjectPhysics {
 
 public:
     StaticRectPhysics(StaticRect* static_rect, b2WorldId world_id);
 
-    void update();
+    [[nodiscard]] b2ShapeId getShapeId() const {
+        return this->shape_id;
+    }
+    b2BodyId getBodyId() override {
+        return this->body_id;
+    }
 
-private:
+    void step() override;
+
+    // void update();
+
+protected:
     StaticRect* static_rect;
     b2WorldId world_id;
     b2BodyId body_id;
