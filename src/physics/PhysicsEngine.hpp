@@ -34,8 +34,8 @@ private:
     // void collisionNotify();
     //
     // std::vector<CollisionObserver*> collision_observers;
-    b2WorldId worldId;
-    b2Vec2 gravity;
+    b2WorldId world_id = B2_ZERO_INIT;
+    b2Vec2 gravity = B2_ZERO_INIT;
     float timeStep = 1.0f / 60.0f;
     int subStepCount = 4;
     bool started = false;

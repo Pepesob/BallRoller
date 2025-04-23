@@ -29,12 +29,17 @@ public:
 
     void collisionNotify() {
         b2ContactEvents contactEvents = b2World_GetContactEvents(this->world_id);
+        // std::cout << "-------COLLISION DETECTION------------" << std::endl;
+        // std::cout << "End count "  <<  contactEvents.endCount << std::endl;
         for (int i = 0; i < contactEvents.beginCount; ++i)
         {
         	b2ContactBeginTouchEvent* beginEvent = contactEvents.beginEvents + i;
             // TODO - right now collisions are only with the main ball, implement getting all world objects and allow collisions with them
             b2BodyId body_a = b2Shape_GetBody(beginEvent->shapeIdA);
             b2BodyId body_b = b2Shape_GetBody(beginEvent->shapeIdB);
+            std::cout << "Iteration " << i << std::endl;
+            std::cout << "Body a:" << beginEvent->shapeIdA.index1 << " " << beginEvent->shapeIdA.revision << " " << beginEvent->shapeIdA.world0 << std::endl;
+            std::cout << "Body b:" << beginEvent->shapeIdB.index1 << " " << beginEvent->shapeIdB.revision << " " << beginEvent->shapeIdB.world0 << std::endl;
             auto it_a = this->ball_collision_observers.find(body_a);
             if (it_a != this->ball_collision_observers.end()) {
                 it_a->second->onContact(this->main_ball_physics);

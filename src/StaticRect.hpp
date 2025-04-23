@@ -7,15 +7,16 @@
 
 class StaticRect {
 public:
-    StaticRect(float x, float y, float w, float h);
+    StaticRect(float x, float y, float w, float h, float rot=0);
 
     [[nodiscard]] float getX() const;
     [[nodiscard]] float getY() const;
     [[nodiscard]] float getW() const;
     [[nodiscard]] float getH() const;
+    [[nodiscard]] float getRotation() const;
 
 private:
-    float x_m, y_m, w_m, h_m;
+    float x_m, y_m, w_m, h_m, rot_rad;
 };
 
 

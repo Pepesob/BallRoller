@@ -11,12 +11,12 @@ PhysicsEngine::PhysicsEngine(float gravity_x, float gravity_y) {
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	worldDef.gravity = this->gravity;
 
-	this->worldId = b2CreateWorld( &worldDef );
+	this->world_id = b2CreateWorld( &worldDef );
 	this->started = false;
 }
 
 PhysicsEngine::~PhysicsEngine() {
-	b2DestroyWorld(this->worldId);
+	b2DestroyWorld(this->world_id);
 }
 
 // void PhysicsEngine::subscribe(CollisionObserver *observer) {
@@ -45,13 +45,10 @@ void PhysicsEngine::update() {
 	std::chrono::milliseconds diff = std::chrono::duration_cast<std::chrono::milliseconds>(current - this->prev_time);
 	int possible_step_count = static_cast<float>(diff.count()) / (this->timeStep * 1000.);
 
-	int actual_step_count = std::ceil(std::sqrt(possible_step_count));
-	// std::cout << "----------------------------" << std::endl;
-	// std::cout << possible_step_count << " possible steps" << std::endl;
-	// std::cout << actual_step_count << " steps" << std::endl;
-	// std::cout << "----------------------------" << std::endl;
+	int actual_step_count = std::ceil(std::sqrt(possible_step_count)) > 0 ? 1 : 0;
+
 	for (int i = 0; i < actual_step_count; i++) {
-		b2World_Step(worldId, timeStep, subStepCount);
+		b2World_Step(world_id, timeStep, subStepCount);
 	}
 	// this->collisionNotify();
 	std::chrono::milliseconds delta_ms(static_cast<long long>(actual_step_count * this->timeStep * 1000.0));
@@ -59,19 +56,6 @@ void PhysicsEngine::update() {
 }
 
 b2WorldId PhysicsEngine::getWorldId() const {
-	return worldId;
+	return world_id;
 }
 
-// void PhysicsEngine::collisionNotify() {
-// 	b2ContactEvents contactEvents = b2World_GetContactEvents(this->getWorldId());
-// 	for (int i = 0; i < contactEvents.beginCount; ++i)
-// 	{
-// 		b2ContactBeginTouchEvent* beginEvent = contactEvents.beginEvents + i;
-// 		// std::cout << "++++++++++++++++++++++++++" << std::endl;
-// 		// std::cout << beginEvent->shapeIdA.index1 << std::endl;
-// 		// std::cout << beginEvent->shapeIdB.index1 << std::endl;
-// 		for (const auto obs: this->collision_observers) {
-// 			obs->update(beginEvent->shapeIdA, beginEvent->shapeIdB);
-// 		}
-// 	}
-// }

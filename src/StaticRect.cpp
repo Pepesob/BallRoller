@@ -4,12 +4,13 @@
 
 #include "StaticRect.hpp"
 
-StaticRect::StaticRect(float x, float y, float w, float h) {
+StaticRect::StaticRect(float x, float y, float w, float h, float rot) {
     // Screen drawing init
     this->x_m = x;
     this->y_m = y;
     this->w_m = w;
     this->h_m = h;
+    this->rot_rad = rot;
 }
 
 float StaticRect::getX() const {
@@ -26,4 +27,8 @@ float StaticRect::getW() const {
 
 float StaticRect::getH() const {
     return h_m;
+}
+
+float StaticRect::getRotation() const {
+    return this->rot_rad;
 }

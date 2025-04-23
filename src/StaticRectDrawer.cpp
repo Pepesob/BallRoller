@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "Box2d/box2d.h"
+
 StaticRectDrawer::StaticRectDrawer(StaticRect *static_rect, Screen *screen, Camera *camera) {
     this->static_rect = static_rect;
     this->screen = screen;
@@ -20,8 +22,10 @@ void StaticRectDrawer::draw() {
     float h = this->static_rect->getH();
     float zoom = this->camera->getZoom();
     float psf = this->screen->getPixelScaleFactor();
+    this->shape.setOrigin({w*psf*zoom/2, h*psf*zoom/2});
     this->shape.setSize({w*psf*zoom, h*psf*zoom});
-    sf::Vector2f v = (this->screen->getScreenMatrix() * this->camera->getCameraMatrix()).transformPoint({x - w/2, y + h/2});
+    this->shape.setRotation(sf::radians(-this->static_rect->getRotation()));
+    sf::Vector2f v = (this->screen->getScreenMatrix() * this->camera->getCameraMatrix()).transformPoint({x, y});
     this->shape.setPosition(v);
     this->screen->getWindow()->draw(shape);
 }

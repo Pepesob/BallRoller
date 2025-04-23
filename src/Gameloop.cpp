@@ -55,7 +55,7 @@ void debug_lines(sf::RenderWindow* window) {
 void gameloop() {
     PhysicsEngine physics_engine(0.f, -6.f);
 
-    Camera camera(0,0,1);
+    Camera camera(-0.5,0,0.1);
     Screen screen(720, 720);
 
     MainBall ball(0, 2, 0.1);
@@ -66,8 +66,8 @@ void gameloop() {
     // StaticRectPhysics static_rect_physics(&static_rect, physics_engine.getWorldId());
     // StaticRectDrawer static_rect_drawer(&static_rect, &screen, &camera);
 
-    StaticRect launcher(0, -0.5, 0.5, 0.1);
-    LauncherPhysics launcher_physics(&launcher, physics_engine.getWorldId());
+    StaticRect launcher(0, -0.5, 0.5, 0.1, 0.5);
+    LauncherPhysics launcher_physics(&launcher, physics_engine.getWorldId(), 0.05);
     StaticRectDrawer launcher_drawer(&launcher, &screen, &camera);
 
     CollisionManager collision_manager(physics_engine.getWorldId(), &ball_physics);
@@ -75,6 +75,8 @@ void gameloop() {
 
     screen.createWindow();
     physics_engine.start();
+
+    float rot = 0;
 
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     while (screen.isWindowOpen()) {
@@ -101,7 +103,7 @@ void gameloop() {
 
         screen.getWindow()->display();
 
-        if (ball.getY() <= -1) break;
+        // if (ball.getY() <= -1) break;
     }
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
