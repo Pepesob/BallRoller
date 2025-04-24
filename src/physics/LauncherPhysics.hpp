@@ -13,8 +13,8 @@
 
 class LauncherPhysics: public StaticRectPhysics, public CollisionObserver {
 public:
-    LauncherPhysics(StaticRect* launcher, b2WorldId world_id, float acceleration): StaticRectPhysics(launcher, world_id) {
-        this->acceleration = acceleration;
+    LauncherPhysics(StaticRect* launcher, b2WorldId world_id, float bounciness): StaticRectPhysics(launcher, world_id, 0, bounciness) {
+        this->bounciness = bounciness;
     }
 
     b2BodyId getBodyId() override {
@@ -22,9 +22,6 @@ public:
     }
 
     void onContact(ObjectPhysics *object) override {
-        if (MainBallPhysics* main_ball_physics = object->getObjectAsType<MainBallPhysics*>(); main_ball_physics != nullptr) {
-            // b2Body_ApplyLinearImpulse(main_ball_physics->getBodyId(), this->accelerationVector(), {0,0}, true);
-        }
     }
 
 
@@ -33,11 +30,8 @@ public:
     }
 
 private:
-    b2Vec2 accelerationVector() {
-        return b2MulSV(this->acceleration, b2RotateVector(b2MakeRot(this->static_rect->getRotation()), {0,1}));
-    }
 
-    float acceleration;
+    float bounciness;
 
 };
 

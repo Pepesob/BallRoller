@@ -16,6 +16,7 @@ MainBallPhysics::MainBallPhysics(MainBall *main_ball, b2WorldId world_id):body_i
     shapeDef.density = 1.0f;
     shapeDef.friction = 0.f;
     shapeDef.restitution = 0.8f;
+    shapeDef.enableSensorEvents = true;
     this->shape_id = b2CreateCircleShape(this->body_id, &shapeDef, &circle);
 }
 

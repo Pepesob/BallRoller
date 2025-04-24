@@ -4,7 +4,7 @@
 
 #include "StaticRectPhysics.hpp"
 
-StaticRectPhysics::StaticRectPhysics(StaticRect *static_rect, b2WorldId world_id) {
+StaticRectPhysics::StaticRectPhysics(StaticRect *static_rect, b2WorldId world_id, float friction, float restitution) {
     // Physics init
     this->static_rect = static_rect;
     this->world_id = world_id;
@@ -15,8 +15,8 @@ StaticRectPhysics::StaticRectPhysics(StaticRect *static_rect, b2WorldId world_id
     this->body_id = b2CreateBody(world_id, &bodyDef);
     b2Polygon dynamicBox = b2MakeBox(this->static_rect->getW()/2, this->static_rect->getH()/2);
     b2ShapeDef shapeDef = b2DefaultShapeDef();
-    shapeDef.friction = 0.f;
-    shapeDef.restitution = 1.5f;
+    shapeDef.friction = friction;
+    shapeDef.restitution = restitution;
     this->shape_id = b2CreatePolygonShape(this->body_id, &shapeDef, &dynamicBox);
 }
 

@@ -13,7 +13,7 @@
 class StaticRectPhysics: public ObjectPhysics {
 
 public:
-    StaticRectPhysics(StaticRect* static_rect, b2WorldId world_id);
+    StaticRectPhysics(StaticRect* static_rect, b2WorldId world_id, float friction=0.f, float restitution=1.f);
 
     [[nodiscard]] b2ShapeId getShapeId() const {
         return this->shape_id;
@@ -27,10 +27,10 @@ public:
     // void update();
 
 protected:
-    StaticRect* static_rect;
-    b2WorldId world_id;
-    b2BodyId body_id;
-    b2ShapeId shape_id;
+    StaticRect* static_rect = nullptr;
+    b2WorldId world_id = {};
+    b2BodyId body_id = {};
+    b2ShapeId shape_id = {};
 };
 
 

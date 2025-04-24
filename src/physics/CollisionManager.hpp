@@ -34,12 +34,31 @@ public:
         for (int i = 0; i < contactEvents.beginCount; ++i)
         {
         	b2ContactBeginTouchEvent* beginEvent = contactEvents.beginEvents + i;
-            // TODO - right now collisions are only with the main ball, implement getting all world objects and allow collisions with them
             b2BodyId body_a = b2Shape_GetBody(beginEvent->shapeIdA);
             b2BodyId body_b = b2Shape_GetBody(beginEvent->shapeIdB);
             std::cout << "Iteration " << i << std::endl;
             std::cout << "Body a:" << beginEvent->shapeIdA.index1 << " " << beginEvent->shapeIdA.revision << " " << beginEvent->shapeIdA.world0 << std::endl;
             std::cout << "Body b:" << beginEvent->shapeIdB.index1 << " " << beginEvent->shapeIdB.revision << " " << beginEvent->shapeIdB.world0 << std::endl;
+            auto it_a = this->ball_collision_observers.find(body_a);
+            if (it_a != this->ball_collision_observers.end()) {
+                it_a->second->onContact(this->main_ball_physics);
+            }
+            auto it_b = this->ball_collision_observers.find(body_b);
+            if (it_b != this->ball_collision_observers.end()) {
+                it_b->second->onContact(this->main_ball_physics);
+            }
+        }
+
+        b2SensorEvents sensor_events = b2World_GetSensorEvents(this->world_id);
+        for (int i = 0; i < sensor_events.beginCount; ++i)
+        {
+            // TODO - only main ball collisions are enabled, modify to allow more objects to collide
+            b2SensorBeginTouchEvent* beginEvent = sensor_events.beginEvents + i;
+            b2BodyId body_a = b2Shape_GetBody(beginEvent->sensorShapeId);
+            b2BodyId body_b = b2Shape_GetBody(beginEvent->visitorShapeId);
+            std::cout << "Iteration sensor " << i << std::endl;
+            // std::cout << "Body a:" << beginEvent->shapeIdA.index1 << " " << beginEvent->shapeIdA.revision << " " << beginEvent->shapeIdA.world0 << std::endl;
+            // std::cout << "Body b:" << beginEvent->shapeIdB.index1 << " " << beginEvent->shapeIdB.revision << " " << beginEvent->shapeIdB.world0 << std::endl;
             auto it_a = this->ball_collision_observers.find(body_a);
             if (it_a != this->ball_collision_observers.end()) {
                 it_a->second->onContact(this->main_ball_physics);

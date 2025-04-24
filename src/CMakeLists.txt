@@ -25,6 +25,12 @@ set(BALLROLLER_SOURCE_FILES
         physics/ObjectPhysics.hpp
         physics/CollisionManager.cpp
         physics/CollisionManager.hpp
+        physics/AccelerationFieldPhysics.cpp
+        physics/AccelerationFieldPhysics.hpp
+        AccelerationField.cpp
+        AccelerationField.hpp
+        AccelerationFieldDrawer.cpp
+        AccelerationFieldDrawer.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)
