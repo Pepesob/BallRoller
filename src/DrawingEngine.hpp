@@ -79,6 +79,7 @@ public:
     }
 
     void draw() const {
+        // TODO - window events should not be handled here, find a way to change that
         screen->handleWindowEvents();
         camera->setScreenRatio(static_cast<float>(screen->getWidth()) / static_cast<float>(screen->getHeight()));
         screen->getWindow()->clear();
