@@ -16,10 +16,19 @@ class RectangleDrawer: public ObjectDrawer {
 public:
     explicit RectangleDrawer(RectanglePhysics* static_rect);
 
+    explicit RectangleDrawer(RectanglePhysicsConfig* config);
+
+    ~RectangleDrawer() {
+        if (this->config != nullptr) {
+            delete this->config;
+        }
+    }
+
     void draw(Screen* screen, Camera* camera) override;
 
 private:
     RectanglePhysics* static_rect;
+    RectanglePhysicsConfig* config;
     sf::RectangleShape shape;
 };
 

@@ -29,6 +29,8 @@ set(BALLROLLER_SOURCE_FILES
         DrawingEngine.hpp
         ExampleSetup.cpp
         ExampleSetup.hpp
+        ObjectPlacementStage.cpp
+        ObjectPlacementStage.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

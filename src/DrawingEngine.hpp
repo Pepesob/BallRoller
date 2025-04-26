@@ -53,56 +53,21 @@ void debug_lines(sf::RenderWindow* window) {
 class DrawingEngine {
 public:
 
-    DrawingEngine() {
-        this->camera = new Camera{-0, 0, 0.5f};
-        this->screen = new Screen{720, 720};
-    }
-
     void addDrawer(ObjectDrawer* drawer) {
         this->drawers.push_back(drawer);
     }
 
-    void start() {
-        if (this->started) {
-            throw std::runtime_error("DrawingEngine already started");
-        }
-        this->screen->createWindow();
-        this->started = true;
-    }
+    void draw(Screen* screen, Camera* camera) const {
 
-    void stop() {
-        if (!this->started) {
-            throw std::runtime_error("DrawingEngine is not started");
-        }
-        this->screen->destroyWindow();
-        this->started = false;
-    }
-
-    void draw() const {
-        // TODO - window events should not be handled here, find a way to change that
-        screen->handleWindowEvents();
-        camera->setScreenRatio(static_cast<float>(screen->getWidth()) / static_cast<float>(screen->getHeight()));
-        screen->getWindow()->clear();
         for (const auto o: this->drawers) {
-            o->draw(this->screen, this->camera);
+            o->draw(screen, camera);
         }
-        debug_lines(this->screen->getWindow());
-        screen->getWindow()->display();
-    }
+        debug_lines(screen->getWindow());
 
-    Camera* getCamera() {
-        return camera;
-    }
-
-    Screen* getScreen() {
-        return screen;
     }
 
 private:
     std::vector<ObjectDrawer*> drawers;
-    Camera* camera;
-    Screen* screen;
-    bool started = false;
 };
 
 
