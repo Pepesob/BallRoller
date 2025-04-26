@@ -5,30 +5,42 @@
 #ifndef MAINBALLPHYSICS_HPP
 #define MAINBALLPHYSICS_HPP
 
-#include "MainBall.hpp"
 #include "ObjectPhysics.hpp"
+#include "common.hpp"
 #include "box2d/box2d.h"
 
+
+struct BallPhysicsConfig {
+    Vector2D position = {0,1};
+    float radius = 0.1f;
+    float density = 1.0f;
+    float friction = 0.3f;
+    float restitution = 1.f;
+};
 
 
 class MainBallPhysics: public ObjectPhysics {
 
 public:
-    MainBallPhysics(MainBall* main_ball, b2WorldId world_id);
+    explicit MainBallPhysics(b2WorldId world_id, const BallPhysicsConfig& config=BallPhysicsConfig());
 
     [[nodiscard]] b2BodyId getBodyId() const;
     [[nodiscard]] b2ShapeId getShapeId() const;
 
+    [[nodiscard]] Vector2D getPosition() const;
+    [[nodiscard]] float getRadius() const;
+    [[nodiscard]] float getRotation() const;
+
     b2BodyId getBodyId() override;
+
+    void onContact(ObjectPhysics *object) override {}
 
     void step() override;
 
-    // void update() const;
-
 private:
-    MainBall* main_ball;
-    b2BodyId body_id;
-    b2ShapeId shape_id;
+    b2WorldId world_id = {};
+    b2BodyId body_id = {};
+    b2ShapeId shape_id = {};
 };
 
 

@@ -6,69 +6,61 @@
 #define COLLISIONMANAGER_HPP
 
 #include <map>
+#include <vector>
 #include <box2d/box2d.h>
-
-#include "CollisionObserver.hpp"
-#include "MainBallPhysics.hpp"
+#include <iostream>
 #include "ObjectPhysics.hpp"
 
 
 class CollisionManager {
 public:
-    CollisionManager(b2WorldId world_id, MainBallPhysics* main_ball_physics) {
-        this->main_ball_physics = main_ball_physics;
+    CollisionManager(b2WorldId world_id, std::vector<ObjectPhysics*>* objects=nullptr) {
+        this->simulation_objects = objects;
         this->world_id = world_id;
     }
 
-    void collisionSubscribe(CollisionObserver* observer) {
-        this->ball_collision_observers[observer->getBodyId()] = observer;
-    }
-    void collisionUnsubscribe(CollisionObserver* observer) {
-        this->ball_collision_observers.erase(observer->getBodyId());
-    }
-
     void collisionNotify() {
+        if (this->simulation_objects == nullptr) {
+            throw std::runtime_error("collisionNotify called without initializing vector<ObjectPhysics*>");
+        }
         b2ContactEvents contactEvents = b2World_GetContactEvents(this->world_id);
-        // std::cout << "-------COLLISION DETECTION------------" << std::endl;
-        // std::cout << "End count "  <<  contactEvents.endCount << std::endl;
         for (int i = 0; i < contactEvents.beginCount; ++i)
         {
         	b2ContactBeginTouchEvent* beginEvent = contactEvents.beginEvents + i;
             b2BodyId body_a = b2Shape_GetBody(beginEvent->shapeIdA);
             b2BodyId body_b = b2Shape_GetBody(beginEvent->shapeIdB);
             std::cout << "Iteration " << i << std::endl;
-            std::cout << "Body a:" << beginEvent->shapeIdA.index1 << " " << beginEvent->shapeIdA.revision << " " << beginEvent->shapeIdA.world0 << std::endl;
-            std::cout << "Body b:" << beginEvent->shapeIdB.index1 << " " << beginEvent->shapeIdB.revision << " " << beginEvent->shapeIdB.world0 << std::endl;
-            auto it_a = this->ball_collision_observers.find(body_a);
-            if (it_a != this->ball_collision_observers.end()) {
-                it_a->second->onContact(this->main_ball_physics);
+
+            ObjectPhysics* obja = this->getObjectOnBodyId(body_a);
+            ObjectPhysics* objb = this->getObjectOnBodyId(body_b);
+            if (obja == nullptr || objb == nullptr) {
+                throw std::runtime_error("Object that collided is not registered!");
             }
-            auto it_b = this->ball_collision_observers.find(body_b);
-            if (it_b != this->ball_collision_observers.end()) {
-                it_b->second->onContact(this->main_ball_physics);
-            }
+            obja->onContact(objb);
+            objb->onContact(obja);
         }
 
         b2SensorEvents sensor_events = b2World_GetSensorEvents(this->world_id);
         for (int i = 0; i < sensor_events.beginCount; ++i)
         {
-            // TODO - only main ball collisions are enabled, modify to allow more objects to collide
             b2SensorBeginTouchEvent* beginEvent = sensor_events.beginEvents + i;
             b2BodyId body_a = b2Shape_GetBody(beginEvent->sensorShapeId);
             b2BodyId body_b = b2Shape_GetBody(beginEvent->visitorShapeId);
-            std::cout << "Iteration sensor " << i << std::endl;
-            // std::cout << "Body a:" << beginEvent->shapeIdA.index1 << " " << beginEvent->shapeIdA.revision << " " << beginEvent->shapeIdA.world0 << std::endl;
-            // std::cout << "Body b:" << beginEvent->shapeIdB.index1 << " " << beginEvent->shapeIdB.revision << " " << beginEvent->shapeIdB.world0 << std::endl;
-            auto it_a = this->ball_collision_observers.find(body_a);
-            if (it_a != this->ball_collision_observers.end()) {
-                it_a->second->onContact(this->main_ball_physics);
+
+            ObjectPhysics* obja = this->getObjectOnBodyId(body_a);
+            ObjectPhysics* objb = this->getObjectOnBodyId(body_b);
+            if (obja == nullptr || objb == nullptr) {
+                throw std::runtime_error("Object that collided is not registered!");
             }
-            auto it_b = this->ball_collision_observers.find(body_b);
-            if (it_b != this->ball_collision_observers.end()) {
-                it_b->second->onContact(this->main_ball_physics);
-            }
+            obja->onContact(objb);
+            objb->onContact(obja);
         }
     }
+
+    void setObjectPhysicsList(std::vector<ObjectPhysics*>* objects) {
+        this->simulation_objects = objects;
+    }
+
 private:
     struct B2IdComp {
         bool operator()(const b2BodyId& a, const b2BodyId& b) const {
@@ -83,8 +75,16 @@ private:
         }
     };
 
-    std::map<b2BodyId, CollisionObserver*, B2IdComp> ball_collision_observers;
-    MainBallPhysics* main_ball_physics;
+    ObjectPhysics* getObjectOnBodyId(b2BodyId body_id) {
+        for (auto o: *this->simulation_objects) {
+            if (B2_ID_EQUALS(o->getBodyId(), body_id)) {
+                return o;
+            }
+        }
+        return nullptr;
+    }
+
+    std::vector<ObjectPhysics*>* simulation_objects;
     b2WorldId world_id;
 };
 

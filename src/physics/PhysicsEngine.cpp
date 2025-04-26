@@ -3,15 +3,16 @@
 #include <thread>
 
 #include <Box2D/box2d.h>
-#include <iostream>
 
-PhysicsEngine::PhysicsEngine(float gravity_x, float gravity_y) {
-	this->gravity = {gravity_x, gravity_y};
+
+PhysicsEngine::PhysicsEngine(Vector2D gravity) {
+	this->gravity = gravity;
 
 	b2WorldDef worldDef = b2DefaultWorldDef();
-	worldDef.gravity = this->gravity;
+	worldDef.gravity = {this->gravity.x, this->gravity.y};
 
 	this->world_id = b2CreateWorld( &worldDef );
+	this->collision_manager = new CollisionManager(this->world_id);
 	this->started = false;
 }
 
@@ -19,17 +20,9 @@ PhysicsEngine::~PhysicsEngine() {
 	b2DestroyWorld(this->world_id);
 }
 
-// void PhysicsEngine::subscribe(CollisionObserver *observer) {
-// 	this->collision_observers.push_back(observer);
-// }
-//
-// void PhysicsEngine::unsubscribe(CollisionObserver *observer) {
-// 	std::vector<CollisionObserver*>::iterator newEnd = std::ranges::remove(collision_observers, observer).begin();
-// 	this->collision_observers.erase(newEnd);
-// }
-
 void PhysicsEngine::start() {
 	this->prev_time = prev_time = std::chrono::steady_clock::now();
+	this->collision_manager->setObjectPhysicsList(&this->objects);
 	this->started = true;
 }
 
@@ -37,7 +30,7 @@ void PhysicsEngine::stop() {
 	this->started = false;
 }
 
-void PhysicsEngine::update() {
+void PhysicsEngine::step() {
 	if (!this->started) {
 		throw std::runtime_error("PhysicsEngine is not started");
 	}
@@ -49,8 +42,10 @@ void PhysicsEngine::update() {
 
 	for (int i = 0; i < actual_step_count; i++) {
 		b2World_Step(world_id, timeStep, subStepCount);
+		this->collision_manager->collisionNotify();
+		this->callStepOnObjects();
 	}
-	// this->collisionNotify();
+
 	std::chrono::milliseconds delta_ms(static_cast<long long>(actual_step_count * this->timeStep * 1000.0));
 	this->prev_time += delta_ms;
 }

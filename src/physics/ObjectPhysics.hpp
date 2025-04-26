@@ -11,6 +11,7 @@
 class ObjectPhysics {
 public:
     virtual ~ObjectPhysics() = default;
+    virtual void onContact(ObjectPhysics* object) = 0;
     virtual b2BodyId getBodyId() = 0;
     virtual void step() = 0;
 

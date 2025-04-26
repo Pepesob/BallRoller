@@ -6,19 +6,19 @@
 #define MAINBALLDRAWER_HPP
 
 #include "Camera.hpp"
-#include "MainBall.hpp"
+#include "ObjectDrawer.hpp"
 #include "Screen.hpp"
+#include "physics/MainBallPhysics.hpp"
 
 
-class MainBallDrawer {
+class MainBallDrawer: public ObjectDrawer {
 public:
-    MainBallDrawer(MainBall *main_ball, Screen *screen, Camera *camera);
-    void draw();
+    explicit MainBallDrawer(MainBallPhysics* main_ball);
+
+    void draw(Screen *screen, Camera *camera) override;
 
 private:
-    MainBall *main_ball;
-    Screen *screen;
-    Camera *camera;
+    MainBallPhysics *main_ball;
     sf::CircleShape shape;
 };
 
