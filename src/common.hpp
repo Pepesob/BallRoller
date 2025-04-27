@@ -17,8 +17,23 @@ struct ObjectPhysicsConfig {
     float rotation = 0;
 };
 
+class Shape {
+public:
+    virtual ~Shape() = default;
+    [[nodiscard]] virtual Vector2D getPosition() const = 0;
+    [[nodiscard]] virtual float getRotation() const = 0;
+};
+
+class ShapePrototype : public Shape {
+
+public:
+    virtual void setPosition(const Vector2D &position) = 0;
+    virtual void setRotation(float rotation) = 0;
+};
+
 enum PhysicsObjectType {
-    None,
-    Rectangle,
+    TypeNone,
+    TypeRectangle,
+    TypeAccelerationField,
 };
 #endif //COMMON_HPP

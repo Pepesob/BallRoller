@@ -1,9 +1,8 @@
 #include "Gameloop.hpp"
 
-#include "AccelerationFieldDrawer.hpp"
+#include "AccelerationField.hpp"
 #include "physics/PhysicsEngine.hpp"
 #include "Screen.hpp"
-#include <iostream>
 
 #include "DrawingEngine.hpp"
 #include "ExampleSetup.hpp"

@@ -9,19 +9,13 @@ set(BALLROLLER_SOURCE_FILES
         Screen.hpp
         physics/MainBallPhysics.cpp
         physics/MainBallPhysics.hpp
-        physics/RectanglePhysics.cpp
-        physics/RectanglePhysics.hpp
         MainBallDrawer.cpp
         MainBallDrawer.hpp
-        RectangleDrawer.cpp
-        RectangleDrawer.hpp
         physics/ObjectPhysics.hpp
         physics/CollisionManager.cpp
         physics/CollisionManager.hpp
-        physics/AccelerationFieldPhysics.cpp
-        physics/AccelerationFieldPhysics.hpp
-        AccelerationFieldDrawer.cpp
-        AccelerationFieldDrawer.hpp
+        AccelerationField.cpp
+        AccelerationField.hpp
         Drawer.cpp
         Drawer.hpp
         common.hpp
@@ -32,9 +26,10 @@ set(BALLROLLER_SOURCE_FILES
         ObjectPlacementStage.cpp
         ObjectPlacementStage.hpp
         SimulationObjectFactory.hpp
-        RectanglePreviewDrawer.cpp
-        RectanglePreviewDrawer.hpp
-        ObjectPreviewDrawer.hpp
+        Rectangle.cpp
+        Rectangle.hpp
+        AvailableLevelObjects.cpp
+        AvailableLevelObjects.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

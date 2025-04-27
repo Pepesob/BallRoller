@@ -8,9 +8,8 @@
 
 #include "MainBallDrawer.hpp"
 #include "Drawer.hpp"
-#include "RectangleDrawer.hpp"
+#include "Rectangle.hpp"
 #include "physics/PhysicsEngine.hpp"
-#include "physics/RectanglePhysics.hpp"
 
 
 class ExampleSetup {

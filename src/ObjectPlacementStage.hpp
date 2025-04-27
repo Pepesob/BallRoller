@@ -4,14 +4,14 @@
 
 #ifndef OBJECTPLACEMENTSTAGE_HPP
 #define OBJECTPLACEMENTSTAGE_HPP
+#include "AvailableLevelObjects.hpp"
 #include "DrawingEngine.hpp"
 #include "Drawer.hpp"
-#include "RectangleDrawer.hpp"
+#include "Rectangle.hpp"
 #include "SimulationObjectFactory.hpp"
 #include "physics/ObjectPhysics.hpp"
 #include "physics/PhysicsEngine.hpp"
-#include "physics/RectanglePhysics.hpp"
-#include "SFML/Window/Keyboard.hpp"
+#include "SFML/Window.hpp"
 
 
 class ObjectPlacementStage {
@@ -26,51 +26,60 @@ public:
 
     void keyboardInput() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-            this->current_object_type = PhysicsObjectType::Rectangle;
-            auto* config = new RectanglePhysicsConfig();
-            config->size = {1, 0.1};
-            this->current_config = config;
-            this->current_drawer = SimulationObjectFactory::createObjectPreviewDrawer(this->current_object_type, *config);
+            this->index = 0;
+            auto [drawer, shape] = this->available_level_objects.getPrototypeDuo(this->index);
+            this->current_prototype = shape;
+            this->current_drawer = drawer;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            this->current_object_type = PhysicsObjectType::None;
+            this->index = 1;
+            auto [drawer, shape] = this->available_level_objects.getPrototypeDuo(this->index);
+            this->current_prototype = shape;
+            this->current_drawer = drawer;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
-            this->current_object_type = PhysicsObjectType::None;
+            this->current_prototype = nullptr;
+            this->current_drawer = nullptr;
         }
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
         this->world_pos = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             this->placeObject();
+            pressed = true;
+        } else {
+            pressed = false;
         }
     }
 
     void placeObject() {
-        b2WorldId world_id = this->physics_engine->getWorldId();
-        this->current_config->position = {this->world_pos.x, this->world_pos.y};
-        ObjectPhysics* obj = SimulationObjectFactory::createObjectPhysics(this->current_object_type, this->current_config, world_id);
-        Drawer* obj_drawer = SimulationObjectFactory::createObjectDrawer(this->current_object_type, obj);
+        if (pressed == true) {
+            return;
+        }
+        auto [drawer, obj] = this->available_level_objects.getPhysicsDuo(this->index, this->physics_engine->getWorldId(), {this->world_pos.x, this->world_pos.y});
         this->physics_engine->addObjectPhysics(obj);
-        this->drawing_engine->addDrawer(obj_drawer);
+        this->drawing_engine->addDrawer(drawer);
     }
 
     void draw(Screen* screen, Camera* camera) {
         if (this->current_drawer != nullptr) {
-            this->current_drawer->setPosition({this->world_pos.x, this->world_pos.y});
+            this->current_prototype->setPosition({this->world_pos.x, this->world_pos.y});
             this->current_drawer->draw(screen, camera);
         }
     }
 
 private:
+    bool pressed = false;
+    size_t index = -1;
+    AvailableLevelObjects available_level_objects;
     PhysicsEngine* physics_engine;
     DrawingEngine* drawing_engine;
     Screen* screen;
     Camera* camera;
     sf::Vector2i mouse_pos;
     sf::Vector2f world_pos;
-    ObjectPreviewDrawer* current_drawer = nullptr;
+    Drawer* current_drawer = nullptr;
     ObjectPhysicsConfig* current_config = nullptr;
-    PhysicsObjectType current_object_type = PhysicsObjectType::None;
+    ShapePrototype* current_prototype = nullptr;
 };
 
 
