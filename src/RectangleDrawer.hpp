@@ -12,6 +12,9 @@
 #include "Screen.hpp"
 #include "physics/RectanglePhysics.hpp"
 
+// TODO - put everything related to rectangle in one file
+// TODO - and maybe create a new thing already ffs
+
 class RectangleDrawer: public Drawer {
 public:
     explicit RectangleDrawer(RectanglePhysics* static_rect);
