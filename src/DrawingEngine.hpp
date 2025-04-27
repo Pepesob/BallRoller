@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "Camera.hpp"
-#include "ObjectDrawer.hpp"
+#include "Drawer.hpp"
 #include "Screen.hpp"
 
 void debug_lines(sf::RenderWindow* window) {
@@ -53,7 +53,7 @@ void debug_lines(sf::RenderWindow* window) {
 class DrawingEngine {
 public:
 
-    void addDrawer(ObjectDrawer* drawer) {
+    void addDrawer(Drawer* drawer) {
         this->drawers.push_back(drawer);
     }
 
@@ -67,7 +67,7 @@ public:
     }
 
 private:
-    std::vector<ObjectDrawer*> drawers;
+    std::vector<Drawer*> drawers;
 };
 
 

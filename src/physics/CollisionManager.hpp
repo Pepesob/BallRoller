@@ -29,7 +29,6 @@ public:
         	b2ContactBeginTouchEvent* beginEvent = contactEvents.beginEvents + i;
             b2BodyId body_a = b2Shape_GetBody(beginEvent->shapeIdA);
             b2BodyId body_b = b2Shape_GetBody(beginEvent->shapeIdB);
-            std::cout << "Iteration " << i << std::endl;
 
             ObjectPhysics* obja = this->getObjectOnBodyId(body_a);
             ObjectPhysics* objb = this->getObjectOnBodyId(body_b);

@@ -22,8 +22,8 @@ set(BALLROLLER_SOURCE_FILES
         physics/AccelerationFieldPhysics.hpp
         AccelerationFieldDrawer.cpp
         AccelerationFieldDrawer.hpp
-        ObjectDrawer.cpp
-        ObjectDrawer.hpp
+        Drawer.cpp
+        Drawer.hpp
         common.hpp
         DrawingEngine.cpp
         DrawingEngine.hpp
@@ -31,6 +31,10 @@ set(BALLROLLER_SOURCE_FILES
         ExampleSetup.hpp
         ObjectPlacementStage.cpp
         ObjectPlacementStage.hpp
+        SimulationObjectFactory.hpp
+        RectanglePreviewDrawer.cpp
+        RectanglePreviewDrawer.hpp
+        ObjectPreviewDrawer.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

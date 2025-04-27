@@ -7,10 +7,9 @@
 #include "Camera.hpp"
 #include "Screen.hpp"
 
-
-class ObjectDrawer {
+class Drawer {
 public:
-    virtual ~ObjectDrawer() = default;
+    virtual ~Drawer() = default;
     virtual void draw(Screen* screen, Camera* camera) = 0;
 };
 

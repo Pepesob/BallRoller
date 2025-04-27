@@ -10,12 +10,15 @@
 #include "box2d/box2d.h"
 
 
-struct BallPhysicsConfig {
-    Vector2D position = {0,1};
+struct BallPhysicsConfig: ObjectPhysicsConfig {
     float radius = 0.1f;
     float density = 1.0f;
     float friction = 0.3f;
     float restitution = 1.f;
+
+    BallPhysicsConfig() {
+        this->position = {0,1};
+    }
 };
 
 

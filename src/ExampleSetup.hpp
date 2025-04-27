@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "MainBallDrawer.hpp"
-#include "ObjectDrawer.hpp"
+#include "Drawer.hpp"
 #include "RectangleDrawer.hpp"
 #include "physics/PhysicsEngine.hpp"
 #include "physics/RectanglePhysics.hpp"
@@ -42,7 +42,7 @@ public:
         objects.push_back(static_rect_physics);
         objects.push_back(static_rect_physics2);
     }
-    std::vector<ObjectDrawer*> drawers;
+    std::vector<Drawer*> drawers;
     std::vector<ObjectPhysics*> objects;
 };
 

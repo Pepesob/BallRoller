@@ -12,10 +12,9 @@
 #include "ObjectPhysics.hpp"
 #include "box2d/box2d.h"
 
-struct RectanglePhysicsConfig {
-    Vector2D position = {0,0};
+
+struct RectanglePhysicsConfig: ObjectPhysicsConfig {
     Vector2D size = {1,1};
-    float rotation = 0;
     float density = 1.0f;
     float friction = 0.3f;
     float restitution = 1.f;
@@ -48,9 +47,9 @@ public:
     }
 
     void onContact(ObjectPhysics *object) override {
-        if (auto* ball = object->getObjectAsType<MainBallPhysics*>()) {
-            std::cout << "Collision with ball" << std::endl;
-        }
+        // if (auto* ball = object->getObjectAsType<MainBallPhysics*>()) {
+        //     std::cout << "Collision with ball" << std::endl;
+        // }
     }
 
     void step() override;

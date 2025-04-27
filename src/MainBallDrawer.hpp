@@ -6,12 +6,12 @@
 #define MAINBALLDRAWER_HPP
 
 #include "Camera.hpp"
-#include "ObjectDrawer.hpp"
+#include "Drawer.hpp"
 #include "Screen.hpp"
 #include "physics/MainBallPhysics.hpp"
 
 
-class MainBallDrawer: public ObjectDrawer {
+class MainBallDrawer: public Drawer {
 public:
     explicit MainBallDrawer(MainBallPhysics* main_ball);
 

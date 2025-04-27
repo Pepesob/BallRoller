@@ -98,7 +98,7 @@ int Screen::getPixelScaleFactor() const {
     return this->pixel_scale_factor;
 }
 
-sf::RenderWindow * Screen::getWindow() const {
+sf::RenderWindow* Screen::getWindow() const {
     return this->window;
 }
 

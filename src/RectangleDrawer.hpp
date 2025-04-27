@@ -8,27 +8,19 @@
 #include <SFML/Graphics.hpp>
 
 #include "Camera.hpp"
-#include "ObjectDrawer.hpp"
+#include "Drawer.hpp"
 #include "Screen.hpp"
 #include "physics/RectanglePhysics.hpp"
 
-class RectangleDrawer: public ObjectDrawer {
+class RectangleDrawer: public Drawer {
 public:
     explicit RectangleDrawer(RectanglePhysics* static_rect);
 
-    explicit RectangleDrawer(RectanglePhysicsConfig* config);
-
-    ~RectangleDrawer() {
-        if (this->config != nullptr) {
-            delete this->config;
-        }
-    }
 
     void draw(Screen* screen, Camera* camera) override;
 
 private:
     RectanglePhysics* static_rect;
-    RectanglePhysicsConfig* config;
     sf::RectangleShape shape;
 };
 

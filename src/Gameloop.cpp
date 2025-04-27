@@ -13,7 +13,7 @@
 void gameloop() {
     PhysicsEngine physics_engine({0.f, -6.f});
     Screen screen(720, 720);
-    Camera camera(0,0,1);
+    Camera camera(0,0,0.5);
     DrawingEngine drawing_engine;
     ExampleSetup setup(&physics_engine);
     ObjectPlacementStage placement_stage(&physics_engine, &drawing_engine, &screen, &camera);
