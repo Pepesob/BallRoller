@@ -3,15 +3,10 @@
 
 #include <Box2d/box2d.h>
 #include <chrono>
-
 #include "CollisionManager.hpp"
 #include "common.hpp"
 
 void test_engine();
-
-enum EventType {
-    BallContactEvent,
-};
 
 class PhysicsEngine {
 
@@ -27,6 +22,7 @@ public:
     void addObjectPhysics(ObjectPhysics* obj) {
         this->objects.push_back(obj);
     }
+
     void start();
     void stop();
     void step();

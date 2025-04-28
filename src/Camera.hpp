@@ -15,6 +15,10 @@ public:
 
     sf::Transform &getCameraMatrix();
     void setPosition(float x, float y);
+    void move(float x, float y) {
+        this->x += x;
+        this->y += y;
+    }
     void setScale(float zoom);
     void setScreenRatio(float ratio);
     void updateCameraMatrix();

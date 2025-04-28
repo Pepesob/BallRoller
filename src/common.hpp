@@ -4,7 +4,6 @@
 
 #ifndef COMMON_HPP
 #define COMMON_HPP
-#include "physics/ObjectPhysics.hpp"
 
 struct Vector2D {
     float x;

@@ -7,6 +7,9 @@
 #include "common.hpp"
 #include "Drawer.hpp"
 #include <SFML/Graphics.hpp>
+#include <box2d/box2d.h>
+
+#include "physics/ObjectPhysics.hpp"
 
 
 class Rectangle: public Shape {
@@ -100,7 +103,7 @@ public:
         return this->body_id;
     }
 
-    void onContact(ObjectPhysics *object) override {
+    void onContactBegin(ObjectPhysics *object) override {
         // if (auto* ball = object->getObjectAsType<MainBallPhysics*>()) {
         //     std::cout << "Collision with ball" << std::endl;
         // }

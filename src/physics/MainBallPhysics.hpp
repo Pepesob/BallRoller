@@ -36,7 +36,7 @@ public:
 
     b2BodyId getBodyId() override;
 
-    void onContact(ObjectPhysics *object) override {}
+    void onContactBegin(ObjectPhysics *object) override {}
 
     void step() override;
 

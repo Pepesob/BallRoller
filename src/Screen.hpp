@@ -4,7 +4,7 @@
 
 #ifndef SCREEN_HPP
 #define SCREEN_HPP
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics.hpp>
 
 
 class Screen {

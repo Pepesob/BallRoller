@@ -1,7 +1,6 @@
 #include "PhysicsEngine.hpp"
 
 #include <thread>
-
 #include <Box2D/box2d.h>
 
 

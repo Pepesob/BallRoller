@@ -30,6 +30,8 @@ set(BALLROLLER_SOURCE_FILES
         Rectangle.hpp
         AvailableLevelObjects.cpp
         AvailableLevelObjects.hpp
+        Shape.hpp
+        Shape.cpp
 )
 
 cmake_minimum_required(VERSION 3.28)

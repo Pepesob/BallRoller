@@ -1,7 +1,3 @@
-//
-// Created by sp on 12.04.2025.
-//
-
 #ifndef OBJECTPHYSICS_HPP
 #define OBJECTPHYSICS_HPP
 
@@ -11,7 +7,8 @@
 class ObjectPhysics {
 public:
     virtual ~ObjectPhysics() = default;
-    virtual void onContact(ObjectPhysics* object) = 0;
+    virtual void onContactBegin(ObjectPhysics* object) {};
+    virtual void onContactEnd() {};
     virtual b2BodyId getBodyId() = 0;
     virtual void step() = 0;
 

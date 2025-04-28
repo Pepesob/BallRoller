@@ -1,6 +1,3 @@
-//
-// Created by sp on 27.04.2025.
-//
 
 #ifndef SIMULATIONOBJECTFACTORY_HPP
 #define SIMULATIONOBJECTFACTORY_HPP

@@ -5,10 +5,9 @@
 #ifndef COLLISIONMANAGER_HPP
 #define COLLISIONMANAGER_HPP
 
-#include <map>
 #include <vector>
+#include <stdexcept>
 #include <box2d/box2d.h>
-#include <iostream>
 #include "ObjectPhysics.hpp"
 
 
@@ -35,8 +34,8 @@ public:
             if (obja == nullptr || objb == nullptr) {
                 throw std::runtime_error("Object that collided is not registered!");
             }
-            obja->onContact(objb);
-            objb->onContact(obja);
+            obja->onContactBegin(objb);
+            objb->onContactBegin(obja);
         }
 
         b2SensorEvents sensor_events = b2World_GetSensorEvents(this->world_id);
@@ -51,8 +50,8 @@ public:
             if (obja == nullptr || objb == nullptr) {
                 throw std::runtime_error("Object that collided is not registered!");
             }
-            obja->onContact(objb);
-            objb->onContact(obja);
+            obja->onContactBegin(objb);
+            objb->onContactBegin(obja);
         }
     }
 

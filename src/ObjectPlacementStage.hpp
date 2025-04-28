@@ -41,6 +41,13 @@ public:
             this->current_prototype = nullptr;
             this->current_drawer = nullptr;
         }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            sf::Transform t = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse();
+            sf::Vector2f current = t.transformPoint(sf::Vector2f(sf::Mouse::getPosition(*this->screen->getWindow())));
+            sf::Vector2f prev = t.transformPoint(sf::Vector2f(this->mouse_pos));
+            sf::Vector2f dx = prev - current;
+            this->camera->move(dx.x, dx.y);
+        }
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
         this->world_pos = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {

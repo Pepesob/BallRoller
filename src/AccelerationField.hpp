@@ -26,7 +26,7 @@ public:
         this->force = config.force;
     }
 
-    void onContact(ObjectPhysics *object) override {
+    void onContactBegin(ObjectPhysics *object) override {
         if (auto* main_ball_physics = object->getObjectAsType<MainBallPhysics*>()) {
             b2Body_ApplyForce(main_ball_physics->getBodyId(), {this->force.x, this->force.y}, {0,0}, true);
         }
