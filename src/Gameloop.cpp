@@ -17,56 +17,72 @@
 void gameloop() {
     // PhysicsEngine physics_engine({0.f, -6.f});
     Screen screen(720, 720);
-    Camera camera(0,0,0.5);
+    Camera camera(0,0,1);
     // DrawingEngine drawing_engine;
     // ExampleSetup setup(&physics_engine);
     // ObjectPlacementStage placement_stage(&physics_engine, &drawing_engine, &screen, &camera);
 
     B2dSimulation simulation({0, -6.0f});
 
-    RectangleShape rectangle({0,0}, {1, 0.1});
+    ShapeConfig shapeConfig;
+    RectangleShape rectangle({1, 0.1}, shapeConfig);
     SimulationBody body;
     body.addShape(&rectangle);
+    AcceleratorObject accelerator_object;
+    accelerator_object.addBody(&body);
 
-    CircleShape ball({0,0}, 0.1);
+    CircleShape ball({0,2}, 0.1);
     SimulationBodyConfig config;
     config.bodyType = b2_dynamicBody;
     config.position = {0, 2};
-    config.rotation = 3.14/2;
+    config.rotation = 3.14/3;
     SimulationBody body2(config);
     body2.addShape(&ball);
 
     RectangleShapeRenderer renderer;
     CircleShapeRenderer circle_renderer;
 
-    simulation.addBody(&body);
+    // simulation.addBody(&body);
+    simulation.addObject(&accelerator_object);
     simulation.addBody(&body2);
+
 
     screen.createWindow();
 
+    auto start = std::chrono::steady_clock::now();
+
     while (true) {
-        simulation.step();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000/60));
-        Vector2D v = simulation.getBodyPosition(&body);
-        Vector2D v2 = simulation.getBodyPosition(&body2);
-        std::cout << "Time step" << std::endl;
-        std::cout << v.x << ", " << v.y << std::endl;
-        std::cout << v2.x << ", " << v2.y << std::endl;
+        simulation.fixedStep();
+        // std::this_thread::sleep_for(std::chrono::milliseconds(1000/30));
 
         screen.handleWindowEvents();
         camera.setScreenRatio(static_cast<float>(screen.getWidth()) / static_cast<float>(screen.getHeight()));
         screen.getWindow()->clear();
 
         Vector2D curr_pos = simulation.getBodyPosition(&body);
-        Vector2D curr_pos2 = simulation.getBodyPosition(&body2);
         float curr_rot = simulation.getBodyRotation(&body);
+
+        Vector2D curr_pos2 = simulation.getBodyPosition(&body2);
         float curr_rot2 = simulation.getBodyRotation(&body2);
+
+        std::cout << curr_rot << std::endl;
+        std::cout << curr_rot2 << std::endl;
 
         renderer.drawShape(rectangle, curr_pos, curr_rot, &screen, &camera);
         circle_renderer.drawShape(ball, curr_pos2, curr_rot2, &screen, &camera);
 
+        if (curr_pos2.y < -1) break;
+
+        debug_lines(screen.getWindow());
+
+        // screen.getWindow()->draw(sprite);
+
         screen.getWindow()->display();
     }
+
+    auto end = std::chrono::steady_clock::now();
+
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
     // for (auto o: setup.objects) {
     //     physics_engine.addObjectPhysics(o);

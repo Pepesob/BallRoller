@@ -18,6 +18,9 @@
 
 class RectangleShape;
 class CircleShape;
+class SimulationObject;
+class B2dSimulation;
+void collisionNotify(B2dSimulation& simulation);
 
 class ShapeBuilder {
 public:
@@ -50,8 +53,7 @@ struct ShapeConfig {
 
 class RectangleShape : public SimulationShape {
 public:
-    RectangleShape(Vector2D position_self, Vector2D size, const ShapeConfig& config=ShapeConfig()) {
-        this->position_self = position_self;
+    RectangleShape(Vector2D size, const ShapeConfig& config=ShapeConfig()) {
         this->size = size;
         this->config = config;
     }
@@ -60,7 +62,6 @@ public:
         builder.buildRectangle(*this);
     }
 
-    Vector2D position_self={};
     Vector2D size={1,1};
     ShapeConfig config;
 };
@@ -95,7 +96,6 @@ public:
 
     explicit SimulationBody(const SimulationBodyConfig& config=SimulationBodyConfig()) {
         this->config = config;
-        // this->id = count++;
     }
 
     void addShape(SimulationShape* shape) {
@@ -104,40 +104,42 @@ public:
 
     SimulationBodyConfig config;
     std::vector<SimulationShape*> shapes;
-
-//     bool operator==(const SimulationBody &body) const {
-//         return this->id == body.id;
-//     }
-//
-//
-// private:
-//     friend struct std::hash<SimulationBody>;
-//     static unsigned int count;
-//     unsigned int id;
 };
 
-// template<>
-// struct std::hash<SimulationBody> {
-//     size_t operator()(const SimulationBody& body) const noexcept {
-//         return hash<unsigned int>()(body.id);
-//     }
-// };
-
-
-
-
 class B2dSimulation {
-
 public:
-    B2dSimulation(Vector2D gravity) {
+    explicit B2dSimulation(Vector2D gravity) {
         this->gravity = gravity;
         b2WorldDef worldDef = b2DefaultWorldDef();
         worldDef.gravity = {this->gravity.x, this->gravity.y};
         this->world_id = b2CreateWorld(&worldDef);
     }
 
-    void step() {
-        b2World_Step(world_id, timeStep, subStepCount);
+    void step();
+
+    void fixedStep() {
+        if (this->prev_time == std::chrono::steady_clock::time_point::min()) {
+            this->prev_time = std::chrono::steady_clock::now();
+        }
+        std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
+        std::chrono::duration<float> timeStepChrono{this->timeStep};
+        auto diff = current - this->prev_time;
+        int possible_step_count = diff / timeStepChrono;
+
+
+        int actual_step_count = std::ceil(std::sqrt(possible_step_count)); // > 0 ? 1 : 0;
+
+        std::cout<<actual_step_count<<std::endl;
+
+        for (int i = 0; i < actual_step_count; i++) {
+            this->step();
+        }
+
+        this->prev_time += std::chrono::duration_cast<std::chrono::nanoseconds>(timeStepChrono * actual_step_count);
+    }
+
+    void resetTimer() {
+        this->prev_time = std::chrono::steady_clock::time_point::min();
     }
 
     void addBody(SimulationBody* body) {
@@ -147,6 +149,19 @@ public:
         }
         this->bodies[body] = body_id;
     }
+
+    void addObject(SimulationObject* obj);
+
+    SimulationBody* getAssociatedBody(b2BodyId body_id) const {
+        for (auto it: this->bodies) {
+            if (B2_ID_EQUALS(it.second, body_id)) {
+                return it.first;
+            }
+        }
+        return nullptr;
+    }
+
+    SimulationObject* getAssociatedObject(SimulationBody* body) const;
 
     Vector2D getBodyPosition(SimulationBody* body) {
         b2BodyId body_id = this->bodies[body];
@@ -160,7 +175,11 @@ public:
         return b2Rot_GetAngle(r);
     }
 
-private:
+    void applyForce(SimulationBody* body, Vector2D force) {
+        b2BodyId body_id = this->bodies[body];
+        b2Body_ApplyForce(body_id, {force.x, force.y}, {0,0}, false);
+    }
+
     b2BodyId b2dCreateBody(SimulationBody& body) const {
         b2BodyDef bodyDef = b2DefaultBodyDef();
         bodyDef.position = {body.config.position.x, body.config.position.y};
@@ -175,45 +194,104 @@ private:
     }
 
     std::unordered_map<SimulationBody*, b2BodyId> bodies;
+    std::vector<SimulationObject*> objects;
     b2WorldId world_id {};
     Vector2D gravity = {0,0};
-    float timeStep = 1.0f / 60.0f;
+    float timeStep = 1.f/60.f;
     int subStepCount = 4;
+private:
+    std::chrono::steady_clock::time_point prev_time = std::chrono::steady_clock::time_point::min();
 };
+
+
+
+class SimulationObject {
+public:
+    virtual ~SimulationObject() = default;
+
+    void addBody(SimulationBody* body) {
+        this->bodies.push_back(body);
+    }
+
+    virtual void onCollisionBegin(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
+    virtual void onCollisionEnd(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_bodyB) {}
+    virtual void step() {}
+
+    std::vector<SimulationBody*> bodies;
+};
+
+class AcceleratorObject : public SimulationObject {
+public:
+    void onCollisionBegin(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_body) override {
+        simulation.applyForce(&other_body, {10,0});
+    }
+
+    // void onCollisionEnd(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_bodyB) override;
+};
+
+
 
 class RectangleShapeRenderer {
 public:
     void drawShape(RectangleShape& shape, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
-        auto [x, y] = shape.position_self;
         auto [w, h] = shape.size;
         float zoom = camera->getZoom();
         int psf = screen->getPixelScaleFactor();
         this->shape.setOrigin({w*psf*zoom/2.f, h*psf*zoom/2.f});
         this->shape.setSize({w*psf*zoom, h*psf*zoom});
-        this->shape.setRotation(sf::radians(objectRot));
+        this->shape.setRotation(sf::radians(-objectRot));
         sf::Vector2f v = (screen->getScreenMatrix() * camera->getCameraMatrix()).transformPoint({objectPos.x, objectPos.y});
         this->shape.setPosition(v);
         screen->getWindow()->draw(this->shape);
     }
 
 private:
-    // sf::RenderTexture renderTexture;
     sf::RectangleShape shape;
 };
 
 class CircleShapeRenderer {
 public:
+    CircleShapeRenderer() {
+        const unsigned int texSize = 256;
+        sf::Image image;
+        image.resize({texSize, texSize},sf::Color::Transparent);
+
+        // Fill image with two colors
+        for (unsigned int y = 0; y < texSize; ++y)
+        {
+            for (unsigned int x = 0; x < texSize; ++x)
+            {
+                float factor = static_cast<float>(y) / texSize; // Vertical gradient
+                unsigned int r = ((1.0f - factor) * 255 + factor * 0);   // From Red to Blue
+                unsigned int g = ((1.0f - factor) * 0   + factor * 0);
+                unsigned int b = ((1.0f - factor) * 0   + factor * 255);
+                image.setPixel({x, y}, sf::Color(r, g, b));
+            }
+        }
+
+        // Load texture from image
+        bool res = this->texture.loadFromImage(image);
+        if (!res) {
+            throw std::runtime_error("Failed to load texture from image");
+        }
+    }
+
     void drawShape(CircleShape& shape, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
         sf::CircleShape circle;
         float radius = shape.radius;
         auto [x, y] = objectPos;
-        circle.setRadius(shape.radius * screen->getPixelScaleFactor() * camera->getZoom());
-        sf::Vector2f v = (screen->getScreenMatrix() * camera->getCameraMatrix()).transformPoint({
-            x - radius, y + radius
-        });
+        float psf = screen->getPixelScaleFactor();
+        circle.setOrigin({radius*psf*camera->getZoom(), radius*psf*camera->getZoom()});
+        circle.setRadius(shape.radius * psf * camera->getZoom());
+        circle.setRotation(sf::radians(-objectRot));
+        sf::Vector2f v = (screen->getScreenMatrix() * camera->getCameraMatrix()).transformPoint({x, y});
         circle.setPosition(v);
+        circle.setTexture(&this->texture);
         screen->getWindow()->draw(circle);
     }
+
+private:
+    sf::Texture texture;
 };
 
 #endif //SHAPE_HPP

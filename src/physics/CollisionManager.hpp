@@ -60,19 +60,6 @@ public:
     }
 
 private:
-    struct B2IdComp {
-        bool operator()(const b2BodyId& a, const b2BodyId& b) const {
-            // Compare index1 first, if equal, compare world0, and then revision
-            if (a.index1 != b.index1) {
-                return a.index1 < b.index1;
-            }
-            if (a.world0 != b.world0) {
-                return a.world0 < b.world0;
-            }
-            return a.revision < b.revision;
-        }
-    };
-
     ObjectPhysics* getObjectOnBodyId(b2BodyId body_id) {
         for (auto o: *this->simulation_objects) {
             if (B2_ID_EQUALS(o->getBodyId(), body_id)) {
