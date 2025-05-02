@@ -1,108 +1,109 @@
-// //
-// // Created by sp on 26.04.2025.
-// //
 //
-// #ifndef OBJECTPLACEMENTSTAGE_HPP
-// #define OBJECTPLACEMENTSTAGE_HPP
-// #include "AvailableLevelObjects.hpp"
-// #include "DrawingEngine.hpp"
-// #include "Drawer.hpp"
-// #include "Rectangle.hpp"
-// #include "Shape.hpp"
-// #include "SimulationObjectFactory.hpp"
-// #include "physics/ObjectPhysics.hpp"
-// #include "physics/PhysicsEngine.hpp"
-// #include "SFML/Window.hpp"
+// Created by sp on 26.04.2025.
 //
-//
-// class ObjectPlacementStage {
-//
-// public:
-//     ObjectPlacementStage(PhysicsEngine* physics_engine, DrawingEngine* drawing_engine, Screen* screen, Camera* camera) {
-//         this->physics_engine = physics_engine;
-//         this->drawing_engine = drawing_engine;
-//         this->screen = screen;
-//         this->camera = camera;
-//
-//         SimulationShape* shape = new RectangleShape({1, 0.1});
-//         SimulationBody* body = new SimulationBody();
-//         body->addShape(shape);
-//
-//         this->available_objects[0] = new SimulationObject();
-//         this->available_objects[0]->addBody(body);
-//
-//     }
-//
-//     void keyboardInput() {
-//         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-//             this->index = 0;
-//             // auto [drawer, shape] = this->available_level_objects.getPrototypeDuo(this->index);
-//             // this->current_prototype = shape;
-//             // this->current_drawer = drawer;
-//             this->current_object = new SimulationObject();
-//             // this->
-//         }
-//         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-//             // this->index = 1;
-//             // auto [drawer, shape] = this->available_level_objects.getPrototypeDuo(this->index);
-//             // this->current_prototype = shape;
-//             // this->current_drawer = drawer;
-//         }
-//         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
-//             this->current_prototype = nullptr;
-//             this->current_drawer = nullptr;
-//         }
-//         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-//             sf::Transform t = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse();
-//             sf::Vector2f current = t.transformPoint(sf::Vector2f(sf::Mouse::getPosition(*this->screen->getWindow())));
-//             sf::Vector2f prev = t.transformPoint(sf::Vector2f(this->mouse_pos));
-//             sf::Vector2f dx = prev - current;
-//             this->camera->move(dx.x, dx.y);
-//         }
-//         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
-//         this->world_pos = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
-//         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-//             this->placeObject();
-//             pressed = true;
-//         } else {
-//             pressed = false;
-//         }
-//     }
-//
-//     void placeObject() {
-//         if (pressed == true) {
-//             return;
-//         }
-//         auto [drawer, obj] = this->available_level_objects.getPhysicsDuo(this->index, this->physics_engine->getWorldId(), {this->world_pos.x, this->world_pos.y});
-//         this->physics_engine->addObjectPhysics(obj);
-//         this->drawing_engine->addDrawer(drawer);
-//     }
-//
-//     void draw(Screen* screen, Camera* camera) {
-//         if (this->current_drawer != nullptr) {
-//             this->current_prototype->setPosition({this->world_pos.x, this->world_pos.y});
-//             this->current_drawer->draw(screen, camera);
-//         }
-//     }
-//
-// private:
-//     bool pressed = false;
-//     size_t index = -1;
-//     AvailableLevelObjects available_level_objects;
-//     PhysicsEngine* physics_engine;
-//     DrawingEngine* drawing_engine;
-//     Screen* screen;
-//     Camera* camera;
-//     sf::Vector2i mouse_pos;
-//     sf::Vector2f world_pos;
-//     Drawer* current_drawer = nullptr;
-//     ObjectPhysicsConfig* current_config = nullptr;
-//     ShapePrototype* current_prototype = nullptr;
-//     SimulationObject* current_object = nullptr;
-//
-//     SimulationObject* available_objects[4];
-// };
-//
-//
-//
-// #endif //OBJECTPLACEMENTSTAGE_HPP
+
+#ifndef OBJECTPLACEMENTSTAGE_HPP
+#define OBJECTPLACEMENTSTAGE_HPP
+#include <iostream>
+#include <unordered_map>
+
+#include "AvailableLevelObjects.hpp"
+#include "DrawingEngine.hpp"
+#include <SFML/Window.hpp>
+#include "SFML/Graphics/Transform.hpp"
+#include "simulation/objects/AcceleratorObject.hpp"
+#include "simulation/objects/MainBallObject.hpp"
+#include "simulation/objects/RectangleObject.hpp"
+
+
+class ObjectPlacementStage {
+
+public:
+    ObjectPlacementStage(Screen* screen, Camera* camera){
+        this->screen = screen;
+        this->camera = camera;
+
+        this->main_ball_object = std::make_shared<MainBallObject>();
+        this->rectangle_object = std::make_shared<RectangleObject>();
+        this->accelerator_object = std::make_shared<AcceleratorObject>();
+
+        this->available_objects[0] = this->main_ball_object;
+        this->available_objects[1] = this->rectangle_object;
+        this->available_objects[2] = this->accelerator_object;
+
+        this->available_drawers[0] = new MainBallDrawer(this->main_ball_object);
+        this->available_drawers[1] = new RectangleDrawer(this->rectangle_object);
+    }
+
+    void keyboardInput(B2dSimulation& simulation, DrawingEngine& drawingEngine) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
+            this->index = 0;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+            this->index = 1;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
+            this->index = -1;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            sf::Transform t = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse();
+            sf::Vector2f current = t.transformPoint(sf::Vector2f(sf::Mouse::getPosition(*this->screen->getWindow())));
+            sf::Vector2f prev = t.transformPoint(sf::Vector2f(this->mouse_pos));
+            sf::Vector2f dx = prev - current;
+            this->camera->move(dx.x, dx.y);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            this->camera->setDeltaZoom(0.001);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            this->camera->setDeltaZoom(-0.001);
+        }
+        this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
+        sf::Vector2f wp = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
+        this->world_pos = {wp.x, wp.y};
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            if (pressed == true || this->index == -1) {
+                return;
+            }
+            this->placeObject(simulation, drawingEngine);
+            std::cout << this->index << std::endl;
+            pressed = true;
+        } else {
+            pressed = false;
+        }
+    }
+
+    void placeObject(B2dSimulation& simulation, DrawingEngine& drawingEngine) {
+        this->available_objects[this->index]->setInitialPosition(this->world_pos);
+        simulation.addObject(this->available_objects[this->index]);
+        drawingEngine.addDrawer(this->available_drawers[this->index]);
+    }
+
+    void draw(Screen* screen, Camera* camera) {
+        if (this->index != -1) {
+            this->available_objects[this->index]->setInitialPosition(this->world_pos);
+            this->available_drawers[this->index]->drawPreview(screen, camera);
+        }
+    }
+
+private:
+    bool pressed = false;
+    size_t index = -1;
+
+    Screen* screen;
+    Camera* camera;
+    sf::Vector2i mouse_pos;
+    Vector2D world_pos {0,0};
+
+    std::shared_ptr<MainBallObject> main_ball_object;
+    std::shared_ptr<RectangleObject> rectangle_object;
+    std::shared_ptr<AcceleratorObject> accelerator_object;
+
+    std::unordered_map<std::string, float> simulationObjectConfig;
+    std::shared_ptr<SimulationObjectBase> available_objects[4]{};
+    SimulationObjectDrawer* available_drawers[4]{};
+};
+
+
+
+#endif //OBJECTPLACEMENTSTAGE_HPP

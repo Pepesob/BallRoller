@@ -10,6 +10,7 @@
 #include "Camera.hpp"
 #include "Drawer.hpp"
 #include "Screen.hpp"
+#include "simulation/objects/SimulationObjectBase.hpp"
 
 void debug_lines(sf::RenderWindow* window) {
     // Calculate 10% of window dimensions
@@ -52,9 +53,12 @@ void debug_lines(sf::RenderWindow* window) {
 
 class DrawingEngine {
 public:
-
     void addDrawer(Drawer* drawer) {
         this->drawers.push_back(drawer);
+    }
+
+    void addDrawer(SimulationObjectDrawer* drawer) {
+        this->addDrawer(new SimulationObjectDrawerWrapper(drawer));
     }
 
     void draw(Screen* screen, Camera* camera) const {
@@ -67,6 +71,18 @@ public:
     }
 
 private:
+    class SimulationObjectDrawerWrapper: public Drawer {
+    public:
+        explicit SimulationObjectDrawerWrapper(SimulationObjectDrawer* drawer) {
+            this->drawer = drawer;
+        }
+
+        void draw(Screen *screen, Camera *camera) override {
+            this->drawer->drawSimulation(screen, camera);
+        }
+    private:
+        SimulationObjectDrawer* drawer;
+    };
     std::vector<Drawer*> drawers;
 };
 

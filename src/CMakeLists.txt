@@ -1,21 +1,18 @@
 set(BALLROLLER_SOURCE_FILES
         Gameloop.cpp
         Gameloop.hpp
-        physics/PhysicsEngine.cpp
-        physics/PhysicsEngine.hpp
+        simulation/objects/SimulationObjectBase.hpp
+        simulation/objects/MainBallObject.hpp
+        simulation/objects/MainBallObject.cpp
+        simulation/objects/MainBallObject.hpp
+        simulation/objects/RectangleObject.cpp
+        simulation/objects/RectangleObject.hpp
+        simulation/objects/AcceleratorObject.cpp
+        simulation/objects/AcceleratorObject.hpp
         Camera.cpp
         Camera.hpp
         Screen.cpp
         Screen.hpp
-        physics/MainBallPhysics.cpp
-        physics/MainBallPhysics.hpp
-        MainBallDrawer.cpp
-        MainBallDrawer.hpp
-        physics/ObjectPhysics.hpp
-        physics/CollisionManager.cpp
-        physics/CollisionManager.hpp
-        AccelerationField.cpp
-        AccelerationField.hpp
         Drawer.cpp
         Drawer.hpp
         common.hpp
@@ -25,14 +22,14 @@ set(BALLROLLER_SOURCE_FILES
         ExampleSetup.hpp
         ObjectPlacementStage.cpp
         ObjectPlacementStage.hpp
-        SimulationObjectFactory.hpp
-        Rectangle.cpp
-        Rectangle.hpp
         AvailableLevelObjects.cpp
         AvailableLevelObjects.hpp
-        Shape.hpp
-        Shape.cpp
-        simulation.hpp
+        simulation/base_drawers/ShapeDrawer.hpp
+        simulation/base_drawers/ShapeDrawer.cpp
+        simulation/physics/Simulation.hpp
+        simulation/physics/SimulationBody.cpp
+        simulation/physics/SimulationBody.hpp
+        simulation/physics/Simulation.cpp
 )
 
 cmake_minimum_required(VERSION 3.28)

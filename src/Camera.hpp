@@ -23,6 +23,12 @@ public:
     void setScreenRatio(float ratio);
     void updateCameraMatrix();
     [[nodiscard]] float getZoom() const;
+    void setZoom(float zoom) {
+        this->zoom = zoom;
+    }
+    void setDeltaZoom(float deltaZoom) {
+        this->zoom += deltaZoom;
+    }
 
 private:
     sf::Transform camera_matrix;
