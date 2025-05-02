@@ -6,10 +6,8 @@
 #define SHAPE_HPP
 
 #include <iostream>
-#include <unordered_map>
 #include <vector>
 #include <box2d/box2d.h>
-
 #include "common.hpp"
 #include <SFML/Graphics.hpp>
 
@@ -20,90 +18,138 @@ class RectangleShape;
 class CircleShape;
 class SimulationObject;
 class B2dSimulation;
+class CircleBody;
+class RectangleBody;
+class SimulationBody;
+class SimulationBodyConfig;
 void collisionNotify(B2dSimulation& simulation);
 
-class ShapeBuilder {
+// class ShapeBuilder {
+// public:
+//     explicit ShapeBuilder(b2BodyId body_id) {
+//         this->body_id = body_id;
+//     }
+//
+//     void buildRectangle(const RectangleShape& rectangle);
+//     void buildCircle(const CircleShape& shape);
+//
+// private:
+//     b2BodyId body_id{};
+// };
+
+
+class B2dBodyBuilder {
 public:
-    explicit ShapeBuilder(b2BodyId body_id) {
-        this->body_id = body_id;
-    }
-
-    void buildRectangle(const RectangleShape& rectangle);
-    void buildCircle(const CircleShape& shape);
-
-private:
-    b2BodyId body_id{};
+    static void buildCircle(CircleBody& circle, b2WorldId world_id);
+    static void buildRectangle(RectangleBody& rectangle, b2WorldId world_id);
+    static b2BodyId b2dCreateBody(const SimulationBodyConfig &config, b2WorldId world_id);
 };
 
 
-class SimulationShape {
-public:
-    virtual ~SimulationShape() = default;
 
-    virtual void accept(ShapeBuilder& builder) = 0;
-};
+// class SimulationShape {
+// public:
+//     virtual ~SimulationShape() = default;
+//
+//     virtual void accept(ShapeBuilder& builder) = 0;
+// };
 
-
-struct ShapeConfig {
-    float friction = 0;
-    float restitution = 0.5f;
-    float density = 1.f;
-    bool isSensor = false;
-};
-
-class RectangleShape : public SimulationShape {
-public:
-    RectangleShape(Vector2D size, const ShapeConfig& config=ShapeConfig()) {
-        this->size = size;
-        this->config = config;
-    }
-
-    void accept(ShapeBuilder& builder) override {
-        builder.buildRectangle(*this);
-    }
-
-    Vector2D size={1,1};
-    ShapeConfig config;
-};
-
-class CircleShape: public SimulationShape {
-public:
-    CircleShape(Vector2D position_self, float radius, const ShapeConfig& config=ShapeConfig()) {
-        this->position_self = position_self;
-        this->radius = radius;
-        this->config = config;
-    }
-
-    void accept(ShapeBuilder& builder) override {
-        builder.buildCircle(*this);
-    }
-
-    Vector2D position_self={};
-    float radius;
-    ShapeConfig config;
-};
-
+//
+// struct ShapeConfig {
+//     float friction = 0;
+//     float restitution = 0.5f;
+//     float density = 1.f;
+//     bool isSensor = false;
+// };
+//
+// class RectangleShape : public SimulationShape {
+// public:
+//     RectangleShape(Vector2D size, const ShapeConfig& config=ShapeConfig()) {
+//         this->size = size;
+//         this->config = config;
+//     }
+//
+//     void accept(ShapeBuilder& builder) override {
+//         builder.buildRectangle(*this);
+//     }
+//
+//     Vector2D size={1,1};
+//     ShapeConfig config;
+// };
+//
+// class CircleShape: public SimulationShape {
+// public:
+//     CircleShape(Vector2D position_self, float radius, const ShapeConfig& config=ShapeConfig()) {
+//         this->position_self = position_self;
+//         this->radius = radius;
+//         this->config = config;
+//     }
+//
+//     void accept(ShapeBuilder& builder) override {
+//         builder.buildCircle(*this);
+//     }
+//
+//     Vector2D position_self={};
+//     float radius;
+//     ShapeConfig config;
+// };
+//
 
 struct SimulationBodyConfig {
     int bodyType = b2_staticBody;
     Vector2D position = {0,0};
     float rotation = 0.f;
+    float friction = 0.5f;
+    float restitution = 0.5f;
+    float density = 1.f;
+    bool isSensor = false;
 };
 
 class SimulationBody {
 public:
     virtual ~SimulationBody() = default;
 
-    explicit SimulationBody(const SimulationBodyConfig& config=SimulationBodyConfig()) {
-        this->config = config;
+private:
+    virtual void build(b2WorldId world_id) = 0;
+    b2BodyId id={};
+
+    friend class B2dSimulation;
+    friend class B2dBodyBuilder;
+};
+
+struct CircleBodyConfig: SimulationBodyConfig {
+    float radius = 0.1f;
+};
+
+class CircleBody: public SimulationBody {
+public:
+    explicit CircleBody(const CircleBodyConfig& config=CircleBodyConfig()) {
+        this->config=config;
     }
 
-    void addShape(SimulationShape* shape) {
-        shapes.push_back(shape);
+    CircleBodyConfig config;
+private:
+    void build(b2WorldId world_id) override {
+        B2dBodyBuilder::buildCircle(*this, world_id);
+    }
+};
+
+struct RectangleBodyConfig: SimulationBodyConfig {
+    Vector2D size = {1.f,0.1f};
+};
+
+class RectangleBody: public SimulationBody {
+public:
+    explicit RectangleBody(const RectangleBodyConfig& config=RectangleBodyConfig()) {
+        this->config=config;
     }
 
-    SimulationBodyConfig config;
-    std::vector<SimulationShape*> shapes;
+    RectangleBodyConfig config;
+
+private:
+    void build(b2WorldId world_id) override {
+        B2dBodyBuilder::buildRectangle(*this, world_id);
+    }
 };
 
 class B2dSimulation {
@@ -142,59 +188,54 @@ public:
         this->prev_time = std::chrono::steady_clock::time_point::min();
     }
 
-    void addBody(SimulationBody* body) {
-        b2BodyId body_id = this->b2dCreateBody(*body);
-        for (auto shape: body->shapes) {
-            b2dAddShapeToBody(body_id, *shape);
-        }
-        this->bodies[body] = body_id;
+    void addObject(const std::shared_ptr<SimulationObject> &obj);
+
+    void addBody(SimulationBody& body) {
+        body.build(this->world_id);
+        this->bodies.push_back(&body);
     }
 
-    void addObject(SimulationObject* obj);
-
-    SimulationBody* getAssociatedBody(b2BodyId body_id) const {
+    [[nodiscard]] SimulationBody& b2dGetAssociatedBody(b2BodyId body_id) const {
         for (auto it: this->bodies) {
-            if (B2_ID_EQUALS(it.second, body_id)) {
-                return it.first;
+            if (B2_ID_EQUALS(it->id, body_id)) {
+                return *it;
             }
         }
-        return nullptr;
+        throw std::runtime_error("Unknown body with given body_id");
     }
 
-    SimulationObject* getAssociatedObject(SimulationBody* body) const;
+    std::shared_ptr<SimulationObject> getAssociatedObject(const SimulationBody& body) const;
 
-    Vector2D getBodyPosition(SimulationBody* body) {
-        b2BodyId body_id = this->bodies[body];
+    Vector2D getBodyPosition(SimulationBody& body) {
+        b2BodyId body_id = body.id;
         b2Vec2 v = b2Body_GetPosition(body_id);
         return {v.x, v.y};
     }
 
-    float getBodyRotation(SimulationBody* body) {
-        b2BodyId body_id = this->bodies[body];
+    float getBodyRotation(SimulationBody& body) {
+        b2BodyId body_id = body.id;
         b2Rot r = b2Body_GetRotation(body_id);
         return b2Rot_GetAngle(r);
     }
 
-    void applyForce(SimulationBody* body, Vector2D force) {
-        b2BodyId body_id = this->bodies[body];
+    void applyForce(SimulationBody& body, Vector2D force) {
+        b2BodyId body_id = body.id;
         b2Body_ApplyForce(body_id, {force.x, force.y}, {0,0}, false);
     }
 
-    b2BodyId b2dCreateBody(SimulationBody& body) const {
-        b2BodyDef bodyDef = b2DefaultBodyDef();
-        bodyDef.position = {body.config.position.x, body.config.position.y};
-        bodyDef.rotation = b2MakeRot(body.config.rotation);
-        bodyDef.type = static_cast<b2BodyType>(body.config.bodyType);
-        return b2CreateBody(this->world_id, &bodyDef);
-    }
+    // void addBody(SimulationBody& body) {
+    //     b2BodyId body_id = this->b2dCreateBody(body);
+    //     body.id = body_id;
+    //     this->bodiesSet.insert(body_id);
+    // }
 
-    static void b2dAddShapeToBody(b2BodyId body_id, SimulationShape& shape) {
-        ShapeBuilder builder(body_id);
-        shape.accept(builder);
-    }
+    // static void b2dAddShapeToBody(b2BodyId body_id, SimulationShape& shape) {
+    //     ShapeBuilder builder(body_id);
+    //     shape.accept(builder);
+    // }
 
-    std::unordered_map<SimulationBody*, b2BodyId> bodies;
-    std::vector<SimulationObject*> objects;
+    std::vector<SimulationBody*> bodies;
+    std::vector<std::shared_ptr<SimulationObject>> objects;
     b2WorldId world_id {};
     Vector2D gravity = {0,0};
     float timeStep = 1.f/60.f;
@@ -208,33 +249,27 @@ private:
 class SimulationObject {
 public:
     virtual ~SimulationObject() = default;
-
-    void addBody(SimulationBody* body) {
-        this->bodies.push_back(body);
-    }
-
     virtual void onCollisionBegin(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
-    virtual void onCollisionEnd(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_bodyB) {}
+    virtual void onCollisionEnd(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
     virtual void step() {}
-
-    std::vector<SimulationBody*> bodies;
+    virtual std::vector<SimulationBody*> getBodies() {return {};}
 };
 
 class AcceleratorObject : public SimulationObject {
 public:
-    void onCollisionBegin(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_body) override {
-        simulation.applyForce(&other_body, {10,0});
+    void onCollisionBegin(B2dSimulation &simulation, SimulationBody& this_body, SimulationBody& other_body) override {
+        simulation.applyForce(other_body, {10,0});
     }
 
-    // void onCollisionEnd(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_bodyB) override;
+    // void onCollisionEnd(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_body) override;
 };
 
 
 
 class RectangleShapeRenderer {
 public:
-    void drawShape(RectangleShape& shape, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
-        auto [w, h] = shape.size;
+    void drawShape(RectangleBody& shape, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
+        auto [w, h] = shape.config.size;
         float zoom = camera->getZoom();
         int psf = screen->getPixelScaleFactor();
         this->shape.setOrigin({w*psf*zoom/2.f, h*psf*zoom/2.f});
@@ -276,13 +311,13 @@ public:
         }
     }
 
-    void drawShape(CircleShape& shape, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
+    void drawShape(CircleBody& shape, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
         sf::CircleShape circle;
-        float radius = shape.radius;
+        float radius = shape.config.radius;
         auto [x, y] = objectPos;
         float psf = screen->getPixelScaleFactor();
         circle.setOrigin({radius*psf*camera->getZoom(), radius*psf*camera->getZoom()});
-        circle.setRadius(shape.radius * psf * camera->getZoom());
+        circle.setRadius(shape.config.radius * psf * camera->getZoom());
         circle.setRotation(sf::radians(-objectRot));
         sf::Vector2f v = (screen->getScreenMatrix() * camera->getCameraMatrix()).transformPoint({x, y});
         circle.setPosition(v);

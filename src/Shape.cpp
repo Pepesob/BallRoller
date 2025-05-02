@@ -3,25 +3,57 @@
 //
 #include "Shape.hpp"
 
-void ShapeBuilder::buildRectangle(const RectangleShape &rectangle) {
-    b2Polygon dynamicBox = b2MakeBox(rectangle.size.x/2, rectangle.size.y/2);
+// void ShapeBuilder::buildRectangle(const RectangleShape &rectangle) {
+//     b2Polygon dynamicBox = b2MakeBox(rectangle.size.x/2, rectangle.size.y/2);
+//     b2ShapeDef shapeDef = b2DefaultShapeDef();
+//     shapeDef.friction = rectangle.config.friction;
+//     shapeDef.restitution = rectangle.config.restitution;
+//     shapeDef.density = rectangle.config.density;
+//     shapeDef.isSensor = rectangle.config.isSensor;
+//     shapeDef.enableSensorEvents = true;
+//     b2CreatePolygonShape(body_id, &shapeDef, &dynamicBox);
+// }
+//
+//
+// void ShapeBuilder::buildCircle(const CircleShape &shape) {
+//     b2Circle circle = {{0, 0}, shape.radius};
+//     b2ShapeDef shapeDef = b2DefaultShapeDef();
+//     shapeDef.density = shape.config.density;
+//     shapeDef.friction = shape.config.friction;
+//     shapeDef.restitution = shape.config.restitution;
+//     shapeDef.enableSensorEvents = true;
+//     b2CreateCircleShape(this->body_id, &shapeDef, &circle);
+// }
+
+b2BodyId B2dBodyBuilder::b2dCreateBody(const SimulationBodyConfig &config, b2WorldId world_id) {
+    b2BodyDef bodyDef = b2DefaultBodyDef();
+    bodyDef.position = {config.position.x, config.position.y};
+    bodyDef.rotation = b2MakeRot(config.rotation);
+    bodyDef.type = static_cast<b2BodyType>(config.bodyType);
+    return b2CreateBody(world_id, &bodyDef);
+}
+
+void B2dBodyBuilder::buildRectangle(RectangleBody &rectangle, b2WorldId world_id) {
+    rectangle.id = b2dCreateBody(rectangle.config, world_id);
+    b2Polygon dynamicBox = b2MakeBox(rectangle.config.size.x/2, rectangle.config.size.y/2);
     b2ShapeDef shapeDef = b2DefaultShapeDef();
     shapeDef.friction = rectangle.config.friction;
     shapeDef.restitution = rectangle.config.restitution;
     shapeDef.density = rectangle.config.density;
     shapeDef.isSensor = rectangle.config.isSensor;
     shapeDef.enableSensorEvents = true;
-    b2CreatePolygonShape(body_id, &shapeDef, &dynamicBox);
+    b2CreatePolygonShape(rectangle.id, &shapeDef, &dynamicBox);
 }
 
-void ShapeBuilder::buildCircle(const CircleShape &shape) {
-    b2Circle circle = {{0, 0}, shape.radius};
+void B2dBodyBuilder::buildCircle(CircleBody &circle, b2WorldId world_id) {
+    circle.id = b2dCreateBody(circle.config, world_id);
+    b2Circle b2d_circle = {{0, 0}, circle.config.radius};
     b2ShapeDef shapeDef = b2DefaultShapeDef();
-    shapeDef.density = shape.config.density;
-    shapeDef.friction = shape.config.friction;
-    shapeDef.restitution = shape.config.restitution;
+    shapeDef.density = circle.config.density;
+    shapeDef.friction = circle.config.friction;
+    shapeDef.restitution = circle.config.restitution;
     shapeDef.enableSensorEvents = true;
-    b2CreateCircleShape(this->body_id, &shapeDef, &circle);
+    b2CreateCircleShape(circle.id, &shapeDef, &b2d_circle);
 }
 
 void B2dSimulation::step() {
@@ -32,17 +64,17 @@ void B2dSimulation::step() {
     }
 }
 
-void B2dSimulation::addObject(SimulationObject *obj) {
+void B2dSimulation::addObject(const std::shared_ptr<SimulationObject> &obj) {
     this->objects.push_back(obj);
-    for (auto b: obj->bodies) {
-        this->addBody(b);
+    for (SimulationBody* b: obj->getBodies()) {
+        this->addBody(*b);
     }
 }
 
-SimulationObject * B2dSimulation::getAssociatedObject(SimulationBody* body) const {
+std::shared_ptr<SimulationObject> B2dSimulation::getAssociatedObject(const SimulationBody& body) const {
     for (auto obj: this->objects) {
-        for (auto it2: obj->bodies) {
-            if (it2 == body) {
+        for (const auto it2: obj->getBodies()) {
+            if (B2_ID_EQUALS(it2->id, body.id)) {
                 return obj;
             }
         }
@@ -58,16 +90,14 @@ void collisionNotify(B2dSimulation &simulation) {
         b2BodyId body_a = b2Shape_GetBody(beginEvent->shapeIdA);
         b2BodyId body_b = b2Shape_GetBody(beginEvent->shapeIdB);
 
-        SimulationBody* obja = simulation.getAssociatedBody(body_a);
-        SimulationBody* objb = simulation.getAssociatedBody(body_b);
-        if (obja == nullptr || objb == nullptr) {
-            throw std::runtime_error("Object that collided is not registered!");
-        }
+        SimulationBody& obja = simulation.b2dGetAssociatedBody(body_a);
+        SimulationBody& objb = simulation.b2dGetAssociatedBody(body_b);
+
         if (auto sim_obj_a = simulation.getAssociatedObject(obja)) {
-            sim_obj_a->onCollisionBegin(simulation, *obja, *objb);
+            sim_obj_a->onCollisionBegin(simulation, obja, objb);
         }
         if (auto sim_obj_b = simulation.getAssociatedObject(objb)) {
-            sim_obj_b->onCollisionBegin(simulation, *objb, *obja);
+            sim_obj_b->onCollisionBegin(simulation, objb, obja);
         }
     }
 
@@ -78,16 +108,14 @@ void collisionNotify(B2dSimulation &simulation) {
         b2BodyId body_a = b2Shape_GetBody(beginEvent->sensorShapeId);
         b2BodyId body_b = b2Shape_GetBody(beginEvent->visitorShapeId);
 
-        SimulationBody* obja = simulation.getAssociatedBody(body_a);
-        SimulationBody* objb = simulation.getAssociatedBody(body_b);
-        if (obja == nullptr || objb == nullptr) {
-            throw std::runtime_error("Object that collided is not registered!");
-        }
+        SimulationBody& obja = simulation.b2dGetAssociatedBody(body_a);
+        SimulationBody& objb = simulation.b2dGetAssociatedBody(body_b);
+
         if (auto sim_obj_a = simulation.getAssociatedObject(obja)) {
-            sim_obj_a->onCollisionBegin(simulation, *obja, *objb);
+            sim_obj_a->onCollisionBegin(simulation, obja, objb);
         }
         if (auto sim_obj_b = simulation.getAssociatedObject(objb)) {
-            sim_obj_b->onCollisionBegin(simulation, *objb, *obja);
+            sim_obj_b->onCollisionBegin(simulation, objb, obja);
         }
     }
 }

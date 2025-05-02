@@ -24,28 +24,21 @@ void gameloop() {
 
     B2dSimulation simulation({0, -6.0f});
 
-    ShapeConfig shapeConfig;
-    RectangleShape rectangle({1, 0.1}, shapeConfig);
-    SimulationBody body;
-    body.addShape(&rectangle);
-    AcceleratorObject accelerator_object;
-    accelerator_object.addBody(&body);
 
-    CircleShape ball({0,2}, 0.1);
-    SimulationBodyConfig config;
-    config.bodyType = b2_dynamicBody;
-    config.position = {0, 2};
-    config.rotation = 3.14/3;
-    SimulationBody body2(config);
-    body2.addShape(&ball);
+    RectangleBody rect_body;
+    rect_body.config.position = {0,0};
+    rect_body.config.rotation = 3.14/6;
+
+    CircleBody body_circle;
+    body_circle.config.position = {0,1};
+    body_circle.config.bodyType = b2_dynamicBody;
+
+    simulation.addBody(rect_body);
+    simulation.addBody(body_circle);
+
 
     RectangleShapeRenderer renderer;
     CircleShapeRenderer circle_renderer;
-
-    // simulation.addBody(&body);
-    simulation.addObject(&accelerator_object);
-    simulation.addBody(&body2);
-
 
     screen.createWindow();
 
@@ -59,17 +52,17 @@ void gameloop() {
         camera.setScreenRatio(static_cast<float>(screen.getWidth()) / static_cast<float>(screen.getHeight()));
         screen.getWindow()->clear();
 
-        Vector2D curr_pos = simulation.getBodyPosition(&body);
-        float curr_rot = simulation.getBodyRotation(&body);
+        Vector2D curr_pos = simulation.getBodyPosition(rect_body);
+        float curr_rot = simulation.getBodyRotation(rect_body);
 
-        Vector2D curr_pos2 = simulation.getBodyPosition(&body2);
-        float curr_rot2 = simulation.getBodyRotation(&body2);
+        Vector2D curr_pos2 = simulation.getBodyPosition(body_circle);
+        float curr_rot2 = simulation.getBodyRotation(body_circle);
 
         std::cout << curr_rot << std::endl;
         std::cout << curr_rot2 << std::endl;
 
-        renderer.drawShape(rectangle, curr_pos, curr_rot, &screen, &camera);
-        circle_renderer.drawShape(ball, curr_pos2, curr_rot2, &screen, &camera);
+        renderer.drawShape(rect_body, curr_pos, curr_rot, &screen, &camera);
+        circle_renderer.drawShape(body_circle, curr_pos2, curr_rot2, &screen, &camera);
 
         if (curr_pos2.y < -1) break;
 
