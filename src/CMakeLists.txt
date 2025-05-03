@@ -30,6 +30,10 @@ set(BALLROLLER_SOURCE_FILES
         simulation/physics/SimulationBody.cpp
         simulation/physics/SimulationBody.hpp
         simulation/physics/Simulation.cpp
+        SimulationObjectFactory.cpp
+        SimulationObjectFactory.hpp
+        LevelSetup.cpp
+        LevelSetup.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

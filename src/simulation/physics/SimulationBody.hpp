@@ -20,6 +20,9 @@ public:
     virtual void visitRectangle(RectangleBody& rectangle) = 0;
 };
 
+
+
+
 struct SimulationBodyConfig {
     int bodyType = b2_staticBody;
     Vector2D initial_position = {0,0};
@@ -36,6 +39,19 @@ struct RectangleBodyConfig: SimulationBodyConfig {
 
 struct CircleBodyConfig: SimulationBodyConfig {
     float radius = 0.1f;
+};
+
+class B2dBodyBuilder: public BodyVisitor {
+public:
+    explicit B2dBodyBuilder(b2WorldId world_id) {
+        this->world_id = world_id;
+    }
+
+    void visitCircle(CircleBody& circle) override;
+    void visitRectangle(RectangleBody& rectangle) override;
+    static b2BodyId b2dCreateBody(const SimulationBodyConfig &config, b2WorldId world_id);
+private:
+    b2WorldId world_id{};
 };
 
 class SimulationBody {

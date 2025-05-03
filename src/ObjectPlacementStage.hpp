@@ -5,15 +5,11 @@
 #ifndef OBJECTPLACEMENTSTAGE_HPP
 #define OBJECTPLACEMENTSTAGE_HPP
 #include <iostream>
-#include <unordered_map>
-
-#include "AvailableLevelObjects.hpp"
 #include "DrawingEngine.hpp"
-#include <SFML/Window.hpp>
+#include "AvailableLevelObjects.hpp"
 #include "SFML/Graphics/Transform.hpp"
 #include "simulation/objects/AcceleratorObject.hpp"
-#include "simulation/objects/MainBallObject.hpp"
-#include "simulation/objects/RectangleObject.hpp"
+
 
 
 class ObjectPlacementStage {
@@ -22,41 +18,51 @@ public:
     ObjectPlacementStage(Screen* screen, Camera* camera){
         this->screen = screen;
         this->camera = camera;
-
-        this->main_ball_object = std::make_shared<MainBallObject>();
-        this->rectangle_object = std::make_shared<RectangleObject>();
-        this->accelerator_object = std::make_shared<AcceleratorObject>();
-
-        this->available_objects[0] = this->main_ball_object;
-        this->available_objects[1] = this->rectangle_object;
-        this->available_objects[2] = this->accelerator_object;
-
-        this->available_drawers[0] = new MainBallDrawer(this->main_ball_object);
-        this->available_drawers[1] = new RectangleDrawer(this->rectangle_object);
     }
 
-    void keyboardInput(B2dSimulation& simulation, DrawingEngine& drawingEngine) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
+    void keyboardInput(B2dSimulation& simulation) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num1)) {
             this->index = 0;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2)) {
             this->index = 1;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
-            this->index = -1;
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num3)) {
+            this->index = 2;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-            sf::Transform t = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse();
-            sf::Vector2f current = t.transformPoint(sf::Vector2f(sf::Mouse::getPosition(*this->screen->getWindow())));
-            sf::Vector2f prev = t.transformPoint(sf::Vector2f(this->mouse_pos));
-            sf::Vector2f dx = prev - current;
-            this->camera->move(dx.x, dx.y);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num4)) {
+            this->index = 3;
         }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num5)) {
+            this->index = 4;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num6)) {
+            this->index = 5;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) {
+            this->index = 6;
+        }
+        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+        //     sf::Transform t = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse();
+        //     sf::Vector2f current = t.transformPoint(sf::Vector2f(sf::Mouse::getPosition(*this->screen->getWindow())));
+        //     sf::Vector2f prev = t.transformPoint(sf::Vector2f(this->mouse_pos));
+        //     sf::Vector2f dx = prev - current;
+        //     // this->camera->move(dx.x, dx.y);
+        // }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-            this->camera->setDeltaZoom(0.001);
+            this->camera->setDeltaZoom(0.999);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-            this->camera->setDeltaZoom(-0.001);
+            this->camera->setDeltaZoom(1.001);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+            this->rotation_radians += 0.001;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+            this->rotation_radians -= 0.001;
+        }
+        if (this->available_objects.isPlaced(this->index) || this->index < 0 || this->index >= this->available_objects.size()) {
+            this->index = -1;
         }
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
         sf::Vector2f wp = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
@@ -65,7 +71,7 @@ public:
             if (pressed == true || this->index == -1) {
                 return;
             }
-            this->placeObject(simulation, drawingEngine);
+            this->placeObject(simulation);
             std::cout << this->index << std::endl;
             pressed = true;
         } else {
@@ -73,35 +79,30 @@ public:
         }
     }
 
-    void placeObject(B2dSimulation& simulation, DrawingEngine& drawingEngine) {
-        this->available_objects[this->index]->setInitialPosition(this->world_pos);
-        simulation.addObject(this->available_objects[this->index]);
-        drawingEngine.addDrawer(this->available_drawers[this->index]);
+    void placeObject(B2dSimulation& simulation) {
+        this->available_objects.objects[this->index]->setInitialPosition(this->world_pos);
+        this->available_objects.place(simulation, this->index);
     }
 
     void draw(Screen* screen, Camera* camera) {
         if (this->index != -1) {
-            this->available_objects[this->index]->setInitialPosition(this->world_pos);
-            this->available_drawers[this->index]->drawPreview(screen, camera);
+            this->available_objects.objects[this->index]->setInitialPosition(this->world_pos);
+            this->available_objects.objects[this->index]->setInitialRotation(this->rotation_radians);
+            this->available_objects.objects[this->index]->drawPreview(screen, camera);
         }
     }
 
 private:
     bool pressed = false;
-    size_t index = -1;
+    int index = -1;
 
     Screen* screen;
     Camera* camera;
     sf::Vector2i mouse_pos;
     Vector2D world_pos {0,0};
+    float rotation_radians = 0;
 
-    std::shared_ptr<MainBallObject> main_ball_object;
-    std::shared_ptr<RectangleObject> rectangle_object;
-    std::shared_ptr<AcceleratorObject> accelerator_object;
-
-    std::unordered_map<std::string, float> simulationObjectConfig;
-    std::shared_ptr<SimulationObjectBase> available_objects[4]{};
-    SimulationObjectDrawer* available_drawers[4]{};
+    AvailableLevelObjects available_objects;
 };
 
 

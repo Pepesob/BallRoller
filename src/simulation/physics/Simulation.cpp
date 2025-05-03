@@ -74,6 +74,13 @@ void B2dBodyBuilder::visitCircle(CircleBody &circle) {
     b2CreateCircleShape(circle.id, &shapeDef, &b2d_circle);
 }
 
+B2dSimulation::B2dSimulation(Vector2D gravity) {
+    this->gravity = gravity;
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = {this->gravity.x, this->gravity.y};
+    this->world_id = b2CreateWorld(&worldDef);
+}
+
 void B2dSimulation::step() {
     b2World_Step(world_id, timeStep, subStepCount);
     collisionNotify(*this);
@@ -82,12 +89,54 @@ void B2dSimulation::step() {
     }
 }
 
+void B2dSimulation::fixedStep() {
+    if (this->prev_time == std::chrono::steady_clock::time_point::min()) {
+        this->prev_time = std::chrono::steady_clock::now();
+    }
+    std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
+    std::chrono::duration<float> timeStepChrono{this->timeStep};
+    auto diff = current - this->prev_time;
+    int possible_step_count = diff / timeStepChrono;
+
+
+    int actual_step_count = std::ceil(std::sqrt(possible_step_count)); // > 0 ? 1 : 0;
+
+
+    for (int i = 0; i < actual_step_count; i++) {
+        this->step();
+    }
+
+    this->prev_time += std::chrono::duration_cast<std::chrono::nanoseconds>(timeStepChrono * actual_step_count);
+}
+
+void B2dSimulation::resetTimer() {
+    this->prev_time = std::chrono::steady_clock::time_point::min();
+}
+
 void B2dSimulation::addObject(const std::shared_ptr<SimulationObjectBase> &obj) {
     this->objects.push_back(obj);
     for (SimulationBody* b: obj->getBodies()) {
         this->addBody(*b);
     }
     obj->simulation = this;
+}
+
+void B2dSimulation::addBody(SimulationBody &body) {
+    if (B2_IS_NON_NULL(body.id)) {
+        throw std::runtime_error("Body already exists in the simulation!");
+    }
+    B2dBodyBuilder builder(this->world_id);
+    body.accept(builder);
+    this->bodies.push_back(&body);
+}
+
+SimulationBody & B2dSimulation::b2dGetAssociatedBody(b2BodyId body_id) const {
+    for (auto it: this->bodies) {
+        if (B2_ID_EQUALS(it->id, body_id)) {
+            return *it;
+        }
+    }
+    throw std::runtime_error("Unknown body with given body_id");
 }
 
 std::shared_ptr<SimulationObjectBase> B2dSimulation::getAssociatedObject(const SimulationBody& body) const {
@@ -99,5 +148,28 @@ std::shared_ptr<SimulationObjectBase> B2dSimulation::getAssociatedObject(const S
         }
     }
     return nullptr;
+}
+
+Vector2D B2dSimulation::getBodyPosition(SimulationBody &body) {
+    b2BodyId body_id = body.id;
+    b2Vec2 v = b2Body_GetPosition(body_id);
+    return {v.x, v.y};
+}
+
+float B2dSimulation::getBodyRotation(SimulationBody &body) {
+    b2BodyId body_id = body.id;
+    b2Rot r = b2Body_GetRotation(body_id);
+    return b2Rot_GetAngle(r);
+}
+
+void B2dSimulation::applyForce(SimulationBody &body, Vector2D force) {
+    b2BodyId body_id = body.id;
+    b2Body_ApplyForce(body_id, {force.x, force.y}, {0,0}, false);
+}
+
+void B2dSimulation::draw(Screen *screen, Camera *camera) {
+    for (auto& obj: this->objects) {
+        obj->drawSimulation(screen, camera);
+    }
 }
 

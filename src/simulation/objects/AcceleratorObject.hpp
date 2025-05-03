@@ -5,14 +5,16 @@
 #ifndef ACCELERATOROBJECT_HPP
 #define ACCELERATOROBJECT_HPP
 
-#include "SimulationObjectBase.hpp"
+#include "RectangleObject.hpp"
+#include "simulation/physics/Simulation.hpp"
+#include "simulation/physics/SimulationBody.hpp"
 
 
 class AcceleratorObject : public SimulationObjectBase {
 public:
     AcceleratorObject() {
-        rectangle.config.isSensor = true;
-        rectangle.config.size = {0.5, 0.5};
+        rectangle.rectangle.config.isSensor = true;
+        rectangle.rectangle.config.size = {0.5, 0.5};
     }
 
     void onCollisionBegin(B2dSimulation &simulation, SimulationBody& this_body, SimulationBody& other_body) override {
@@ -20,13 +22,28 @@ public:
     }
 
     void setInitialPosition(const Vector2D& position) override {
-        rectangle.config.initial_position = position;
+        rectangle.setInitialPosition(position);
+    }
+
+    void setInitialRotation(const float radians) override {
+        rectangle.setInitialRotation(radians);
     }
 
     std::vector<SimulationBody *> getBodies() override {
-        return {&rectangle};
+        return rectangle.getBodies();
     }
-    RectangleBody rectangle;
+
+    void drawPreview(Screen *screen, Camera *camera) override {
+        rectangle.drawPreview(screen, camera);
+    }
+
+    void drawSimulation(Screen *screen, Camera *camera) override {
+        rectangle.drawSimulation(screen, camera);
+    }
+
+
+
+    RectangleObject rectangle;
 };
 
 

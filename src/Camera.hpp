@@ -27,7 +27,7 @@ public:
         this->zoom = zoom;
     }
     void setDeltaZoom(float deltaZoom) {
-        this->zoom += deltaZoom;
+        this->zoom *= deltaZoom;
     }
 
 private:
