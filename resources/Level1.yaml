@@ -1,0 +1,41 @@
+levelObjects:
+  - objectType: "MainBall"
+    initialPosition:
+      x: 0
+      y: 0
+  - objectType: "Rectangle"
+    initialPosition:
+      x: 0
+      y: -2
+    initialRotation: 0
+    size:
+      x: 4
+      y: 0.2
+    restitution: 1.2
+  - objectType: "Rectangle"
+    initialPosition:
+      x: -2
+      y: 0
+    initialRotation: 1.57
+    size:
+      x: 4
+      y: 0.2
+    restitution: 1.2
+  - objectType: "Rectangle"
+    initialPosition:
+      x: 0
+      y: 2
+    initialRotation: 0
+    size:
+      x: 4
+      y: 0.2
+    restitution: 1.2
+  - objectType: "Rectangle"
+    initialPosition:
+      x: 2
+      y: 0
+    initialRotation: 1.57
+    size:
+      x: 4
+      y: 0.2
+    restitution: 1.2
