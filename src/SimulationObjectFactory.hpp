@@ -5,6 +5,7 @@
 #ifndef SIMULATIONOBJECTFACTORY_HPP
 #define SIMULATIONOBJECTFACTORY_HPP
 #include "simulation/objects/AcceleratorObject.hpp"
+#include "simulation/objects/GoalObject.hpp"
 #include "simulation/objects/MainBallObject.hpp"
 #include "simulation/objects/RectangleObject.hpp"
 #include "simulation/physics/Simulation.hpp"
@@ -23,6 +24,9 @@ public:
         }
         if (name == "Accelerator") {
             return std::make_shared<AcceleratorObject>();
+        }
+        if (name == "Goal") {
+            return std::make_shared<GoalObject>();
         }
         throw std::invalid_argument("Object type not recognised: " + name);
     }

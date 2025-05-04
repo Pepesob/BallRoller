@@ -82,6 +82,7 @@ public:
 
     void placeObject(B2dSimulation& simulation) {
         this->available_objects.objects[this->index]->setInitialPosition(this->world_pos);
+        this->available_objects.objects[this->index]->setInitialRotation(this->rotation_radians);
         this->available_objects.place(simulation, this->index);
     }
 

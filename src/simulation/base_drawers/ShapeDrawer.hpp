@@ -37,7 +37,6 @@ public:
         screen->getWindow()->draw(this->shape);
     }
 
-private:
     sf::RectangleShape shape;
 };
 
@@ -71,7 +70,7 @@ public:
     }
 
     void drawShape(CircleBodyConfig config, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
-        sf::CircleShape circle;
+
         float radius = config.radius;
         auto [x, y] = objectPos;
         float psf = screen->getPixelScaleFactor();
@@ -84,7 +83,7 @@ public:
         screen->getWindow()->draw(circle);
     }
 
-private:
+    sf::CircleShape circle;
     sf::Texture texture;
 };
 

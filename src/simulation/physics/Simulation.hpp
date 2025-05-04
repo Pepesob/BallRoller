@@ -17,6 +17,7 @@
 class B2dSimulation;
 class SimulationBody;
 
+
 class SimulationObjectBase {
 public:
     virtual ~SimulationObjectBase() = default;
@@ -34,6 +35,12 @@ public:
 
     B2dSimulation* simulation = nullptr;
 };
+
+template<typename T>
+std::shared_ptr<T> getObjectAs(std::shared_ptr<SimulationObjectBase> obj) {
+    return std::dynamic_pointer_cast<T>(obj);
+}
+
 
 class B2dSimulation {
 public:
@@ -60,6 +67,7 @@ public:
     Vector2D gravity = {0,0};
     float timeStep = 1.f/60.f;
     int subStepCount = 4;
+    bool goalReached = false;
 
 private:
     std::chrono::steady_clock::time_point prev_time = std::chrono::steady_clock::time_point::min();

@@ -37,8 +37,6 @@ void gameloop() {
         screen.getWindow()->clear();
 
 
-
-
         sf::Vector2i current = sf::Mouse::getPosition(*screen.getWindow());
         if (state == 0) {
             placement_stage.keyboardInput(simulation);
@@ -70,6 +68,10 @@ void gameloop() {
         screen.getWindow()->display();
 
         prev = current;
+
+        if (simulation.goalReached == true) {
+            break;
+        }
     }
 
     auto end = std::chrono::steady_clock::now();

@@ -18,7 +18,10 @@ public:
     }
 
     void onCollisionBegin(B2dSimulation &simulation, SimulationBody& this_body, SimulationBody& other_body) override {
-        simulation.applyForce(other_body, {10,0});
+        Vector2D v_force = {this->forceScalar * std::cos(this->rotation), this->forceScalar * std::sin(this->rotation)};
+        simulation.applyForce(other_body, v_force);
+        std::cout << this->rotation << std::endl;
+        std::cout << v_force.x << " " << v_force.y << std::endl;
     }
 
     void setInitialPosition(const Vector2D& position) override {
@@ -27,6 +30,7 @@ public:
 
     void setInitialRotation(const float radians) override {
         rectangle.setInitialRotation(radians);
+        this->rotation = radians;
     }
 
     std::vector<SimulationBody *> getBodies() override {
@@ -45,6 +49,8 @@ public:
         rectangle.loadConfig(config);
     }
 
+    float forceScalar = 10;
+    float rotation = 0;
     RectangleObject rectangle;
 };
 

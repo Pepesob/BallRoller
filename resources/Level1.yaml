@@ -39,3 +39,12 @@ setupObjects:
       x: 4
       y: 0.2
     restitution: 1.2
+  - objectType: "Goal"
+    initialPosition:
+      x: 1.5
+      y: 1.5
+    initialRotation: 0
+    size:
+      x: 0.5
+      y: 0.5
+    restitution: 0
