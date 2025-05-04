@@ -4,8 +4,10 @@
 
 #ifndef LEVELSETUP_HPP
 #define LEVELSETUP_HPP
+#include <iostream>
 #include <vector>
 
+#include "SimulationObjectFactory.hpp"
 #include "simulation/objects/MainBallObject.hpp"
 #include "simulation/objects/RectangleObject.hpp"
 #include "simulation/physics/Simulation.hpp"
@@ -13,6 +15,22 @@
 
 class LevelSetup {
 public:
+    LevelSetup(const YAML::Node& object_list) {
+        try {
+            assert(object_list.IsSequence());
+            SimulationObjectFactory factory;
+            for (const YAML::Node& obj_config: object_list) {
+                std::shared_ptr<SimulationObjectBase> obj_base = factory.createSimulationObject(obj_config["objectType"].as<std::string>());
+                obj_base->loadConfig(obj_config);
+                objects.push_back(obj_base);
+            }
+        }
+        catch (const std::exception& e) {
+            std::cout << e.what() << std::endl;
+            throw std::runtime_error("Error while loading available level objects");
+        }
+    }
+
     LevelSetup() {
         auto main_ball = std::make_shared<MainBallObject>();
         main_ball->setInitialPosition({0, 0});

@@ -33,8 +33,8 @@ set(BALLROLLER_SOURCE_FILES
         SimulationObjectFactory.hpp
         LevelSetup.cpp
         LevelSetup.hpp
-        YamlConfigurationLoader.cpp
-        YamlConfigurationLoader.hpp
+        Level.cpp
+        Level.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

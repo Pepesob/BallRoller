@@ -1,4 +1,4 @@
-levelObjects:
+setupObjects:
   - objectType: "MainBall"
     initialPosition:
       x: 0

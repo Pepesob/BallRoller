@@ -4,8 +4,11 @@
 
 #include "simulation/physics/SimulationBody.hpp"
 #include <chrono>
+#include <iostream>
+
 #include "common.hpp"
 #include <box2d/box2d.h>
+#include "yaml-cpp/yaml.h"
 
 #include "Camera.hpp"
 #include "Screen.hpp"
@@ -22,9 +25,12 @@ public:
     virtual void step() {}
     virtual std::vector<SimulationBody*> getBodies() = 0;
     virtual void setInitialPosition(const Vector2D& position) = 0;
-    virtual void setInitialRotation(const float radians) = 0;
+    virtual void setInitialRotation(float radians) = 0;
     virtual void drawPreview(Screen *screen, Camera *camera) = 0;
     virtual void drawSimulation(Screen *screen, Camera *camera)=0;
+    virtual void loadConfig(const YAML::Node& config) {
+        std::cerr << "Warning: Loading config not implemented. Using defaults." << std::endl;
+    }
 
     B2dSimulation* simulation = nullptr;
 };
@@ -42,6 +48,8 @@ public:
     Vector2D getBodyPosition(SimulationBody& body);
     float getBodyRotation(SimulationBody& body);
     void applyForce(SimulationBody& body, Vector2D force);
+    void setVelocity(SimulationBody& body, Vector2D velocity);
+    [[nodiscard]] Vector2D getVelocity(SimulationBody& body);
     void draw(Screen* screen, Camera* camera);
 
 

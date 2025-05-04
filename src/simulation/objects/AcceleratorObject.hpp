@@ -41,7 +41,9 @@ public:
         rectangle.drawSimulation(screen, camera);
     }
 
-
+    void loadConfig(const YAML::Node &config) override {
+        rectangle.loadConfig(config);
+    }
 
     RectangleObject rectangle;
 };

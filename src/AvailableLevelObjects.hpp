@@ -4,6 +4,7 @@
 
 #ifndef AVAILABLELEVELOBJECTS_HPP
 #define AVAILABLELEVELOBJECTS_HPP
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -14,6 +15,8 @@
 class AvailableLevelObjects {
 
 public:
+    // explicit AvailableLevelObjects(const YAML::Node& config) {
+    // }
 
     AvailableLevelObjects() {
         // this->objectTags.emplace_back("MainBall");

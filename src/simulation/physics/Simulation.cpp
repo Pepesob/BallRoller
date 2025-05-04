@@ -167,6 +167,17 @@ void B2dSimulation::applyForce(SimulationBody &body, Vector2D force) {
     b2Body_ApplyForce(body_id, {force.x, force.y}, {0,0}, false);
 }
 
+void B2dSimulation::setVelocity(SimulationBody &body, Vector2D velocity) {
+    b2BodyId body_id = body.id;
+    b2Body_SetLinearVelocity(body_id, {velocity.x, velocity.y});
+}
+
+Vector2D B2dSimulation::getVelocity(SimulationBody &body) {
+    b2BodyId body_id = body.id;
+    b2Vec2 v = b2Body_GetLinearVelocity(body_id);
+    return {v.x, v.y};
+}
+
 void B2dSimulation::draw(Screen *screen, Camera *camera) {
     for (auto& obj: this->objects) {
         obj->drawSimulation(screen, camera);

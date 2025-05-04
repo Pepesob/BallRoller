@@ -7,6 +7,7 @@
 #include <iostream>
 #include "DrawingEngine.hpp"
 #include "AvailableLevelObjects.hpp"
+#include "Level.hpp"
 #include "SFML/Graphics/Transform.hpp"
 #include "simulation/objects/AcceleratorObject.hpp"
 
@@ -15,7 +16,7 @@
 class ObjectPlacementStage {
 
 public:
-    ObjectPlacementStage(Screen* screen, Camera* camera){
+    ObjectPlacementStage(AvailableLevelObjects& available_objects, Screen* screen, Camera* camera): available_objects(available_objects) {
         this->screen = screen;
         this->camera = camera;
     }
@@ -102,7 +103,7 @@ private:
     Vector2D world_pos {0,0};
     float rotation_radians = 0;
 
-    AvailableLevelObjects available_objects;
+    AvailableLevelObjects& available_objects;
 };
 
 

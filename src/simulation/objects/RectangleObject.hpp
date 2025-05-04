@@ -32,6 +32,15 @@ public:
         this->renderer.drawShape(rectangle.config, v, rot, screen, camera);
     }
 
+    void loadConfig(const YAML::Node &config) override {
+        this->rectangle.config.initial_position.x = config["initialPosition"]["x"].as<float>();
+        this->rectangle.config.initial_position.y = config["initialPosition"]["y"].as<float>();
+        this->rectangle.config.rotation = config["initialRotation"].as<float>();
+        this->rectangle.config.restitution = config["restitution"].as<float>();
+        this->rectangle.config.size.x = config["size"]["x"].as<float>();
+        this->rectangle.config.size.y = config["size"]["y"].as<float>();
+    }
+
     RectangleShapeDrawer renderer;
     RectangleBody rectangle;
 };

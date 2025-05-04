@@ -7,7 +7,7 @@
 
 #include "simulation/base_drawers/ShapeDrawer.hpp"
 #include "simulation/physics/Simulation.hpp"
-
+#include <cmath>
 
 class MainBallObject : public SimulationObjectBase {
 public:
@@ -38,6 +38,21 @@ public:
         this->renderer.drawShape(ball.config, v, rot, screen, camera);
     }
 
+    void loadConfig(const YAML::Node &config) override {
+        this->ball.config.initial_position.x = config["initialPosition"]["x"].as<float>();
+        this->ball.config.initial_position.y = config["initialPosition"]["y"].as<float>();
+    }
+
+    void step() override {
+        Vector2D v = this->simulation->getVelocity(this->ball);
+        float current_speed = std::sqrt(v.x * v.x + v.y * v.y);
+        if (current_speed > this->max_speed) {
+            float scale = this->max_speed / current_speed;
+            this->simulation->setVelocity(this->ball, {v.x * scale, v.y * scale});
+        }
+    }
+
+    float max_speed = 20;
     CircleShapeDrawer renderer;
     CircleBody ball;
 };

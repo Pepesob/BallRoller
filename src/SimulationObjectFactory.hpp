@@ -14,7 +14,7 @@ class SimulationObjectFactory {
 
 public:
 
-    std::shared_ptr<SimulationObjectBase> createSimulationObject(const std::string& name) {
+    [[nodiscard]] std::shared_ptr<SimulationObjectBase> createSimulationObject(const std::string& name) {
         if  (name == "MainBall") {
             return std::make_shared<MainBallObject>();
         }
@@ -24,7 +24,7 @@ public:
         if (name == "Accelerator") {
             return std::make_shared<AcceleratorObject>();
         }
-        throw std::invalid_argument("Object type not recognised");
+        throw std::invalid_argument("Object type not recognised: " + name);
     }
 
 };
