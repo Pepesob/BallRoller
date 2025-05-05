@@ -11,10 +11,12 @@ class RectangleObject : public SimulationObjectBase {
 public:
 
     void setInitialPosition(const Vector2D& position) override {
+        SimulationObjectBase::setInitialPosition(position);
         rectangle.config.initial_position = position;
     }
 
     void setInitialRotation(const float radians) override {
+        SimulationObjectBase::setInitialRotation(radians);
         rectangle.config.rotation = radians;
     }
 
@@ -33,12 +35,17 @@ public:
     }
 
     void loadConfig(const YAML::Node &config) override {
-        this->rectangle.config.initial_position.x = config["initialPosition"]["x"].as<float>();
-        this->rectangle.config.initial_position.y = config["initialPosition"]["y"].as<float>();
-        this->rectangle.config.rotation = config["initialRotation"].as<float>();
-        this->rectangle.config.restitution = config["restitution"].as<float>();
-        this->rectangle.config.size.x = config["size"]["x"].as<float>();
-        this->rectangle.config.size.y = config["size"]["y"].as<float>();
+        SimulationObjectBase::loadConfig(config);
+        assignIfExist(config["restitution"], &this->rectangle.config.restitution);
+        assignIfExist(config["size"], &this->rectangle.config.size);
+    }
+
+    YAML::Node saveConfig() override {
+        YAML::Node node = SimulationObjectBase::saveConfig();
+        node["objectType"] = "Rectangle";
+        node["restitution"] = this->rectangle.config.restitution;
+        node["size"] = this->rectangle.config.size;
+        return node;
     }
 
     RectangleShapeDrawer renderer;

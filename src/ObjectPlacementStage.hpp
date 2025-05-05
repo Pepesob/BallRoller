@@ -43,13 +43,6 @@ public:
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) {
             this->index = 6;
         }
-        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        //     sf::Transform t = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse();
-        //     sf::Vector2f current = t.transformPoint(sf::Vector2f(sf::Mouse::getPosition(*this->screen->getWindow())));
-        //     sf::Vector2f prev = t.transformPoint(sf::Vector2f(this->mouse_pos));
-        //     sf::Vector2f dx = prev - current;
-        //     // this->camera->move(dx.x, dx.y);
-        // }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
             this->camera->setDeltaZoom(0.999);
         }

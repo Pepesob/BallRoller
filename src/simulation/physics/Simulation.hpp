@@ -4,11 +4,12 @@
 
 #include "simulation/physics/SimulationBody.hpp"
 #include <chrono>
+#include <fstream>
 #include <iostream>
 
 #include "common.hpp"
 #include <box2d/box2d.h>
-#include "yaml-cpp/yaml.h"
+#include "yaml_configuration.hpp"
 
 #include "Camera.hpp"
 #include "Screen.hpp"
@@ -18,6 +19,9 @@ class B2dSimulation;
 class SimulationBody;
 
 
+
+
+
 class SimulationObjectBase {
 public:
     virtual ~SimulationObjectBase() = default;
@@ -25,21 +29,51 @@ public:
     virtual void onCollisionEnd(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
     virtual void step() {}
     virtual std::vector<SimulationBody*> getBodies() = 0;
-    virtual void setInitialPosition(const Vector2D& position) = 0;
-    virtual void setInitialRotation(float radians) = 0;
+    virtual void setInitialPosition(const Vector2D& position) {
+        this->initialPosition = position;
+    }
+    virtual void setInitialRotation(float radians) {
+        this->initialRotation = radians;
+    }
     virtual void drawPreview(Screen *screen, Camera *camera) = 0;
-    virtual void drawSimulation(Screen *screen, Camera *camera)=0;
+    virtual void drawSimulation(Screen *screen, Camera *camera) = 0;
     virtual void loadConfig(const YAML::Node& config) {
-        std::cerr << "Warning: Loading config not implemented. Using defaults." << std::endl;
+        try {
+            setInitialPosition(config["initialPosition"].as<Vector2D>());
+            setInitialRotation(config["initialRotation"].as<float>());
+        }
+        catch (std::exception& e) {
+            std::cerr << "WARNING: could not load initial position and rotation" << std::endl;
+        }
+    }
+
+    virtual YAML::Node saveConfig() {
+        YAML::Node node;
+        node["initialPosition"] = initialPosition;
+        node["initialRotation"] = initialRotation;
+        return node;
     }
 
     B2dSimulation* simulation = nullptr;
+    Vector2D initialPosition;
+    float initialRotation;
 };
 
 template<typename T>
 std::shared_ptr<T> getObjectAs(std::shared_ptr<SimulationObjectBase> obj) {
     return std::dynamic_pointer_cast<T>(obj);
 }
+
+inline void saveCurrentWorld(std::vector<std::shared_ptr<SimulationObjectBase>>& objects, std::string filename) {
+    YAML::Emitter out;
+    out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
+    for (auto obj : objects) {
+        out << obj->saveConfig();
+    }
+    std::ofstream fout(filename);
+    fout << out.c_str();
+}
+
 
 
 class B2dSimulation {

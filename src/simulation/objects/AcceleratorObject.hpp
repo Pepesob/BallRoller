@@ -18,20 +18,28 @@ public:
     }
 
     void onCollisionBegin(B2dSimulation &simulation, SimulationBody& this_body, SimulationBody& other_body) override {
-        Vector2D v_force = {this->forceScalar * std::cos(this->rotation), this->forceScalar * std::sin(this->rotation)};
+        Vector2D v_force = {this->forceScalar * std::cos(this->initialRotation), this->forceScalar * std::sin(this->initialRotation)};
         simulation.applyForce(other_body, v_force);
-        std::cout << this->rotation << std::endl;
+        std::cout << this->initialRotation << std::endl;
         std::cout << v_force.x << " " << v_force.y << std::endl;
     }
 
     void setInitialPosition(const Vector2D& position) override {
+        SimulationObjectBase::setInitialPosition(position);
         rectangle.setInitialPosition(position);
     }
 
     void setInitialRotation(const float radians) override {
+        SimulationObjectBase::setInitialRotation(radians);
         rectangle.setInitialRotation(radians);
-        this->rotation = radians;
     }
+
+    YAML::Node saveConfig() override {
+        YAML::Node node = SimulationObjectBase::saveConfig();
+        node["objectType"] = "Accelerator";
+        return node;
+    }
+
 
     std::vector<SimulationBody *> getBodies() override {
         return rectangle.getBodies();
@@ -50,7 +58,6 @@ public:
     }
 
     float forceScalar = 10;
-    float rotation = 0;
     RectangleObject rectangle;
 };
 

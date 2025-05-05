@@ -37,6 +37,7 @@ set(BALLROLLER_SOURCE_FILES
         Level.hpp
         simulation/objects/GoalObject.cpp
         simulation/objects/GoalObject.hpp
+        yaml_configuration.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

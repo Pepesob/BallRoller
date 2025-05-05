@@ -14,8 +14,8 @@
 
 class Level {
 public:
-    Level() {
-        this->levelInfo = YAML::LoadFile("resources/Level1.yaml");
+    Level(std::string fileName) {
+        this->levelInfo = YAML::LoadFile(fileName);
         this->level_setup = new LevelSetup(this->levelInfo["setupObjects"]);
         this->available_objects = new AvailableLevelObjects();
     }

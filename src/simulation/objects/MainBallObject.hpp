@@ -17,10 +17,12 @@ public:
     }
 
     void setInitialPosition(const Vector2D& position) override {
+        SimulationObjectBase::setInitialPosition(position);
         ball.config.initial_position = position;
     }
 
     void setInitialRotation(const float radians) override {
+        SimulationObjectBase::setInitialRotation(radians);
         ball.config.rotation = radians;
     }
 
@@ -41,6 +43,12 @@ public:
     void loadConfig(const YAML::Node &config) override {
         this->ball.config.initial_position.x = config["initialPosition"]["x"].as<float>();
         this->ball.config.initial_position.y = config["initialPosition"]["y"].as<float>();
+    }
+
+    YAML::Node saveConfig() override {
+        YAML::Node node = SimulationObjectBase::saveConfig();
+        node["objectType"] = "MainBall";
+        return node;
     }
 
     void step() override {

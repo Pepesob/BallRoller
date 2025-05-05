@@ -18,7 +18,10 @@ void gameloop() {
     Screen screen(720, 720);
     Camera camera(0,0,0.3);
     B2dSimulation simulation({0, -6.0f});
-    Level level;
+    Level level("resources/mysetup.yaml");
+    // delete level.available_objects;
+    // level.level_setup->objects.clear();
+    // level.available_objects = new InfiniteLevelObjects();
     ObjectPlacementStage placement_stage(*level.available_objects,&screen, &camera);
 
     level.level_setup->place(simulation);
@@ -58,6 +61,10 @@ void gameloop() {
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
             camera.setDeltaZoom(1.001);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+            saveCurrentWorld(simulation.objects, "resources/mysetup2.yaml");
+            break;
         }
 
 

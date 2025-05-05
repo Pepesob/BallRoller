@@ -38,7 +38,7 @@ public:
         return index >= 0 && index < this->objects.size() && this->objects[index]->simulation != nullptr;
     }
 
-    void place(B2dSimulation& simulation, int index) {
+    virtual void place(B2dSimulation& simulation, int index) {
         if (this->isPlaced(index)) {
             throw std::runtime_error("Object already placed");
         }
@@ -55,6 +55,33 @@ public:
 
     std::vector<std::string> objectTags;
     std::vector<std::shared_ptr<SimulationObjectBase>> objects;
+};
+
+class InfiniteLevelObjects: public AvailableLevelObjects {
+public:
+    InfiniteLevelObjects() {
+        this->objectTags.clear();
+        this->objects.clear();
+
+        this->objectTags.emplace_back("MainBall");
+        this->objectTags.emplace_back("Rectangle");
+        this->objectTags.emplace_back("Accelerator");
+        this->objectTags.emplace_back("Goal");
+
+        for (const auto& tag: objectTags) {
+            SimulationObjectFactory factory;
+            this->objects.push_back(factory.createSimulationObject(tag));
+        }
+    }
+
+    void place(B2dSimulation& simulation, int index) override {
+        if (this->isPlaced(index)) {
+            throw std::runtime_error("Object already placed");
+        }
+        simulation.addObject(this->objects[index]);
+        SimulationObjectFactory factory;
+        this->objects[index] = factory.createSimulationObject(this->objectTags[index]);
+    }
 };
 
 
