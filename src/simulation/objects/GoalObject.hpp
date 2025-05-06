@@ -14,7 +14,6 @@ public:
     GoalObject() {
         this->rectangle.rectangle.config.isSensor = true;
         this->rectangle.rectangle.config.size = {1,1};
-        this->rectangle.renderer.shape.setFillColor({0,255,0,128});
     }
 
     void onCollisionBegin(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_body) override {
@@ -28,12 +27,10 @@ public:
     }
 
     void setInitialPosition(const Vector2D &position) override {
-        SimulationObjectBase::setInitialPosition(position);
         this->rectangle.setInitialPosition(position);
     }
 
     void setInitialRotation(float radians) override {
-        SimulationObjectBase::setInitialRotation(radians);
         this->rectangle.setInitialRotation(radians);
     }
 
@@ -41,14 +38,6 @@ public:
         YAML::Node node = SimulationObjectBase::saveConfig();
         node["objectType"] = "Goal";
         return node;
-    }
-
-    void drawPreview(Screen *screen, Camera *camera) override {
-        this->rectangle.drawPreview(screen, camera);
-    }
-
-    void drawSimulation(Screen *screen, Camera *camera) override {
-        this->rectangle.drawSimulation(screen, camera);
     }
 
     void loadConfig(const YAML::Node &config) override {

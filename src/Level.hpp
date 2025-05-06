@@ -14,6 +14,11 @@
 
 class Level {
 public:
+    Level() {
+        this->level_setup = new LevelSetup();
+        this->available_objects = new InfiniteLevelObjects();
+    }
+
     Level(std::string fileName) {
         this->levelInfo = YAML::LoadFile(fileName);
         this->level_setup = new LevelSetup(this->levelInfo["setupObjects"]);
@@ -24,6 +29,11 @@ public:
     //     YAML::Node config = YAML::LoadFile("resources/Level1.yaml");
     //     std::cout << config["levelObjects"][1] << std::endl;
     // }
+
+    void draw(Screen* screen, Camera* camera) {
+        this->available_objects->draw(screen, camera);
+        this->level_setup->draw(screen, camera);
+    }
 
     YAML::Node levelInfo;
     LevelSetup* level_setup;

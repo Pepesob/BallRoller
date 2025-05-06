@@ -5,7 +5,6 @@
 #ifndef MAINBALLOBJECT_HPP
 #define MAINBALLOBJECT_HPP
 
-#include "simulation/base_drawers/ShapeDrawer.hpp"
 #include "simulation/physics/Simulation.hpp"
 #include <cmath>
 
@@ -17,32 +16,17 @@ public:
     }
 
     void setInitialPosition(const Vector2D& position) override {
-        SimulationObjectBase::setInitialPosition(position);
         ball.config.initial_position = position;
+        ball.setPosition(ball.config.initial_position);
     }
 
     void setInitialRotation(const float radians) override {
-        SimulationObjectBase::setInitialRotation(radians);
-        ball.config.rotation = radians;
+        ball.config.initial_rotation = radians;
+        ball.setRotation(ball.config.initial_rotation);
     }
 
     std::vector<SimulationBody *> getBodies() override {
         return {&ball};
-    }
-
-    void drawPreview(Screen *screen, Camera *camera) override {
-        this->renderer.drawShape(ball.config, ball.config.initial_position, ball.config.rotation, screen, camera);
-    }
-
-    void drawSimulation(Screen *screen, Camera *camera) override {
-        Vector2D v = simulation->getBodyPosition(ball);
-        float rot = simulation->getBodyRotation(ball);
-        this->renderer.drawShape(ball.config, v, rot, screen, camera);
-    }
-
-    void loadConfig(const YAML::Node &config) override {
-        this->ball.config.initial_position.x = config["initialPosition"]["x"].as<float>();
-        this->ball.config.initial_position.y = config["initialPosition"]["y"].as<float>();
     }
 
     YAML::Node saveConfig() override {
@@ -61,7 +45,6 @@ public:
     }
 
     float max_speed = 20;
-    CircleShapeDrawer renderer;
     CircleBody ball;
 };
 

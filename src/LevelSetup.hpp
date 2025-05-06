@@ -20,9 +20,11 @@ public:
             assert(object_list.IsSequence());
             SimulationObjectFactory factory;
             for (const YAML::Node& obj_config: object_list) {
-                std::shared_ptr<SimulationObjectBase> obj_base = factory.createSimulationObject(obj_config["objectType"].as<std::string>());
+                SimulationObjectBase* obj_base = factory.createSimulationObject(obj_config["objectType"].as<std::string>());
+                ISimulationObjectDrawer* obj_drawer = factory.createSimulationObjectDrawer(obj_config["objectType"].as<std::string>(), obj_base);
                 obj_base->loadConfig(obj_config);
                 objects.push_back(obj_base);
+                drawers.push_back(obj_drawer);
             }
         }
         catch (const std::exception& e) {
@@ -32,28 +34,28 @@ public:
     }
 
     LevelSetup() {
-        auto main_ball = std::make_shared<MainBallObject>();
+        auto main_ball = new MainBallObject();
         main_ball->setInitialPosition({0, 0});
 
-        auto rect1 = std::make_shared<RectangleObject>();
+        auto rect1 = new RectangleObject();
         rect1->setInitialPosition({0, -2});
         rect1->setInitialRotation(0);
         rect1->rectangle.config.size = {4, 0.2};
         rect1->rectangle.config.restitution = 1.1;
 
-        auto rect2 = std::make_shared<RectangleObject>();
+        auto rect2 = new RectangleObject();
         rect2->setInitialPosition({-2, 0});
         rect2->setInitialRotation(3.14/2);
         rect2->rectangle.config.size = {4, 0.2};
         rect2->rectangle.config.restitution = 1.1;
 
-        auto rect3 = std::make_shared<RectangleObject>();
+        auto rect3 = new RectangleObject();
         rect3->setInitialPosition({0, 2});
         rect3->setInitialRotation(0);
         rect3->rectangle.config.size = {4, 0.2};
         rect3->rectangle.config.restitution = 1.1;
 
-        auto rect4 = std::make_shared<RectangleObject>();
+        auto rect4 = new RectangleObject();
         rect4->setInitialPosition({2, 0});
         rect4->setInitialRotation(3.14/2);
         rect4->rectangle.config.size = {4, 0.2};
@@ -68,12 +70,19 @@ public:
     }
 
     void place(B2dSimulation& simulation) {
-        for (auto& object : objects) {
-            simulation.addObject(object);
+        for (auto* object : objects) {
+            simulation.addObject(*object);
         }
     }
 
-    std::vector<std::shared_ptr<SimulationObjectBase>> objects;
+    void draw(Screen* screen, Camera* camera) {
+        for (auto* drawer : drawers) {
+            drawer->draw(screen, camera);
+        }
+    }
+
+    std::vector<SimulationObjectBase*> objects;
+    std::vector<ISimulationObjectDrawer*> drawers;
 };
 
 

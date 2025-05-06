@@ -18,10 +18,7 @@ void gameloop() {
     Screen screen(720, 720);
     Camera camera(0,0,0.3);
     B2dSimulation simulation({0, -6.0f});
-    Level level("resources/mysetup.yaml");
-    // delete level.available_objects;
-    // level.level_setup->objects.clear();
-    // level.available_objects = new InfiniteLevelObjects();
+    Level level("resources/Level123.yaml");
     ObjectPlacementStage placement_stage(*level.available_objects,&screen, &camera);
 
     level.level_setup->place(simulation);
@@ -43,13 +40,13 @@ void gameloop() {
         sf::Vector2i current = sf::Mouse::getPosition(*screen.getWindow());
         if (state == 0) {
             placement_stage.keyboardInput(simulation);
-            placement_stage.draw(&screen, &camera);
         }
         else {
             simulation.fixedStep();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && state == 0) {
+            level.available_objects->addToSimulation(simulation);
             state = 1;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
@@ -63,14 +60,15 @@ void gameloop() {
             camera.setDeltaZoom(1.001);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            saveCurrentWorld(simulation.objects, "resources/mysetup2.yaml");
+            // saveCurrentWorld(simulation.objects, "resources/mysetup3.yaml");
+            level.available_objects->save("resources/Level123.yaml");
             break;
         }
 
 
-        simulation.draw(&screen, &camera);
-
         debug_lines(screen.getWindow());
+
+        level.draw(&screen, &camera);
 
         screen.getWindow()->display();
 

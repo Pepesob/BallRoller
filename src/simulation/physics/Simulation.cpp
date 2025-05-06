@@ -46,7 +46,7 @@ void collisionNotify(B2dSimulation &simulation) {
 b2BodyId B2dBodyBuilder::b2dCreateBody(const SimulationBodyConfig &config, b2WorldId world_id) {
     b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.position = {config.initial_position.x, config.initial_position.y};
-    bodyDef.rotation = b2MakeRot(config.rotation);
+    bodyDef.rotation = b2MakeRot(config.initial_rotation);
     bodyDef.type = static_cast<b2BodyType>(config.bodyType);
     return b2CreateBody(world_id, &bodyDef);
 }
@@ -87,6 +87,7 @@ void B2dSimulation::step() {
     for (auto sim_obj: this->objects) {
         sim_obj->step();
     }
+    this->updateBodies();
 }
 
 void B2dSimulation::fixedStep() {
@@ -113,12 +114,12 @@ void B2dSimulation::resetTimer() {
     this->prev_time = std::chrono::steady_clock::time_point::min();
 }
 
-void B2dSimulation::addObject(const std::shared_ptr<SimulationObjectBase> &obj) {
-    this->objects.push_back(obj);
-    for (SimulationBody* b: obj->getBodies()) {
+void B2dSimulation::addObject(SimulationObjectBase& obj) {
+    this->objects.push_back(&obj);
+    for (SimulationBody* b: obj.getBodies()) {
         this->addBody(*b);
     }
-    obj->simulation = this;
+    obj.simulation = this;
 }
 
 void B2dSimulation::addBody(SimulationBody &body) {
@@ -139,7 +140,7 @@ SimulationBody & B2dSimulation::b2dGetAssociatedBody(b2BodyId body_id) const {
     throw std::runtime_error("Unknown body with given body_id");
 }
 
-std::shared_ptr<SimulationObjectBase> B2dSimulation::getAssociatedObject(const SimulationBody& body) const {
+SimulationObjectBase* B2dSimulation::getAssociatedObject(const SimulationBody& body) const {
     for (auto obj: this->objects) {
         for (const auto it2: obj->getBodies()) {
             if (B2_ID_EQUALS(it2->id, body.id)) {
@@ -162,6 +163,13 @@ float B2dSimulation::getBodyRotation(SimulationBody &body) {
     return b2Rot_GetAngle(r);
 }
 
+void B2dSimulation::updateBodies() {
+    for (auto body: this->bodies) {
+        body->position = getBodyPosition(*body);
+        body->rotation = getBodyRotation(*body);
+    }
+}
+
 void B2dSimulation::applyForce(SimulationBody &body, Vector2D force) {
     b2BodyId body_id = body.id;
     b2Body_ApplyForce(body_id, {force.x, force.y}, {0,0}, false);
@@ -176,11 +184,5 @@ Vector2D B2dSimulation::getVelocity(SimulationBody &body) {
     b2BodyId body_id = body.id;
     b2Vec2 v = b2Body_GetLinearVelocity(body_id);
     return {v.x, v.y};
-}
-
-void B2dSimulation::draw(Screen *screen, Camera *camera) {
-    for (auto& obj: this->objects) {
-        obj->drawSimulation(screen, camera);
-    }
 }
 

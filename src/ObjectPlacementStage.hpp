@@ -23,25 +23,25 @@ public:
 
     void keyboardInput(B2dSimulation& simulation) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num1)) {
-            this->index = 0;
+            this->available_objects.select(0);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2)) {
-            this->index = 1;
+            this->available_objects.select(1);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num3)) {
-            this->index = 2;
+            this->available_objects.select(2);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num4)) {
-            this->index = 3;
+            this->available_objects.select(3);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num5)) {
-            this->index = 4;
+            this->available_objects.select(4);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num6)) {
-            this->index = 5;
+            this->available_objects.select(5);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) {
-            this->index = 6;
+            this->available_objects.select(6);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
             this->camera->setDeltaZoom(0.999);
@@ -55,41 +55,27 @@ public:
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
             this->rotation_radians -= 0.001;
         }
-        if (this->available_objects.isPlaced(this->index) || this->index < 0 || this->index >= this->available_objects.size()) {
-            this->index = -1;
-        }
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
         sf::Vector2f wp = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
         this->world_pos = {wp.x, wp.y};
+        this->available_objects.set(this->world_pos, this->rotation_radians);
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-            if (pressed == true || this->index == -1) {
+            if (pressed == true) {
                 return;
             }
-            this->placeObject(simulation);
-            std::cout << this->index << std::endl;
+            this->placeObject();
             pressed = true;
         } else {
             pressed = false;
         }
     }
 
-    void placeObject(B2dSimulation& simulation) {
-        this->available_objects.objects[this->index]->setInitialPosition(this->world_pos);
-        this->available_objects.objects[this->index]->setInitialRotation(this->rotation_radians);
-        this->available_objects.place(simulation, this->index);
-    }
-
-    void draw(Screen* screen, Camera* camera) {
-        if (this->index != -1) {
-            this->available_objects.objects[this->index]->setInitialPosition(this->world_pos);
-            this->available_objects.objects[this->index]->setInitialRotation(this->rotation_radians);
-            this->available_objects.objects[this->index]->drawPreview(screen, camera);
-        }
+    void placeObject() {
+        this->available_objects.place(this->world_pos, this->rotation_radians);
     }
 
 private:
     bool pressed = false;
-    int index = -1;
 
     Screen* screen;
     Camera* camera;

@@ -2,53 +2,34 @@
 #ifndef RECTANGLEOBJECT_HPP
 #define RECTANGLEOBJECT_HPP
 
-
-#include "simulation/base_drawers/ShapeDrawer.hpp"
 #include "simulation/physics/Simulation.hpp"
 
 
 class RectangleObject : public SimulationObjectBase {
 public:
+    RectangleObject() {
+    }
 
     void setInitialPosition(const Vector2D& position) override {
-        SimulationObjectBase::setInitialPosition(position);
         rectangle.config.initial_position = position;
+        rectangle.setPosition(rectangle.config.initial_position);
     }
 
     void setInitialRotation(const float radians) override {
-        SimulationObjectBase::setInitialRotation(radians);
-        rectangle.config.rotation = radians;
+        rectangle.config.initial_rotation = radians;
+        rectangle.setRotation(rectangle.config.initial_rotation);
     }
 
     std::vector<SimulationBody *> getBodies() override {
         return {&rectangle};
     }
 
-    void drawPreview(Screen *screen, Camera *camera) override {
-        renderer.drawShape(rectangle.config, rectangle.config.initial_position, rectangle.config.rotation, screen, camera);
-    }
-
-    void drawSimulation(Screen *screen, Camera *camera) override {
-        Vector2D v = simulation->getBodyPosition(rectangle);
-        float rot = simulation->getBodyRotation(rectangle);
-        this->renderer.drawShape(rectangle.config, v, rot, screen, camera);
-    }
-
-    void loadConfig(const YAML::Node &config) override {
-        SimulationObjectBase::loadConfig(config);
-        assignIfExist(config["restitution"], &this->rectangle.config.restitution);
-        assignIfExist(config["size"], &this->rectangle.config.size);
-    }
-
     YAML::Node saveConfig() override {
         YAML::Node node = SimulationObjectBase::saveConfig();
         node["objectType"] = "Rectangle";
-        node["restitution"] = this->rectangle.config.restitution;
-        node["size"] = this->rectangle.config.size;
         return node;
     }
 
-    RectangleShapeDrawer renderer;
     RectangleBody rectangle;
 };
 

@@ -4,6 +4,7 @@
 
 #ifndef SIMULATIONOBJECTFACTORY_HPP
 #define SIMULATIONOBJECTFACTORY_HPP
+#include "simulation/base_drawers/SimulationObjectDrawer.hpp"
 #include "simulation/objects/AcceleratorObject.hpp"
 #include "simulation/objects/GoalObject.hpp"
 #include "simulation/objects/MainBallObject.hpp"
@@ -11,24 +12,45 @@
 #include "simulation/physics/Simulation.hpp"
 
 
+
 class SimulationObjectFactory {
 
 public:
 
-    [[nodiscard]] std::shared_ptr<SimulationObjectBase> createSimulationObject(const std::string& name) {
+    [[nodiscard]] SimulationObjectBase* createSimulationObject(const std::string& name) {
         if  (name == "MainBall") {
-            return std::make_shared<MainBallObject>();
+            return new MainBallObject();
         }
         if (name == "Rectangle") {
-            return std::make_shared<RectangleObject>();
+            return new RectangleObject();
         }
         if (name == "Accelerator") {
-            return std::make_shared<AcceleratorObject>();
+            return new AcceleratorObject();
         }
         if (name == "Goal") {
-            return std::make_shared<GoalObject>();
+            return new GoalObject();
         }
         throw std::invalid_argument("Object type not recognised: " + name);
+    }
+
+    [[nodiscard]] ISimulationObjectDrawer* createSimulationObjectDrawer(const std::string& name, SimulationObjectBase* simulation_object) {
+        if  (name == "MainBall") {
+            auto obj = dynamic_cast<MainBallObject*>(simulation_object);
+            return new MainBallObjectDrawer(*obj);
+        }
+        if (name == "Rectangle") {
+            auto obj = dynamic_cast<RectangleObject*>(simulation_object);
+            return new RectangleObjectDrawer(*obj);
+        }
+        if (name == "Accelerator") {
+            auto obj = dynamic_cast<AcceleratorObject*>(simulation_object);
+            return new AcceleratorObjectDrawer(*obj);
+        }
+        if (name == "Goal") {
+            auto obj = dynamic_cast<GoalObject*>(simulation_object);
+            return new GoalObjectDrawer(*obj);
+        }
+        return new DefaultObjectDrawer(*simulation_object);
     }
 
 };
