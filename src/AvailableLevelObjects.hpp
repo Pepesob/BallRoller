@@ -19,13 +19,79 @@ struct ObjectAndDrawer {
 
 
 
+class AvailableObjects {
+public:
+    virtual ~AvailableObjects() = default;
+
+    virtual void place(int index) = 0;
+    virtual void move(int index, Vector2D position, float rotation) = 0;
+    virtual void remove(int index) = 0;
+
+    std::vector<std::string> available_object_tags;
+    std::vector<SimulationSprite> available_sprites;
+    std::vector<SimulationSprite*> placed_sprites;
+};
+
+class AvLvlObj: public AvailableObjects {
+public:
+
+    AvLvlObj() {
+        this->available_object_tags.emplace_back("Rectangle");
+        this->available_object_tags.emplace_back("Rectangle");
+        this->available_object_tags.emplace_back("Rectangle");
+        this->available_object_tags.emplace_back("Accelerator");
+        this->available_object_tags.emplace_back("Accelerator");
+        this->available_object_tags.emplace_back("Accelerator");
+
+        for (int i=0; i<this->available_object_tags.size(); i++) {
+            SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(this->available_object_tags[i]);
+            this->available_sprites.push_back(sprite);
+        }
+    }
+
+    void place(int index) override {
+        if (index < 0 || index >= available_sprites.size()) {
+            std::cerr << "index out of bounds" << std::endl;
+            return;
+        }
+        if (SimulationSprite* sprite_ptr = &available_sprites[index]; std::ranges::find(placed_sprites, sprite_ptr) == placed_sprites.end()) {
+            this->placed_sprites.push_back(sprite_ptr);
+        }
+
+    }
+
+    void move(int index, Vector2D position, float rotation) {
+        if (index < 0 || index >= available_sprites.size()) {
+            std::cerr << "index out of bounds" << std::endl;
+            return;
+        }
+        this->remove(index);
+        this->available_sprites[index].object->config["initial_position"] = position;
+        this->available_sprites[index].object->config["initial_rotation"] = rotation;
+        this->available_sprites[index].object->applyConfig();
+    }
+
+    void remove(int index) override {
+        if (index < 0 || index >= available_sprites.size()) {
+            std::cerr << "index out of bounds" << std::endl;
+            return;
+        }
+        SimulationSprite* sprite_ptr = &this->available_sprites[index];
+        if (const auto it = std::ranges::remove(placed_sprites, sprite_ptr).begin(); it != placed_sprites.end()) {
+            placed_sprites.erase(it, placed_sprites.end());
+        }
+    }
+
+};
+
+
+
+
+
 
 class AvailableLevelObjects {
 
 public:
-    enum LevelObjectState {
-        NOT_PLACED, PREVIEW, PLACED
-    };
 
     virtual ~AvailableLevelObjects() {
         this->clear();
@@ -132,6 +198,10 @@ public:
     int selected = -1;
 
 protected:
+
+    enum LevelObjectState {
+        NOT_PLACED, PREVIEW, PLACED
+    };
     std::vector<std::string> objectTags;
     std::vector<SimulationObjectBase*> objects;
     std::vector<ISimulationObjectDrawer*> drawers;
