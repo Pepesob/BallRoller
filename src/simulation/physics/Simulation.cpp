@@ -1,8 +1,5 @@
-//
-// Created by sp on 02.05.2025.
-//
-
-#include "simulation/physics/Simulation.hpp"
+#include "Simulation.hpp"
+#include "simulation/objects/SimulationObjectBase.hpp"
 
 void collisionNotify(B2dSimulation &simulation) {
     b2ContactEvents contactEvents = b2World_GetContactEvents(simulation.world_id);
@@ -61,6 +58,9 @@ void B2dBodyBuilder::visitRectangle(RectangleBody &rectangle) {
     shapeDef.isSensor = rectangle.config.isSensor;
     shapeDef.enableSensorEvents = true;
     b2CreatePolygonShape(rectangle.id, &shapeDef, &dynamicBox);
+
+    rectangle.position = rectangle.config.initial_position;
+    rectangle.rotation = rectangle.config.initial_rotation;
 }
 
 void B2dBodyBuilder::visitCircle(CircleBody &circle) {
@@ -72,6 +72,19 @@ void B2dBodyBuilder::visitCircle(CircleBody &circle) {
     shapeDef.restitution = circle.config.restitution;
     shapeDef.enableSensorEvents = true;
     b2CreateCircleShape(circle.id, &shapeDef, &b2d_circle);
+
+    circle.position = circle.config.initial_position;
+    circle.rotation = circle.config.initial_rotation;
+}
+
+void saveCurrentWorld(const std::vector<SimulationObjectBase *> &objects, const std::string &filename) {
+    YAML::Emitter out;
+    out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
+    for (const auto obj : objects) {
+        out << obj->config;
+    }
+    std::ofstream fout(filename);
+    fout << out.c_str();
 }
 
 B2dSimulation::B2dSimulation(Vector2D gravity) {

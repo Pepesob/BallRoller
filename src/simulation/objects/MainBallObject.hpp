@@ -8,31 +8,22 @@
 #include "simulation/physics/Simulation.hpp"
 #include <cmath>
 
+#include "SimulationObjectBase.hpp"
+
 class MainBallObject : public SimulationObjectBase {
 public:
 
-    MainBallObject() {
+    MainBallObject(): SimulationObjectBase("MainBall") {
         this->ball.config.bodyType = 2;
-    }
-
-    void setInitialPosition(const Vector2D& position) override {
-        ball.config.initial_position = position;
-        ball.setPosition(ball.config.initial_position);
-    }
-
-    void setInitialRotation(const float radians) override {
-        ball.config.initial_rotation = radians;
-        ball.setRotation(ball.config.initial_rotation);
     }
 
     std::vector<SimulationBody *> getBodies() override {
         return {&ball};
     }
 
-    YAML::Node saveConfig() override {
-        YAML::Node node = SimulationObjectBase::saveConfig();
-        node["objectType"] = "MainBall";
-        return node;
+    void applyConfig() override {
+        this->ball.config.initial_position = this->config["initial_position"].as<Vector2D>();
+        this->ball.config.initial_rotation = this->config["initial_rotation"].as<float>();
     }
 
     void step() override {

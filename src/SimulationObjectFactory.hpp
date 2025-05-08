@@ -44,11 +44,11 @@ public:
         }
         if (name == "Accelerator") {
             auto obj = dynamic_cast<AcceleratorObject*>(simulation_object);
-            return new AcceleratorObjectDrawer(*obj);
+            return new RectangleObjectDrawer(*obj);
         }
         if (name == "Goal") {
             auto obj = dynamic_cast<GoalObject*>(simulation_object);
-            return new GoalObjectDrawer(*obj);
+            return new RectangleObjectDrawer(*obj);
         }
         return new DefaultObjectDrawer(*simulation_object);
     }

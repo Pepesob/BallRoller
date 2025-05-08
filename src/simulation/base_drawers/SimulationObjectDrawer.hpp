@@ -10,6 +10,10 @@
 #include "simulation/objects/MainBallObject.hpp"
 #include "simulation/objects/RectangleObject.hpp"
 
+// TODO - remove ISimulationObjectDrawer and replace with Drawer interface
+// TODO - move drawers to corresponding object files
+// TODO - remove this file
+
 class DefaultDrawersBuilder: public BodyVisitor {
 public:
     void visitCircle(CircleBody &circle) override {
@@ -77,7 +81,7 @@ private:
 class RectangleObjectDrawer: public ISimulationObjectDrawer {
 public:
     explicit RectangleObjectDrawer(RectangleObject& rectangle): rectangle(rectangle) {
-        drawer.texture = sf::Texture("resources/wood_texture.jpg");
+        drawer.texture = sf::Texture(rectangle.texture_path);
     }
 
     void draw(Screen *screen, Camera *camera) override {
@@ -92,39 +96,39 @@ private:
     RectangleDrawer drawer;
 };
 
-class AcceleratorObjectDrawer: public ISimulationObjectDrawer {
-public:
-    explicit AcceleratorObjectDrawer(AcceleratorObject& rectangle): rectangle(rectangle.rectangle) {
-        drawer.texture = sf::Texture("resources/arrow_texture.png");
-    }
-
-    void draw(Screen *screen, Camera *camera) override {
-        this->drawer.size = rectangle.rectangle.config.size;
-        drawer.position = this->rectangle.rectangle.getPosition();
-        drawer.rotation = this->rectangle.rectangle.getRotation();
-        this->drawer.draw(screen, camera);
-    }
-
-private:
-    RectangleObject& rectangle;
-    RectangleDrawer drawer;
-};
-
-class GoalObjectDrawer: public ISimulationObjectDrawer {
-public:
-    explicit GoalObjectDrawer(GoalObject& rectangle): rectangle(rectangle.rectangle) {
-        drawer.texture = sf::Texture("resources/finish_texture.png");
-    }
-
-    void draw(Screen *screen, Camera *camera) override {
-        this->drawer.size = rectangle.rectangle.config.size;
-        drawer.position = this->rectangle.rectangle.getPosition();
-        drawer.rotation = this->rectangle.rectangle.getRotation();
-        this->drawer.draw(screen, camera);
-    }
-
-private:
-    RectangleObject& rectangle;
-    RectangleDrawer drawer;
-};
+// class AcceleratorObjectDrawer: public ISimulationObjectDrawer {
+// public:
+//     explicit AcceleratorObjectDrawer(AcceleratorObject& accelerator): accelerator(accelerator) {
+//         drawer.texture = sf::Texture("resources/arrow_texture.png");
+//     }
+//
+//     void draw(Screen *screen, Camera *camera) override {
+//         this->drawer.size = accelerator.rectangle.config.size;
+//         drawer.position = this->accelerator.rectangle.getPosition();
+//         drawer.rotation = this->accelerator.rectangle.getRotation();
+//         this->drawer.draw(screen, camera);
+//     }
+//
+// private:
+//     AcceleratorObject& accelerator;
+//     RectangleDrawer drawer;
+// };
+//
+// class GoalObjectDrawer: public ISimulationObjectDrawer {
+// public:
+//     explicit GoalObjectDrawer(GoalObject& rectangle): goal(rectangle.rectangle) {
+//         drawer.texture = sf::Texture("resources/finish_texture.png");
+//     }
+//
+//     void draw(Screen *screen, Camera *camera) override {
+//         this->drawer.size = goal.rectangle.config.size;
+//         drawer.position = this->goal.rectangle.getPosition();
+//         drawer.rotation = this->goal.rectangle.getRotation();
+//         this->drawer.draw(screen, camera);
+//     }
+//
+// private:
+//     Goal& goal;
+//     RectangleDrawer drawer;
+// };
 

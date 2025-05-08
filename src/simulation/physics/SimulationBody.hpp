@@ -5,8 +5,8 @@
 #ifndef SIMULATIONBODY_H
 #define SIMULATIONBODY_H
 
-#include <stdexcept>
 #include <box2d/box2d.h>
+
 #include "common.hpp"
 
 
@@ -63,29 +63,11 @@ public:
     SimulationBody(Vector2D initial_position, float initial_rotation): position(initial_position), rotation(initial_rotation) {}
     virtual void accept(BodyVisitor& visitor) = 0;
 
-    Vector2D getPosition() const {
-        return position;
-    }
+    virtual Vector2D getPosition() = 0;
+    [[nodiscard]] virtual float getRotation() const = 0;
 
-    float getRotation() const {
-        return rotation;
-    }
 
-    void setPosition(const Vector2D& position) {
-        if (!B2_IS_NULL(id)) {
-            throw std::runtime_error("Can't set position when body is placed in simulation, use Simulation methods to change position");
-        }
-        this->position = position;
-    }
-
-    void setRotation(float rotation) {
-        if (!B2_IS_NULL(id)) {
-            throw std::runtime_error("Cant set rotation when body is placed in simulation, use Simulation methods to change rotation");
-        }
-        this->rotation = rotation;
-    }
-
-private:
+protected:
     b2BodyId id={};
     Vector2D position;
     float rotation;
@@ -95,32 +77,40 @@ private:
 };
 
 
-
-class RectangleBody: public SimulationBody {
+template<typename T>
+class ConfigurableBody: public SimulationBody {
 public:
-    explicit RectangleBody(const RectangleBodyConfig& config=RectangleBodyConfig()): SimulationBody(config.initial_position, config.initial_rotation) {
+
+    explicit ConfigurableBody(const T& config=T()): SimulationBody(config.initial_position, config.initial_rotation) {
         this->config = config;
     }
 
-    void accept(BodyVisitor &visitor) override {
-        visitor.visitRectangle(*this);
+    Vector2D getPosition() override {
+        return B2_IS_NULL(this->id) ? this->config.initial_position: this->position;
     }
 
-    RectangleBodyConfig config;
+    [[nodiscard]] float getRotation() const override {
+        return B2_IS_NULL(this->id) ? this->config.initial_rotation: this->rotation;
+    }
+
+    T config;
 };
 
 
-class CircleBody: public SimulationBody {
-public:
-    explicit CircleBody(const CircleBodyConfig& config=CircleBodyConfig()): SimulationBody(config.initial_position, config.initial_rotation) {
-        this->config = config;
-    }
 
+class RectangleBody: public ConfigurableBody<RectangleBodyConfig> {
+public:
+    void accept(BodyVisitor &visitor) override {
+        visitor.visitRectangle(*this);
+    }
+};
+
+
+class CircleBody: public ConfigurableBody<CircleBodyConfig> {
+public:
     void accept(BodyVisitor &visitor) override {
         visitor.visitCircle(*this);
     }
-
-    CircleBodyConfig config;
 };
 
 

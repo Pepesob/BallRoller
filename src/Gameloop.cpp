@@ -18,7 +18,7 @@ void gameloop() {
     Screen screen(720, 720);
     Camera camera(0,0,0.3);
     B2dSimulation simulation({0, -6.0f});
-    Level level("resources/Level123.yaml");
+    Level level("resources/Level1234.yaml");
     ObjectPlacementStage placement_stage(*level.available_objects,&screen, &camera);
 
     level.level_setup->place(simulation);
@@ -61,7 +61,7 @@ void gameloop() {
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
             // saveCurrentWorld(simulation.objects, "resources/mysetup3.yaml");
-            level.available_objects->save("resources/Level123.yaml");
+            level.available_objects->save("resources/Level12345.yaml");
             break;
         }
 

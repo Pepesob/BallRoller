@@ -37,11 +37,11 @@ set(BALLROLLER_SOURCE_FILES
         Level.hpp
         simulation/objects/GoalObject.cpp
         simulation/objects/GoalObject.hpp
-        yaml_configuration.hpp
         simulation/base_drawers/SimulationObjectDrawer.cpp
         simulation/base_drawers/SimulationObjectDrawer.hpp
         simulation/base_drawers/BodyDrawer.cpp
         simulation/base_drawers/BodyDrawer.hpp
+        simulation/objects/SimulationObjectBase.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

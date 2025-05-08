@@ -22,7 +22,8 @@ public:
             for (const YAML::Node& obj_config: object_list) {
                 SimulationObjectBase* obj_base = factory.createSimulationObject(obj_config["objectType"].as<std::string>());
                 ISimulationObjectDrawer* obj_drawer = factory.createSimulationObjectDrawer(obj_config["objectType"].as<std::string>(), obj_base);
-                obj_base->loadConfig(obj_config);
+                obj_base->config = obj_config;
+                obj_base->applyConfig();
                 objects.push_back(obj_base);
                 drawers.push_back(obj_drawer);
             }
@@ -35,29 +36,33 @@ public:
 
     LevelSetup() {
         auto main_ball = new MainBallObject();
-        main_ball->setInitialPosition({0, 0});
+        main_ball->config["initial_position"] = Vector2D{0, 0};
 
         auto rect1 = new RectangleObject();
-        rect1->setInitialPosition({0, -2});
-        rect1->setInitialRotation(0);
+        rect1->config["initial_position"] = Vector2D{0, -2};
+        rect1->config["initial_rotation"] = 0;
+        rect1->applyConfig();
         rect1->rectangle.config.size = {4, 0.2};
         rect1->rectangle.config.restitution = 1.1;
 
         auto rect2 = new RectangleObject();
-        rect2->setInitialPosition({-2, 0});
-        rect2->setInitialRotation(3.14/2);
+        rect2->config["initial_position"] = Vector2D{-2, 0};
+        rect2->config["initial_rotation"] = 3.14/2;
+        rect2->applyConfig();
         rect2->rectangle.config.size = {4, 0.2};
         rect2->rectangle.config.restitution = 1.1;
 
         auto rect3 = new RectangleObject();
-        rect3->setInitialPosition({0, 2});
-        rect3->setInitialRotation(0);
+        rect3->config["initial_position"] = Vector2D{0, 2};
+        rect3->config["initial_rotation"] = 0;
+        rect3->applyConfig();
         rect3->rectangle.config.size = {4, 0.2};
         rect3->rectangle.config.restitution = 1.1;
 
         auto rect4 = new RectangleObject();
-        rect4->setInitialPosition({2, 0});
-        rect4->setInitialRotation(3.14/2);
+        rect4->config["initial_position"] = Vector2D{2, 0};
+        rect4->config["initial_rotation"] = 3.14/2;
+        rect4->applyConfig();
         rect4->rectangle.config.size = {4, 0.2};
         rect4->rectangle.config.restitution = 1.1;
 

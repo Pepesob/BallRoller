@@ -63,8 +63,9 @@ public:
         if (this->selected == -1) {
             return;
         }
-        this->objects[this->selected]->setInitialPosition(position);
-        this->objects[this->selected]->setInitialRotation(rotation);
+        this->objects[this->selected]->config["initial_position"] = position;
+        this->objects[this->selected]->config["initial_rotation"] = rotation;
+        this->objects[this->selected]->applyConfig();
     }
 
     virtual void unplace(int index) {
@@ -170,8 +171,9 @@ public:
         }
         SimulationObjectFactory factory;
         SimulationObjectBase* base = factory.createSimulationObject(this->objectTags[this->selected]);
-        base->setInitialPosition(position);
-        base->setInitialRotation(rotation);
+        base->config["initial_position"] = position;
+        base->config["initial_rotation"] = rotation;
+        base->applyConfig();
         this->objects_for_simulation.push_back(base);
         this->drawers_for_simulation.push_back(factory.createSimulationObjectDrawer(this->objectTags[this->selected], base));
     }

@@ -9,11 +9,12 @@
 #include "simulation/physics/Simulation.hpp"
 
 
-class GoalObject: public SimulationObjectBase {
+class GoalObject: public RectangleObject {
 public:
-    GoalObject() {
-        this->rectangle.rectangle.config.isSensor = true;
-        this->rectangle.rectangle.config.size = {1,1};
+    GoalObject(): RectangleObject("Goal") {
+        this->rectangle.config.isSensor = true;
+        this->rectangle.config.size = {1,1};
+        this->texture_path = "resources/finish_texture.png";
     }
 
     void onCollisionBegin(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_body) override {
@@ -21,30 +22,6 @@ public:
             simulation.goalReached = true;
         }
     }
-
-    std::vector<SimulationBody *> getBodies() override {
-        return this->rectangle.getBodies();
-    }
-
-    void setInitialPosition(const Vector2D &position) override {
-        this->rectangle.setInitialPosition(position);
-    }
-
-    void setInitialRotation(float radians) override {
-        this->rectangle.setInitialRotation(radians);
-    }
-
-    YAML::Node saveConfig() override {
-        YAML::Node node = SimulationObjectBase::saveConfig();
-        node["objectType"] = "Goal";
-        return node;
-    }
-
-    void loadConfig(const YAML::Node &config) override {
-        this->rectangle.loadConfig(config);
-    }
-
-    RectangleObject rectangle;
 };
 
 

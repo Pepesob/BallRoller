@@ -2,34 +2,28 @@
 #ifndef RECTANGLEOBJECT_HPP
 #define RECTANGLEOBJECT_HPP
 
+#include "SimulationObjectBase.hpp"
 #include "simulation/physics/Simulation.hpp"
 
 
 class RectangleObject : public SimulationObjectBase {
 public:
-    RectangleObject() {
-    }
 
-    void setInitialPosition(const Vector2D& position) override {
-        rectangle.config.initial_position = position;
-        rectangle.setPosition(rectangle.config.initial_position);
-    }
+    RectangleObject(): SimulationObjectBase("Rectangle"){}
 
-    void setInitialRotation(const float radians) override {
-        rectangle.config.initial_rotation = radians;
-        rectangle.setRotation(rectangle.config.initial_rotation);
+    explicit RectangleObject(const std::string& objectType): SimulationObjectBase(objectType){}
+
+
+    void applyConfig() override {
+        this->rectangle.config.initial_position = this->config["initial_position"].as<Vector2D>();
+        this->rectangle.config.initial_rotation = this->config["initial_rotation"].as<float>();
     }
 
     std::vector<SimulationBody *> getBodies() override {
         return {&rectangle};
     }
 
-    YAML::Node saveConfig() override {
-        YAML::Node node = SimulationObjectBase::saveConfig();
-        node["objectType"] = "Rectangle";
-        return node;
-    }
-
+    std::string texture_path = "resources/wood_texture.jpg";
     RectangleBody rectangle;
 };
 

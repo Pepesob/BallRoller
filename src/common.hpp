@@ -5,6 +5,8 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+#include <yaml-cpp/yaml.h>
+
 struct Vector2D {
     float x;
     float y;
@@ -35,4 +37,25 @@ enum PhysicsObjectType {
     TypeRectangle,
     TypeAccelerationField,
 };
+
+namespace YAML {
+    template<>
+    struct convert<Vector2D> {
+        static Node encode(const Vector2D& rhs) {
+            Node node;
+            node["x"] = rhs.x;
+            node["y"] = rhs.y;
+            return node;
+        }
+
+        static bool decode(const Node& node, Vector2D& rhs) {
+            if(!(node.IsMap() && node["x"] && node["y"])) {
+                return false;
+            }
+            rhs.x = node["x"].as<float>();
+            rhs.y = node["y"].as<float>();
+            return true;
+        }
+    };
+}
 #endif //COMMON_HPP

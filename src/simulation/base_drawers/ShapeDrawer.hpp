@@ -90,28 +90,6 @@ public:
     CircleShapeDrawer() {
         this->texture = sf::Texture("resources/pokeball_texture.png");
         this->circle.setTexture(&this->texture);
-        // const unsigned int texSize = 256;
-        // sf::Image image;
-        // image.resize({texSize, texSize},sf::Color::Transparent);
-        //
-        // // Fill image with two colors
-        // for (unsigned int y = 0; y < texSize; ++y)
-        // {
-        //     for (unsigned int x = 0; x < texSize; ++x)
-        //     {
-        //         float factor = static_cast<float>(y) / texSize; // Vertical gradient
-        //         unsigned int r = ((1.0f - factor) * 255 + factor * 0);   // From Red to Blue
-        //         unsigned int g = ((1.0f - factor) * 0   + factor * 0);
-        //         unsigned int b = ((1.0f - factor) * 0   + factor * 255);
-        //         image.setPixel({x, y}, sf::Color(r, g, b));
-        //     }
-        // }
-        //
-        // // Load texture from image
-        // bool res = this->texture.loadFromImage(image);
-        // if (!res) {
-        //     throw std::runtime_error("Failed to load texture from image");
-        // }
     }
 
     void drawShape(CircleBodyConfig config, Vector2D objectPos, float objectRot, Screen* screen, Camera* camera) {
