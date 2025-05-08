@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 
-#include "SimulationObjectFactory.hpp"
+#include "simulation/objects/SimulationObjectFactory.hpp"
 #include "simulation/objects/MainBallObject.hpp"
 #include "simulation/objects/RectangleObject.hpp"
 #include "simulation/physics/Simulation.hpp"
@@ -20,8 +20,9 @@ public:
             assert(object_list.IsSequence());
             SimulationObjectFactory factory;
             for (const YAML::Node& obj_config: object_list) {
-                SimulationObjectBase* obj_base = factory.createSimulationObject(obj_config["objectType"].as<std::string>());
-                ISimulationObjectDrawer* obj_drawer = factory.createSimulationObjectDrawer(obj_config["objectType"].as<std::string>(), obj_base);
+                SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(obj_config["objectType"].as<std::string>());
+                SimulationObjectBase* obj_base = sprite.object;
+                ISimulationObjectDrawer* obj_drawer = sprite.drawer;
                 obj_base->config = obj_config;
                 obj_base->applyConfig();
                 objects.push_back(obj_base);

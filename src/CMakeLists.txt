@@ -29,8 +29,8 @@ set(BALLROLLER_SOURCE_FILES
         simulation/physics/SimulationBody.cpp
         simulation/physics/SimulationBody.hpp
         simulation/physics/Simulation.cpp
-        SimulationObjectFactory.cpp
-        SimulationObjectFactory.hpp
+        simulation/objects/SimulationObjectFactory.cpp
+        simulation/objects/SimulationObjectFactory.hpp
         LevelSetup.cpp
         LevelSetup.hpp
         Level.cpp
@@ -82,6 +82,7 @@ target_compile_features(BallRollerLib PRIVATE cxx_std_17)
 target_link_libraries(BallRollerLib PRIVATE SFML::Graphics)
 target_link_libraries(BallRollerLib PRIVATE box2d)
 target_link_libraries(BallRollerLib PRIVATE yaml-cpp::yaml-cpp)
+
 
 
 add_custom_command(TARGET BallRollerLib POST_BUILD

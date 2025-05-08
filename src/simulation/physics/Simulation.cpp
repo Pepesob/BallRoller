@@ -1,4 +1,7 @@
 #include "Simulation.hpp"
+
+#include <fstream>
+
 #include "simulation/objects/SimulationObjectBase.hpp"
 
 void collisionNotify(B2dSimulation &simulation) {

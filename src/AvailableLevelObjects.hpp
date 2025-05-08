@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "SimulationObjectFactory.hpp"
+#include "simulation/objects/SimulationObjectFactory.hpp"
 #include "simulation/base_drawers/SimulationObjectDrawer.hpp"
 #include "simulation/physics/Simulation.hpp"
 
@@ -44,9 +44,9 @@ public:
         this->objectTags.emplace_back("Accelerator");
 
         for (int i=0; i<this->objectTags.size(); i++) {
-            SimulationObjectFactory factory;
-            this->objects.push_back(factory.createSimulationObject(this->objectTags[i]));
-            this->drawers.push_back(factory.createSimulationObjectDrawer(this->objectTags[i], this->objects[i]));
+            SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(this->objectTags[i]);
+            this->objects.push_back(sprite.object);
+            this->drawers.push_back(sprite.drawer);
             this->objectPlaced.push_back(NOT_PLACED);
         }
     }
@@ -154,8 +154,9 @@ public:
         int i=0;
         for (const auto& tag: objectTags) {
             SimulationObjectFactory factory;
-            this->objects.push_back(factory.createSimulationObject(tag));
-            this->drawers.push_back(factory.createSimulationObjectDrawer(tag, this->objects[i]));
+            SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
+            this->objects.push_back(sprite.object);
+            this->drawers.push_back(sprite.drawer);
             this->objectPlaced.push_back(NOT_PLACED);
             i++;
         }
@@ -169,13 +170,13 @@ public:
         if (this->selected == -1) {
             return;
         }
-        SimulationObjectFactory factory;
-        SimulationObjectBase* base = factory.createSimulationObject(this->objectTags[this->selected]);
+        SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(this->objectTags[this->selected]);
+        SimulationObjectBase* base = sprite.object;
         base->config["initial_position"] = position;
         base->config["initial_rotation"] = rotation;
         base->applyConfig();
         this->objects_for_simulation.push_back(base);
-        this->drawers_for_simulation.push_back(factory.createSimulationObjectDrawer(this->objectTags[this->selected], base));
+        this->drawers_for_simulation.push_back(sprite.drawer);
     }
 
     void draw(Screen *screen, Camera *camera) override {

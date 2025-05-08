@@ -5,10 +5,12 @@
 #ifndef MAINBALLOBJECT_HPP
 #define MAINBALLOBJECT_HPP
 
-#include "simulation/physics/Simulation.hpp"
+
 #include <cmath>
 
+#include "simulation/physics/Simulation.hpp"
 #include "SimulationObjectBase.hpp"
+#include "simulation/base_drawers/SimulationObjectDrawer.hpp"
 
 class MainBallObject : public SimulationObjectBase {
 public:
@@ -38,6 +40,26 @@ public:
     float max_speed = 20;
     CircleBody ball;
 };
+
+class MainBallObjectDrawer: public ISimulationObjectDrawer {
+public:
+    explicit MainBallObjectDrawer(MainBallObject& main_ball): main_ball(main_ball) {
+        this->main_ball = main_ball;
+        drawer.radius = main_ball.ball.config.radius;
+        drawer.texture = sf::Texture("resources/pokeball_texture.png");
+    }
+
+    void draw(Screen *screen, Camera *camera) override {
+        drawer.position = this->main_ball.ball.getPosition();
+        drawer.rotation = this->main_ball.ball.getRotation();
+        this->drawer.draw(screen, camera);
+    }
+
+private:
+    MainBallObject& main_ball;
+    CircleDrawer drawer;
+};
+
 
 
 // class MainBallDrawer: public SimulationObjectDrawer {

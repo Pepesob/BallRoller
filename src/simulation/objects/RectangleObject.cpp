@@ -3,3 +3,9 @@
 //
 
 #include "RectangleObject.hpp"
+
+#include "SimulationObjectFactory.hpp"
+
+
+
+

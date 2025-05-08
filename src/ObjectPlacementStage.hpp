@@ -43,12 +43,12 @@ public:
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) {
             this->available_objects.select(6);
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-            this->camera->setDeltaZoom(0.999);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-            this->camera->setDeltaZoom(1.001);
-        }
+        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+        //     this->camera->setDeltaZoom(0.999);
+        // }
+        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+        //     this->camera->setDeltaZoom(1.001);
+        // }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
             this->rotation_radians += 0.001;
         }

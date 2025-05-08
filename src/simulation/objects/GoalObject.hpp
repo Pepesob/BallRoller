@@ -4,9 +4,9 @@
 
 #ifndef GOALOBJECT_HPP
 #define GOALOBJECT_HPP
+
 #include "MainBallObject.hpp"
 #include "RectangleObject.hpp"
-#include "simulation/physics/Simulation.hpp"
 
 
 class GoalObject: public RectangleObject {

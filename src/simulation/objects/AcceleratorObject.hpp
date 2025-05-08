@@ -2,8 +2,7 @@
 // Created by sp on 02.05.2025.
 //
 
-#ifndef ACCELERATOROBJECT_HPP
-#define ACCELERATOROBJECT_HPP
+#pragma once
 
 
 #include "simulation/physics/Simulation.hpp"
@@ -27,4 +26,3 @@ public:
 };
 
 
-#endif //ACCELERATOROBJECT_HPP

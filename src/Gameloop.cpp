@@ -1,17 +1,17 @@
 #include "Gameloop.hpp"
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "Screen.hpp"
 #include "DrawingEngine.hpp"
 #include "ObjectPlacementStage.hpp"
-#include <thread>
-#include <chrono>
-
 #include "LevelSetup.hpp"
 
 
 void gameloop() {
+    register_sprites();
 
     std::cout << std::filesystem::current_path() << std::endl;
 
@@ -54,10 +54,10 @@ void gameloop() {
             camera.move(dx.x/screen.getPixelScaleFactor(), -dx.y/screen.getPixelScaleFactor());
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-            camera.setDeltaZoom(0.999);
+            camera.setDeltaZoom(1.001);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-            camera.setDeltaZoom(1.001);
+            camera.setDeltaZoom(0.999);
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
             // saveCurrentWorld(simulation.objects, "resources/mysetup3.yaml");

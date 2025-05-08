@@ -1,9 +1,10 @@
 
-#ifndef RECTANGLEOBJECT_HPP
-#define RECTANGLEOBJECT_HPP
+#pragma once
 
 #include "SimulationObjectBase.hpp"
-#include "simulation/physics/Simulation.hpp"
+#include "simulation/base_drawers/ShapeDrawer.hpp"
+#include "simulation/base_drawers/SimulationObjectDrawer.hpp"
+
 
 
 class RectangleObject : public SimulationObjectBase {
@@ -25,6 +26,24 @@ public:
 
     std::string texture_path = "resources/wood_texture.jpg";
     RectangleBody rectangle;
+};
+
+class RectangleObjectDrawer: public ISimulationObjectDrawer {
+public:
+    explicit RectangleObjectDrawer(RectangleObject& rectangle): rectangle(rectangle) {
+        drawer.texture = sf::Texture(rectangle.texture_path);
+    }
+
+    void draw(Screen *screen, Camera *camera) override {
+        this->drawer.size = rectangle.rectangle.config.size;
+        drawer.position = this->rectangle.rectangle.getPosition();
+        drawer.rotation = this->rectangle.rectangle.getRotation();
+        this->drawer.draw(screen, camera);
+    }
+
+private:
+    RectangleObject& rectangle;
+    RectangleDrawer drawer;
 };
 
 //
@@ -53,5 +72,3 @@ public:
 //
 
 
-
-#endif //RECTANGLEOBJECT_HPP
