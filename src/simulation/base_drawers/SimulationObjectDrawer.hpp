@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ShapeDrawer.hpp"
+#include "Screen.hpp"
+#include "Camera.hpp"
 
 class ISimulationObjectDrawer {
 public:

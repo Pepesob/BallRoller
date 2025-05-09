@@ -6,6 +6,7 @@
 #define OBJECTPLACEMENTSTAGE_HPP
 #include <iostream>
 #include "DrawingEngine.hpp"
+
 #include "AvailableLevelObjects.hpp"
 #include "Level.hpp"
 #include "SFML/Graphics/Transform.hpp"
@@ -16,7 +17,7 @@
 class ObjectPlacementStage {
 
 public:
-    ObjectPlacementStage(AvailableLevelObjects& available_objects, Screen* screen, Camera* camera) {
+    ObjectPlacementStage(Level& level, Screen* screen, Camera* camera): level(level) {
         this->screen = screen;
         this->camera = camera;
     }
@@ -55,12 +56,15 @@ public:
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
             this->rotation_radians -= 0.001;
         }
+
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
         sf::Vector2f wp = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
         this->world_pos = {wp.x, wp.y};
+        this->changeObject(this->index);
         this->moveObject();
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             this->placeObject();
+            pressed = true;
         } else {
             pressed = false;
         }
@@ -69,8 +73,11 @@ public:
     }
 
     void moveObject() {
-        if (this->index >= 0 && this->index < av.available_object_tags.size()) {
-            av.move(this->index, this->world_pos, this->rotation_radians);
+        const auto objs = level.available_objects->getAvailableObjects();
+        if (this->index >= 0 && this->index < objs.size()) {
+            this->current_sprite.object->config["initial_position"] = this->world_pos;
+            this->current_sprite.object->config["initial_rotation"] = this->rotation_radians;
+            this->current_sprite.object->applyConfig();
         }
     }
 
@@ -78,26 +85,45 @@ public:
         if (pressed == true) {
             return;
         }
-        if (this->index >= 0 && this->index < av.available_object_tags.size()) {
-            this->av.move(this->index, this->world_pos, this->rotation_radians);
-            this->av.place(this->index);
-            pressed = true;
+        const auto objs = level.available_objects->getAvailableObjects();
+        if (this->index >= 0 && this->index < objs.size()) {
+            this->level.available_objects->place(objs[this->index], this->world_pos, this->rotation_radians);
         }
+        this->current_tag = "";
         this->index = -1;
     }
 
     void draw(Screen* screen, Camera* camera) {
-        for (const auto sprite: this->av.placed_sprites) {
-            sprite->drawer->draw(screen, camera);
+        const auto objs = level.available_objects->getAvailableObjects();
+        for (const auto sprite: this->level.available_objects->placed_objects) {
+            sprite.drawer->draw(screen, camera);
         }
-        if (this->index >= 0 && this->index < av.available_object_tags.size()) {
-            this->av.available_sprites[this->index].drawer->draw(screen, camera);
+        if (this->index >= 0 && this->index < objs.size()) {
+            this->current_sprite.drawer->draw(screen, camera);
         }
+    }
+
+    void changeObject(int index) {
+        const auto objs = this->level.available_objects->getAvailableObjects();
+        if (index < 0 || index >= objs.size()) {
+            return;
+        }
+        const std::string& tag = objs[index];
+        if (tag == this->current_tag) {
+            return;
+        }
+        this->current_tag = tag;
+        delete this->current_sprite.drawer;
+        delete this->current_sprite.object;
+        this->current_sprite = SimulationObjectFactory::createSimulationSprite(tag);
     }
 
 private:
     bool pressed = false;
     int index = -1;
+
+    std::string current_tag;
+    SimulationSprite current_sprite {};
 
     Screen* screen;
     Camera* camera;
@@ -105,8 +131,8 @@ private:
     Vector2D world_pos {0,0};
     float rotation_radians = 0;
 
-    AvLvlObj av;
-    // AvailableLevelObjects& available_objects;
+
+    Level& level;
 };
 
 

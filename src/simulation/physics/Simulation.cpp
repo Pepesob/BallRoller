@@ -90,6 +90,8 @@ void saveCurrentWorld(const std::vector<SimulationObjectBase *> &objects, const 
     fout << out.c_str();
 }
 
+
+
 B2dSimulation::B2dSimulation(Vector2D gravity) {
     this->gravity = gravity;
     b2WorldDef worldDef = b2DefaultWorldDef();

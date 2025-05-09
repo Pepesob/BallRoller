@@ -10,6 +10,7 @@
 
 #include "simulation/physics/Simulation.hpp"
 #include "SimulationObjectBase.hpp"
+#include "simulation/base_drawers/ShapeDrawer.hpp"
 #include "simulation/base_drawers/SimulationObjectDrawer.hpp"
 
 class MainBallObject : public SimulationObjectBase {

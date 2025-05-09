@@ -23,10 +23,7 @@
 void register_sprites();
 
 
-struct SimulationSprite {
-    SimulationObjectBase* object;
-    ISimulationObjectDrawer* drawer;
-};
+
 
 
 class SimulationObjectFactory {

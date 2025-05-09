@@ -7,9 +7,17 @@
 
 #include <yaml-cpp/yaml.h>
 
+class ISimulationObjectDrawer;
+class SimulationObjectBase;
+
 struct Vector2D {
     float x;
     float y;
+};
+
+struct SimulationSprite {
+    SimulationObjectBase* object=nullptr;
+    ISimulationObjectDrawer* drawer=nullptr;
 };
 
 struct ObjectPhysicsConfig {
