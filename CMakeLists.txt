@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(src)
 add_executable(BallRoller main.cpp)
 
+message(${MSVC})
+if (MSVC)
+    target_link_options(BallRoller PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
+endif()
 
 
 target_link_libraries(BallRoller PRIVATE BallRollerLib)
