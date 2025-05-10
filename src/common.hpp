@@ -8,6 +8,10 @@ class SimulationObjectBase;
 struct Vector2D {
     float x;
     float y;
+
+    Vector2D operator+(const Vector2D& rhs) const {
+        return {this->x + rhs.x, this->y + rhs.y};
+    }
 };
 
 struct SimulationSprite {
