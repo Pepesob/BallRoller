@@ -38,6 +38,7 @@ public:
     void updateBodies();
     void applyForce(SimulationBody& body, Vector2D force);
     void setVelocity(SimulationBody& body, Vector2D velocity);
+    void click(Vector2D world_point);
     [[nodiscard]] Vector2D getVelocity(SimulationBody& body);
 
     std::vector<SimulationBody*> bodies;
@@ -48,7 +49,11 @@ public:
     int subStepCount = 4;
     bool goalReached = false;
 
+    bool check_click = false;
+    Vector2D click_world_point = {};
+
 private:
+    void clickNotify(Vector2D world_point);
     std::chrono::steady_clock::time_point prev_time = std::chrono::steady_clock::time_point::min();
 };
 

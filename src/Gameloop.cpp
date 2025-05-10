@@ -55,6 +55,6 @@ void gameloop() {
 
         screen.getWindow()->display();
     }
-
+    screen.destroyWindow();
     std::cout << "Exiting..." << std::endl;
 }

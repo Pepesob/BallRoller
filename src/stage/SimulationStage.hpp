@@ -40,8 +40,24 @@ public:
             this->state_machine.shutdown = true;
         }
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
+
+        this->clickTest();
         this->level.simulation->fixedStep();
         this->draw(screen, camera);
+    }
+
+    void clickTest() {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            if (this->mouse_left_pressed == true) {
+                return;
+            }
+            sf::Vector2f sf_world_point = (this->screen->getScreenMatrix() * this->camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));
+            this->level.simulation->click({ sf_world_point.x, sf_world_point.y });
+            this->mouse_left_pressed = true;
+        }
+        else {
+            this->mouse_left_pressed = false;
+        }
     }
 
     void onNext() override {}
@@ -61,4 +77,5 @@ private:
     Camera* camera;
     sf::Vector2i mouse_pos;
     StateMachine& state_machine;
+    bool mouse_left_pressed = false;
 };

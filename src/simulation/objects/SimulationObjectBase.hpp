@@ -3,6 +3,7 @@
 
 #include "simulation/physics/Simulation.hpp"
 #include "common.hpp"
+#include <iostream>
 
 
 class SimulationObjectBase {
@@ -17,6 +18,7 @@ public:
 
     virtual void onCollisionBegin(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
     virtual void onCollisionEnd(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
+    virtual void onClick() {};
     virtual void step() {}
     virtual std::vector<SimulationBody*> getBodies() = 0;
     virtual void applyConfig() = 0;

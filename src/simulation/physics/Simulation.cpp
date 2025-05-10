@@ -126,6 +126,10 @@ void B2dSimulation::fixedStep() {
 
 
     int actual_step_count = std::ceil(std::sqrt(possible_step_count)); // > 0 ? 1 : 0;
+    if (this->check_click) {
+        this->clickNotify(this->click_world_point);
+        this->check_click = false;
+    }
 
 
     for (int i = 0; i < actual_step_count; i++) {
@@ -203,6 +207,27 @@ void B2dSimulation::applyForce(SimulationBody &body, Vector2D force) {
 void B2dSimulation::setVelocity(SimulationBody &body, Vector2D velocity) {
     b2BodyId body_id = body.id;
     b2Body_SetLinearVelocity(body_id, {velocity.x, velocity.y});
+}
+
+void B2dSimulation::click(Vector2D world_point) {
+    this->check_click = true;
+    this->click_world_point = world_point;
+}
+
+void B2dSimulation::clickNotify(Vector2D world_point)
+{
+    const int max_shape_n = 10;
+    b2ShapeId shape_ids[max_shape_n];
+    for (auto body : this->bodies) {
+        b2Body_GetShapes(body->id, shape_ids, max_shape_n);
+        int shape_n = b2Body_GetShapeCount(body->id);
+        for (int i = 0; i < shape_n; i++) {
+            if (b2Shape_TestPoint(shape_ids[i], { world_point.x, world_point.y})) {
+                auto obj = this->getAssociatedObject(*body);
+                obj->onClick();
+            }
+        }
+    }
 }
 
 Vector2D B2dSimulation::getVelocity(SimulationBody &body) {
