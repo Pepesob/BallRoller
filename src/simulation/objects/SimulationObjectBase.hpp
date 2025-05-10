@@ -1,9 +1,5 @@
-//
-// Created by sp on 08.05.2025.
-//
+#pragma once
 
-#ifndef SIMULATIONOBJECTBASE_HPP
-#define SIMULATIONOBJECTBASE_HPP
 
 #include "simulation/physics/Simulation.hpp"
 #include "common.hpp"
@@ -32,8 +28,3 @@ private:
     std::string objectType;
 };
 
-
-
-
-
-#endif //SIMULATIONOBJECTBASE_HPP

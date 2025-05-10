@@ -1,9 +1,4 @@
-//
-// Created by sp on 02.04.2025.
-//
-
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#pragma once
 
 #include <SFML/Graphics.hpp>
 
@@ -15,20 +10,13 @@ public:
 
     sf::Transform &getCameraMatrix();
     void setPosition(float x, float y);
-    void move(float x, float y) {
-        this->x += x;
-        this->y += y;
-    }
+    void move(float x, float y);
     void setScale(float zoom);
     void setScreenRatio(float ratio);
     void updateCameraMatrix();
     [[nodiscard]] float getZoom() const;
-    void setZoom(float zoom) {
-        this->zoom = zoom;
-    }
-    void setDeltaZoom(float deltaZoom) {
-        this->zoom *= deltaZoom;
-    }
+    void setZoom(float zoom);
+    void setDeltaZoom(float deltaZoom);
 
 private:
     sf::Transform camera_matrix;
@@ -40,5 +28,3 @@ private:
     bool needs_update;
 };
 
-
-#endif //CAMERA_HPP

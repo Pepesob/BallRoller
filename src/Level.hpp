@@ -17,13 +17,20 @@ public:
     Level() {
         this->level_setup = new LevelSetup();
         this->available_objects = new AvailableLevelObjects();
+        this->simulation = new B2dSimulation({0, -6.0f});
     }
 
     explicit Level(const std::string& fileName) {
         this->levelInfo = YAML::LoadFile(fileName);
         this->level_setup = new LevelSetup(this->levelInfo["setupObjects"]);
-        this->available_objects = new AvailableLevelObjects();
-        this->simulation = new B2dSimulation({0, -6.0f});
+        this->available_objects = new AvailableLevelObjects(this->levelInfo["availableObjects"]);
+        this->simulation = new B2dSimulation(this->levelInfo["simulation"]);
+    }
+
+    ~Level() {
+        delete this->level_setup;
+        delete this->available_objects;
+        delete this->simulation;
     }
 
     YAML::Node levelInfo;

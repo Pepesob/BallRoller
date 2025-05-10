@@ -1,9 +1,6 @@
-//
-// Created by sp on 03.05.2025.
-//
+#pragma once
 
-#ifndef LEVELSETUP_HPP
-#define LEVELSETUP_HPP
+
 #include <iostream>
 #include <vector>
 
@@ -15,14 +12,13 @@
 
 class LevelSetup {
 public:
-    LevelSetup(const YAML::Node& object_list) {
+    explicit LevelSetup(const YAML::Node& object_list) {
         try {
             assert(object_list.IsSequence());
-            SimulationObjectFactory factory;
             for (const YAML::Node& obj_config: object_list) {
                 SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(obj_config["objectType"].as<std::string>());
                 SimulationObjectBase* obj_base = sprite.object;
-                ISimulationObjectDrawer* obj_drawer = sprite.drawer;
+                Drawer* obj_drawer = sprite.drawer;
                 obj_base->config = obj_config;
                 obj_base->applyConfig();
                 objects.push_back(obj_base);
@@ -75,6 +71,15 @@ public:
         objects.push_back(rect4);
     }
 
+    ~LevelSetup() {
+        for (const auto* drawer: drawers) {
+            delete drawer;
+        }
+        for (const auto* obj: objects) {
+            delete obj;
+        }
+    }
+
     void place(B2dSimulation& simulation) {
         for (auto* object : objects) {
             simulation.addObject(*object);
@@ -88,9 +93,5 @@ public:
     }
 
     std::vector<SimulationObjectBase*> objects;
-    std::vector<ISimulationObjectDrawer*> drawers;
+    std::vector<Drawer*> drawers;
 };
-
-
-
-#endif //LEVELSETUP_HPP

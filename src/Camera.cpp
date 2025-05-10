@@ -16,6 +16,11 @@ void Camera::setPosition(float x, float y) {
     this->needs_update = true;
 }
 
+void Camera::move(float x, float y) {
+    this->x += x;
+    this->y += y;
+}
+
 void Camera::setScale(float zoom) {
     this->zoom = zoom;
     this->needs_update = true;
@@ -36,4 +41,12 @@ void Camera::updateCameraMatrix() {
 
 float Camera::getZoom() const {
     return zoom;
+}
+
+void Camera::setZoom(float zoom) {
+    this->zoom = zoom;
+}
+
+void Camera::setDeltaZoom(float deltaZoom) {
+    this->zoom *= deltaZoom;
 }

@@ -25,6 +25,7 @@ inline void saveCurrentWorld(const std::vector<SimulationObjectBase*>& objects, 
 class B2dSimulation {
 public:
     explicit B2dSimulation(Vector2D gravity);
+    explicit B2dSimulation(const YAML::Node& config);
     void step();
     void fixedStep();
     void resetTimer();

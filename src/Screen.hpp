@@ -1,18 +1,15 @@
-//
-// Created by sp on 02.04.2025.
-//
+#pragma once
 
-#ifndef SCREEN_HPP
-#define SCREEN_HPP
+
 #include <SFML/Graphics.hpp>
+
+void debug_lines(sf::RenderWindow* window);
 
 
 class Screen {
 public:
     Screen(unsigned int width, unsigned int height);
-
     ~Screen();
-
     void createWindow();
     void destroyWindow();
     void handleWindowEvents();
@@ -33,7 +30,3 @@ private:
     int pixel_scale_factor;
     bool needs_update;
 };
-
-
-
-#endif //SCREEN_HPP

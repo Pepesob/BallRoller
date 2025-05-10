@@ -1,28 +1,23 @@
-//
-// Created by sp on 26.04.2025.
-//
-
-#ifndef OBJECTPLACEMENTSTAGE_HPP
-#define OBJECTPLACEMENTSTAGE_HPP
-#include <iostream>
-#include "DrawingEngine.hpp"
+#pragma once
 
 #include "AvailableLevelObjects.hpp"
 #include "Level.hpp"
+#include "SimulationStage.hpp"
 #include "SFML/Graphics/Transform.hpp"
 #include "simulation/objects/AcceleratorObject.hpp"
+#include "StateMachine.hpp"
 
 
 
-class ObjectPlacementStage {
+class ObjectPlacementStage: public State {
 
 public:
-    ObjectPlacementStage(Level& level, Screen* screen, Camera* camera): level(level) {
+    ObjectPlacementStage(StateMachine& state_machine, Level& level, Screen* screen, Camera* camera): state_machine(state_machine), level(level) {
         this->screen = screen;
         this->camera = camera;
     }
 
-    void keyboardInput(B2dSimulation& simulation) {
+    void keyboardInput() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num1)) {
             this->index = 0;
         }
@@ -44,17 +39,25 @@ public:
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num7)) {
             this->index = 6;
         }
-        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-        //     this->camera->setDeltaZoom(0.999);
-        // }
-        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-        //     this->camera->setDeltaZoom(1.001);
-        // }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            this->camera->setDeltaZoom(0.999);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            this->camera->setDeltaZoom(1.001);
+        }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
             this->rotation_radians += 0.001;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
             this->rotation_radians -= 0.001;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            auto current_pos = sf::Mouse::getPosition(*this->screen->getWindow());
+            sf::Vector2f dx = sf::Vector2f(this->mouse_pos - current_pos);
+            camera->move(dx.x/screen->getPixelScaleFactor(), -dx.y/screen->getPixelScaleFactor());
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
+            this->state_machine.switchState(new SimulationStage(state_machine,level, screen, camera));
         }
 
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
@@ -68,8 +71,6 @@ public:
         } else {
             pressed = false;
         }
-
-        this->draw(screen, camera);
     }
 
     void moveObject() {
@@ -93,8 +94,11 @@ public:
         this->index = -1;
     }
 
-    void draw(Screen* screen, Camera* camera) {
+    void draw() {
         const auto objs = level.available_objects->getAvailableObjects();
+        for (const auto drawer: this->level.level_setup->drawers) {
+            drawer->draw(screen, camera);
+        }
         for (const auto sprite: this->level.available_objects->placed_objects) {
             sprite.drawer->draw(screen, camera);
         }
@@ -118,6 +122,17 @@ public:
         this->current_sprite = SimulationObjectFactory::createSimulationSprite(tag);
     }
 
+    void onInit() override {
+
+    }
+
+    void onUpdate() override {
+        this->keyboardInput();
+        this->draw();
+    }
+
+    void onNext() override {}
+
 private:
     bool pressed = false;
     int index = -1;
@@ -125,6 +140,7 @@ private:
     std::string current_tag;
     SimulationSprite current_sprite {};
 
+    StateMachine& state_machine;
     Screen* screen;
     Camera* camera;
     sf::Vector2i mouse_pos;
@@ -135,6 +151,3 @@ private:
     Level& level;
 };
 
-
-
-#endif //OBJECTPLACEMENTSTAGE_HPP

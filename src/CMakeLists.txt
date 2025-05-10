@@ -1,6 +1,24 @@
 set(BALLROLLER_SOURCE_FILES
         Gameloop.cpp
         Gameloop.hpp
+        Camera.cpp
+        Camera.hpp
+        Screen.cpp
+        Screen.hpp
+        Drawer.hpp
+        common.hpp
+        AvailableLevelObjects.cpp
+        AvailableLevelObjects.hpp
+        LevelSetup.cpp
+        LevelSetup.hpp
+        Level.cpp
+        Level.hpp
+        simulation/base_drawers/BodyDrawer.cpp
+        simulation/base_drawers/BodyDrawer.hpp
+        simulation/physics/Simulation.hpp
+        simulation/physics/SimulationBody.cpp
+        simulation/physics/SimulationBody.hpp
+        simulation/physics/Simulation.cpp
         simulation/objects/MainBallObject.hpp
         simulation/objects/MainBallObject.cpp
         simulation/objects/MainBallObject.hpp
@@ -8,40 +26,17 @@ set(BALLROLLER_SOURCE_FILES
         simulation/objects/RectangleObject.hpp
         simulation/objects/AcceleratorObject.cpp
         simulation/objects/AcceleratorObject.hpp
-        Camera.cpp
-        Camera.hpp
-        Screen.cpp
-        Screen.hpp
-        Drawer.cpp
-        Drawer.hpp
-        common.hpp
-        DrawingEngine.cpp
-        DrawingEngine.hpp
-        ExampleSetup.cpp
-        ExampleSetup.hpp
-        ObjectPlacementStage.cpp
-        ObjectPlacementStage.hpp
-        AvailableLevelObjects.cpp
-        AvailableLevelObjects.hpp
-        simulation/base_drawers/ShapeDrawer.hpp
-        simulation/base_drawers/ShapeDrawer.cpp
-        simulation/physics/Simulation.hpp
-        simulation/physics/SimulationBody.cpp
-        simulation/physics/SimulationBody.hpp
-        simulation/physics/Simulation.cpp
         simulation/objects/SimulationObjectFactory.cpp
         simulation/objects/SimulationObjectFactory.hpp
-        LevelSetup.cpp
-        LevelSetup.hpp
-        Level.cpp
-        Level.hpp
+        simulation/objects/SimulationObjectBase.hpp
         simulation/objects/GoalObject.cpp
         simulation/objects/GoalObject.hpp
-        simulation/base_drawers/SimulationObjectDrawer.cpp
-        simulation/base_drawers/SimulationObjectDrawer.hpp
-        simulation/base_drawers/BodyDrawer.cpp
-        simulation/base_drawers/BodyDrawer.hpp
-        simulation/objects/SimulationObjectBase.hpp
+        stage/StateMachine.cpp
+        stage/StateMachine.hpp
+        stage/ObjectPlacementStage.cpp
+        stage/ObjectPlacementStage.hpp
+        stage/SimulationStage.cpp
+        stage/SimulationStage.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

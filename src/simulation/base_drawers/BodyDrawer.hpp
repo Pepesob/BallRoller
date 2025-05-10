@@ -1,32 +1,38 @@
-//
-// Created by sp on 06.05.2025.
-//
+#pragma once
 
-#ifndef BODYDRAWER_HPP
-#define BODYDRAWER_HPP
-#include "ShapeDrawer.hpp"
+#include <SFML/Graphics.hpp>
+
+#include "Drawer.hpp"
 #include "simulation/physics/SimulationBody.hpp"
 
-
-class BodyDrawer {
+class RectangleDrawer: public Drawer {
 public:
-    virtual ~BodyDrawer() = default;
+    void draw(Screen* screen, Camera* camera) override;
 
-    virtual void draw(Screen* screen, Camera* camera) = 0;
+    Vector2D size{};
+    Vector2D position{};
+    float rotation=0;
+    sf::Texture texture;
+    sf::RectangleShape shape;
 };
 
-class RectangleBodyDrawer: public BodyDrawer {
-public:
-    RectangleBodyDrawer(RectangleBody* body) {
-        this->rectangle = body;
-    }
 
-    void draw(Screen* screen, Camera* camera) override {
-        this->drawer.size = rectangle->config.size;
-        drawer.position = rectangle->getPosition();
-        drawer.rotation = rectangle->getRotation();
-        drawer.draw(screen, camera);
-    }
+class CircleDrawer: public Drawer {
+public:
+    void draw(Screen* screen, Camera* camera) override;
+
+    float radius = 0;
+    Vector2D position{};
+    float rotation=0;
+    sf::CircleShape circle;
+    sf::Texture texture;
+};
+
+class RectangleBodyDrawer: public Drawer {
+public:
+    explicit RectangleBodyDrawer(RectangleBody* body);
+
+    void draw(Screen* screen, Camera* camera) override;
 
 private:
     RectangleBody* rectangle;
@@ -34,29 +40,13 @@ private:
 };
 
 
-class CircleBodyDrawer: public BodyDrawer {
+class CircleBodyDrawer: public Drawer {
 public:
-    CircleBodyDrawer(CircleBody* body) {
-        this->circle = body;
-    }
+    explicit CircleBodyDrawer(CircleBody* body);
 
-    void draw(Screen* screen, Camera* camera) override {
-        drawer.radius = circle->config.radius;
-        this->drawer.position = circle->getPosition();
-        this->drawer.rotation = circle->getRotation();
-        this->drawer.draw(screen, camera);
-    }
+    void draw(Screen* screen, Camera* camera) override;
 
 private:
     CircleBody* circle;
     CircleDrawer drawer;
 };
-
-
-
-
-
-
-
-
-#endif //BODYDRAWER_HPP

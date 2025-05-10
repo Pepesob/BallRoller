@@ -8,10 +8,11 @@
 
 #include <cmath>
 
+#include "Drawer.hpp"
 #include "simulation/physics/Simulation.hpp"
 #include "SimulationObjectBase.hpp"
-#include "simulation/base_drawers/ShapeDrawer.hpp"
-#include "simulation/base_drawers/SimulationObjectDrawer.hpp"
+#include "simulation/base_drawers/BodyDrawer.hpp"
+
 
 class MainBallObject : public SimulationObjectBase {
 public:
@@ -42,7 +43,7 @@ public:
     CircleBody ball;
 };
 
-class MainBallObjectDrawer: public ISimulationObjectDrawer {
+class MainBallObjectDrawer: public Drawer {
 public:
     explicit MainBallObjectDrawer(MainBallObject& main_ball): main_ball(main_ball) {
         this->main_ball = main_ball;

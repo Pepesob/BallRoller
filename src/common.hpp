@@ -1,13 +1,8 @@
-//
-// Created by sp on 25.04.2025.
-//
-
-#ifndef COMMON_HPP
-#define COMMON_HPP
+#pragma once
 
 #include <yaml-cpp/yaml.h>
 
-class ISimulationObjectDrawer;
+class Drawer;
 class SimulationObjectBase;
 
 struct Vector2D {
@@ -17,7 +12,7 @@ struct Vector2D {
 
 struct SimulationSprite {
     SimulationObjectBase* object=nullptr;
-    ISimulationObjectDrawer* drawer=nullptr;
+    Drawer* drawer=nullptr;
 };
 
 struct ObjectPhysicsConfig {
@@ -66,4 +61,3 @@ namespace YAML {
         }
     };
 }
-#endif //COMMON_HPP

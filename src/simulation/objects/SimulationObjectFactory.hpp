@@ -3,8 +3,9 @@
 
 #include <functional>
 
-#include "SimulationObjectBase.hpp"
-#include "simulation/base_drawers/SimulationObjectDrawer.hpp"
+#include <execution>
+
+#include "common.hpp"
 
 
 #define REGISTER_SIMULATION_SPRITE(Name, ObjectType, DrawerType)          \
@@ -41,6 +42,10 @@ public:
             throw std::invalid_argument("Object already registered: " + name);
         }
         spriteCreators[name] = creator;
+    }
+
+    static bool isSpriteTagValid(const std::string& tag) {
+        return spriteCreators.contains(tag);
     }
 
 private:

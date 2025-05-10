@@ -99,6 +99,13 @@ B2dSimulation::B2dSimulation(Vector2D gravity) {
     this->world_id = b2CreateWorld(&worldDef);
 }
 
+B2dSimulation::B2dSimulation(const YAML::Node &config) {
+    this->gravity = config["gravity"].as<Vector2D>();
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = {this->gravity.x, this->gravity.y};
+    this->world_id = b2CreateWorld(&worldDef);
+}
+
 void B2dSimulation::step() {
     b2World_Step(world_id, timeStep, subStepCount);
     collisionNotify(*this);

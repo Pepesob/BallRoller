@@ -1,10 +1,7 @@
-
 #pragma once
 
 #include "SimulationObjectBase.hpp"
-#include "simulation/base_drawers/ShapeDrawer.hpp"
-#include "simulation/base_drawers/SimulationObjectDrawer.hpp"
-
+#include "simulation/base_drawers/BodyDrawer.hpp"
 
 
 class RectangleObject : public SimulationObjectBase {
@@ -28,7 +25,7 @@ public:
     RectangleBody rectangle;
 };
 
-class RectangleObjectDrawer: public ISimulationObjectDrawer {
+class RectangleObjectDrawer: public Drawer {
 public:
     explicit RectangleObjectDrawer(RectangleObject& rectangle): rectangle(rectangle) {
         drawer.texture = sf::Texture(rectangle.texture_path);
