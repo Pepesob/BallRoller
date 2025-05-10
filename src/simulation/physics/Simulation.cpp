@@ -80,11 +80,11 @@ void B2dBodyBuilder::visitCircle(CircleBody &circle) {
     circle.rotation = circle.config.initial_rotation;
 }
 
-void saveCurrentWorld(const std::vector<SimulationObjectBase *> &objects, const std::string &filename) {
+void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::string &filename) {
     YAML::Emitter out;
     out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
-    for (const auto obj : objects) {
-        out << obj->config;
+    for (const auto& obj : objects) {
+        out << obj.object->config;
     }
     std::ofstream fout(filename);
     fout << out.c_str();
@@ -207,6 +207,11 @@ void B2dSimulation::applyForce(SimulationBody &body, Vector2D force) {
 void B2dSimulation::setVelocity(SimulationBody &body, Vector2D velocity) {
     b2BodyId body_id = body.id;
     b2Body_SetLinearVelocity(body_id, {velocity.x, velocity.y});
+}
+
+void B2dSimulation::teleport(SimulationBody &body, Vector2D position) {
+    b2Rot rotation = b2MakeRot(body.rotation);
+    b2Body_SetTransform(body.id, {position.x, position.y}, rotation);
 }
 
 void B2dSimulation::click(Vector2D world_point) {

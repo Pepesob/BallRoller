@@ -7,7 +7,7 @@
 
 class BodyCompound {
 public:
-    BodyCompound() {}
+    BodyCompound() = default;
 
     void addBody(SimulationBody& body, Vector2D local_position, float self_rotation) {
         this->placed_bodies.push_back({body, local_position, self_rotation});

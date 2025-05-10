@@ -19,7 +19,7 @@ T* getObjectAs(SimulationObjectBase* obj) {
     return dynamic_cast<T*>(obj);
 }
 
-inline void saveCurrentWorld(const std::vector<SimulationObjectBase*>& objects, const std::string &filename);
+inline void saveCurrentWorld(const std::vector<SimulationSprite>& objects, const std::string &filename);
 
 
 class B2dSimulation {
@@ -38,6 +38,7 @@ public:
     void updateBodies();
     void applyForce(SimulationBody& body, Vector2D force);
     void setVelocity(SimulationBody& body, Vector2D velocity);
+    void teleport(SimulationBody& body, Vector2D position);
     void click(Vector2D world_point);
     [[nodiscard]] Vector2D getVelocity(SimulationBody& body);
 

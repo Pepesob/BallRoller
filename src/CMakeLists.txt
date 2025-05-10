@@ -39,8 +39,8 @@ set(BALLROLLER_SOURCE_FILES
         stage/SimulationStage.hpp
         simulation/objects/BodyCompound.cpp
         simulation/objects/BodyCompound.hpp
-        simulation/objects/CompoundTest.cpp
-        simulation/objects/CompoundTest.hpp
+        simulation/objects/TeleporterObject.cpp
+        simulation/objects/TeleporterObject.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

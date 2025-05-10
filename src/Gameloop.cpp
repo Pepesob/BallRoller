@@ -26,7 +26,7 @@ void gameloop() {
 
     Screen screen(720, 720);
     Camera camera(0,0,0.3);
-    Level level("resources/level1234.yaml");
+    Level level("resources/levels/Level1.yaml");
     StateMachine state_machine;
     state_machine.setInitialState(new ObjectPlacementStage(state_machine, level, &screen, &camera));
 

@@ -7,8 +7,9 @@
 #include "simulation/objects/SimulationObjectBase.hpp"
 
 AvailableLevelObjects::AvailableLevelObjects() {
-    this->available_objects["Rectangle"] = 3;
-    this->available_objects["Accelerator"] = 3;
+    for (auto tag: SimulationObjectFactory::getAvailableTags()) {
+        this->available_objects[tag] = INT_MAX;
+    }
 
     auto ks = std::views::keys(this->available_objects);
     this->available_object_tags = {ks.begin(), ks.end()};
@@ -42,7 +43,19 @@ bool AvailableLevelObjects::place(const std::string &tag, Vector2D position, flo
     if (available_objects.contains(tag) && available_objects[tag] > 0) {
         const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
         sprite.object->config["initial_position"] = position;
-        sprite.object->config["rotation"] = rotation;
+        sprite.object->config["initial_rotation"] = rotation;
+        sprite.object->applyConfig();
+        this->placed_objects.push_back(sprite);
+        available_objects[tag]--;
+        return true;
+    }
+    return false;
+}
+
+bool AvailableLevelObjects::place(const std::string &tag, const YAML::Node& config) {
+    if (available_objects.contains(tag) && available_objects[tag] > 0) {
+        const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
+        sprite.object->config = config;
         sprite.object->applyConfig();
         this->placed_objects.push_back(sprite);
         available_objects[tag]--;

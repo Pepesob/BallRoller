@@ -32,43 +32,6 @@ public:
     }
 
     LevelSetup() {
-        auto main_ball = new MainBallObject();
-        main_ball->config["initial_position"] = Vector2D{0, 0};
-
-        auto rect1 = new RectangleObject();
-        rect1->config["initial_position"] = Vector2D{0, -2};
-        rect1->config["initial_rotation"] = 0;
-        rect1->applyConfig();
-        rect1->rectangle.config.size = {4, 0.2};
-        rect1->rectangle.config.restitution = 1.1;
-
-        auto rect2 = new RectangleObject();
-        rect2->config["initial_position"] = Vector2D{-2, 0};
-        rect2->config["initial_rotation"] = 3.14/2;
-        rect2->applyConfig();
-        rect2->rectangle.config.size = {4, 0.2};
-        rect2->rectangle.config.restitution = 1.1;
-
-        auto rect3 = new RectangleObject();
-        rect3->config["initial_position"] = Vector2D{0, 2};
-        rect3->config["initial_rotation"] = 0;
-        rect3->applyConfig();
-        rect3->rectangle.config.size = {4, 0.2};
-        rect3->rectangle.config.restitution = 1.1;
-
-        auto rect4 = new RectangleObject();
-        rect4->config["initial_position"] = Vector2D{2, 0};
-        rect4->config["initial_rotation"] = 3.14/2;
-        rect4->applyConfig();
-        rect4->rectangle.config.size = {4, 0.2};
-        rect4->rectangle.config.restitution = 1.1;
-
-
-        objects.push_back(main_ball);
-        objects.push_back(rect1);
-        objects.push_back(rect2);
-        objects.push_back(rect3);
-        objects.push_back(rect4);
     }
 
     ~LevelSetup() {

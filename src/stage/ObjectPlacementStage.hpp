@@ -59,6 +59,9 @@ public:
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
             this->state_machine.switchState(new SimulationStage(state_machine,level, screen, camera));
         }
+        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+        //     saveCurrentWorld(this->level.available_objects->placed_objects, "resources/Level1.yaml");
+        // }
 
         this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
         sf::Vector2f wp = (screen->getScreenMatrix() * camera->getCameraMatrix()).getInverse().transformPoint(sf::Vector2f(this->mouse_pos));

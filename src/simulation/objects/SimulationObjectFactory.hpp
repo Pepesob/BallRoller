@@ -2,10 +2,11 @@
 #pragma once
 
 #include <functional>
-
+#include <ranges>
 #include <execution>
 
 #include "common.hpp"
+
 
 
 #define REGISTER_SIMULATION_SPRITE(Name, ObjectType, DrawerType)          \
@@ -46,6 +47,11 @@ public:
 
     static bool isSpriteTagValid(const std::string& tag) {
         return spriteCreators.contains(tag);
+    }
+
+    static std::vector<std::string> getAvailableTags() {
+        auto a = std::views::keys(spriteCreators);
+        return {a.begin(), a.end()};
     }
 
 private:
