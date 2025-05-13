@@ -45,8 +45,8 @@ void gameloop() {
             frames = 0;
         }
 
-        screen.handleWindowEvents();
-        camera.setScreenRatio(static_cast<float>(screen.getWidth()) / static_cast<float>(screen.getHeight()));
+        // screen.handleWindowEvents();
+        // camera.setScreenRatio(static_cast<float>(screen.getWidth()) / static_cast<float>(screen.getHeight()));
         screen.getWindow()->clear();
 
         state_machine.update();

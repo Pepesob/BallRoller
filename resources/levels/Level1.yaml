@@ -204,6 +204,8 @@ availableObjects:
     quantity: 6
   - objectType: Teleporter
     quantity: 1
+  - objectType: Rectangle
+    quantity: 1
 simulation:
   gravity:
     x: 0

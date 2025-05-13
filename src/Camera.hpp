@@ -11,12 +11,13 @@ public:
     sf::Transform &getCameraMatrix();
     void setPosition(float x, float y);
     void move(float x, float y);
-    void setScale(float zoom);
     void setScreenRatio(float ratio);
     void updateCameraMatrix();
     [[nodiscard]] float getZoom() const;
     void setZoom(float zoom);
     void setDeltaZoom(float deltaZoom);
+
+    void handleEvent(const std::optional<sf::Event> &event);
 
 private:
     sf::Transform camera_matrix;
@@ -26,5 +27,7 @@ private:
     float zoom;
     float screen_ratio;
     bool needs_update;
+
+    sf::Vector2i prev_mouse_pos;
 };
 

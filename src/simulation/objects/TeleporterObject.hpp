@@ -13,8 +13,8 @@ public:
         this->teleportB.config.isSensor = true;
         this->teleportB.config.size = {0.3, 0.3};
 
-        this->compound.addBody(this->teleportA, {-distance/2, 0}, 0);
-        this->compound.addBody(this->teleportB, {distance/2, 0}, 0);
+        this->compound.addBody(&this->teleportA, {-distance/2, 0}, 0);
+        this->compound.addBody(&this->teleportB, {distance/2, 0}, 0);
     }
 
     void onCollisionBegin(B2dSimulation &simulation, SimulationBody &this_body, SimulationBody &other_body) override {
@@ -42,13 +42,14 @@ public:
     }
 
     void applyConfig() override {
-        this->compound.setPosition(this->config["initial_position"].as<Vector2D>());
+        // this->compound.setPosition(this->config["initial_position"].as<Vector2D>());
+        // this->compound.setRotation(this->config["initial_rotation"].as<float>());
+        this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
     }
 
     float distance = 1;
     int teleport_cd = 60*5;
     uint64_t cd_count = teleport_cd + 1;
-    BodyCompound compound;
     RectangleBody teleportA;
     RectangleBody teleportB;
 };

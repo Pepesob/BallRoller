@@ -7,7 +7,7 @@ add_subdirectory(src)
 add_executable(BallRoller main.cpp)
 
 message(${MSVC})
-if (MSVC)
+if (MSVC AND CMAKE_BUILD_TYPE STREQUAL "Release")
     target_link_options(BallRoller PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
 endif()
 

@@ -5,6 +5,8 @@
 #include "common.hpp"
 #include <iostream>
 
+#include "BodyCompound.hpp"
+
 
 class SimulationObjectBase {
 public:
@@ -24,6 +26,7 @@ public:
     virtual void applyConfig() = 0;
 
     YAML::Node config{};
+    BodyCompound compound;
     B2dSimulation* simulation = nullptr;
 
 private:

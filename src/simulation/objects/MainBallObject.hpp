@@ -19,6 +19,7 @@ public:
 
     MainBallObject(): SimulationObjectBase("MainBall") {
         this->ball.config.bodyType = 2;
+        this->compound.addBody(&this->ball);
     }
 
     std::vector<SimulationBody *> getBodies() override {
@@ -26,8 +27,9 @@ public:
     }
 
     void applyConfig() override {
-        this->ball.config.initial_position = this->config["initial_position"].as<Vector2D>();
-        this->ball.config.initial_rotation = this->config["initial_rotation"].as<float>();
+        // this->ball.config.initial_position = this->config["initial_position"].as<Vector2D>();
+        // this->ball.config.initial_rotation = this->config["initial_rotation"].as<float>();
+        this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
     }
 
     void step() override {

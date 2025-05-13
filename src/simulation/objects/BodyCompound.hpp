@@ -9,16 +9,38 @@ class BodyCompound {
 public:
     BodyCompound() = default;
 
-    void addBody(SimulationBody& body, Vector2D local_position, float self_rotation) {
+    void addBody(SimulationBody* body, Vector2D local_position={0,0}, float self_rotation=0) {
         this->placed_bodies.push_back({body, local_position, self_rotation});
     }
 
     void setPosition(const Vector2D world_position) {
+        this->world_position = world_position;
         for (auto&[body, local_position, self_rotation]: this->placed_bodies) {
             InitialPositionSetterVisitor visitor;
             visitor.position = world_position + local_position;
-            visitor.rotation = self_rotation;
-            body.accept(visitor);
+            body->accept(visitor);
+        }
+    }
+
+    void setRotation(float radians) {
+        this->compound_rotation = radians;
+        for (auto&[body, local_position, self_rotation]: this->placed_bodies) {
+            InitialPositionSetterVisitor visitor;
+            visitor.rotation = self_rotation + radians;
+            body->accept(visitor);
+        }
+    }
+
+    void setTransform(const Vector2D world_position, float radians) {
+        this->world_position = world_position;
+        this->compound_rotation = radians;
+        for (auto&[body, local_position, self_rotation]: this->placed_bodies) {
+            InitialPositionSetterVisitor visitor;
+            float sint = std::sin(compound_rotation);
+            float cost = std::cos(compound_rotation);
+            visitor.position = Vector2D{local_position.x * cost - local_position.y * sint, local_position.x * sint + local_position.y * cost} + world_position;
+            visitor.rotation = self_rotation + radians;
+            body->accept(visitor);
         }
     }
 
@@ -40,13 +62,13 @@ private:
     };
 
     struct PlacedBody {
-        SimulationBody& body;
+        SimulationBody* body;
         Vector2D local_position;
         float self_rotation;
     };
 
     Vector2D world_position = {};
-    float self_rotation = 0;
+    float compound_rotation = 0;
     std::vector<PlacedBody> placed_bodies = {};
 };
 

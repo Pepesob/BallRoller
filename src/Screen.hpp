@@ -13,6 +13,9 @@ public:
     void createWindow();
     void destroyWindow();
     void handleWindowEvents();
+    // TODO - thing of a way of better event handling, right now every event is passed here, it can slow down application
+    void handleEvent(const std::optional<sf::Event> &event);
+
     sf::Transform& getScreenMatrix();
     unsigned int getWidth() const;
     unsigned int getHeight() const;

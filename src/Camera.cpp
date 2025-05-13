@@ -19,12 +19,9 @@ void Camera::setPosition(float x, float y) {
 void Camera::move(float x, float y) {
     this->x += x;
     this->y += y;
-}
-
-void Camera::setScale(float zoom) {
-    this->zoom = zoom;
     this->needs_update = true;
 }
+
 
 void Camera::setScreenRatio(float ratio) {
     this->screen_ratio = ratio;
@@ -44,9 +41,17 @@ float Camera::getZoom() const {
 }
 
 void Camera::setZoom(float zoom) {
+    this->needs_update = true;
     this->zoom = zoom;
 }
 
 void Camera::setDeltaZoom(float deltaZoom) {
+    this->needs_update = true;
     this->zoom *= deltaZoom;
+}
+
+void Camera::handleEvent(const std::optional<sf::Event> &event) {
+    if (const auto e = event->getIf<sf::Event::Resized>()) {
+        this->setScreenRatio(static_cast<float>(e->size.x) / static_cast<float>(e->size.y));
+    }
 }

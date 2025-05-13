@@ -25,6 +25,7 @@ public:
 
 
     void onUpdate() override {
+        this->handleEvents();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
             this->camera->setDeltaZoom(0.999);
         }
@@ -68,6 +69,15 @@ public:
         }
         for (auto sprite: this->level.available_objects->placed_objects) {
             sprite.drawer->draw(screen, camera);
+        }
+    }
+
+    void handleEvents() {
+        while (const std::optional event = this->screen->getWindow()->pollEvent()) {
+            this->screen->handleEvent(event);
+            // if (const auto e = event->getIf<sf::Event::KeyPressed>()) {
+            //     this->onKeyPressed(*e);
+            // }
         }
     }
 

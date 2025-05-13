@@ -90,6 +90,20 @@ void Screen::handleWindowEvents() {
     }
 }
 
+void Screen::handleEvent(const std::optional<sf::Event>& event) {
+    if (event->is<sf::Event::Closed>()) {
+        this->destroyWindow();
+    }
+    else if (const auto* resized = event->getIf<sf::Event::Resized>()) {
+        this->width = resized->size.x;
+        this->height = resized->size.y;
+        sf::View v(sf::FloatRect({0.f, 0.f}, {static_cast<float>(this->width), static_cast<float>(this->height)}));
+        this->window->setView(v);
+        this->pixel_scale_factor = this->height/2;
+        this->needs_update = true;
+    }
+}
+
 sf::Transform & Screen::getScreenMatrix() {
     if (this->needs_update) {
         this->updateScreenMatrix();

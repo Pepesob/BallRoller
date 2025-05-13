@@ -31,8 +31,7 @@ public:
         }
     }
 
-    LevelSetup() {
-    }
+    LevelSetup() = default;
 
     ~LevelSetup() {
         for (const auto* drawer: drawers) {

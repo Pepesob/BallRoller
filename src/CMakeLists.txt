@@ -21,7 +21,6 @@ set(BALLROLLER_SOURCE_FILES
         simulation/physics/Simulation.cpp
         simulation/objects/MainBallObject.hpp
         simulation/objects/MainBallObject.cpp
-        simulation/objects/MainBallObject.hpp
         simulation/objects/RectangleObject.cpp
         simulation/objects/RectangleObject.hpp
         simulation/objects/AcceleratorObject.cpp
@@ -58,6 +57,24 @@ FetchContent_Declare(SFML
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+FetchContent_Declare(
+        imgui
+        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        GIT_TAG v1.91.9b
+)
+FetchContent_MakeAvailable(imgui)
+
+
+FetchContent_Declare(imgui-sfml
+        GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
+        GIT_TAG v3.0
+)
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
+set(IMGUI_SFML_FIND_SFML OFF)
+set(IMGUI_SFML_IMGUI_DEMO OFF)
+FetchContent_MakeAvailable(imgui-sfml)
+
+
 FetchContent_Declare(box2d
         GIT_REPOSITORY https://github.com/erincatto/box2d.git
         GIT_TAG v3.0.0
@@ -65,6 +82,7 @@ FetchContent_Declare(box2d
         EXCLUDE_FROM_ALL
         SYSTEM)
 FetchContent_MakeAvailable(box2d)
+
 
 FetchContent_Declare(
         yaml-cpp
@@ -81,6 +99,8 @@ target_compile_features(BallRollerLib PRIVATE cxx_std_17)
 target_link_libraries(BallRollerLib PRIVATE SFML::Graphics)
 target_link_libraries(BallRollerLib PRIVATE box2d)
 target_link_libraries(BallRollerLib PRIVATE yaml-cpp::yaml-cpp)
+target_link_libraries(BallRollerLib PRIVATE ImGui-SFML::ImGui-SFML)
+
 
 
 

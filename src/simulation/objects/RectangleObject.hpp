@@ -7,14 +7,16 @@
 class RectangleObject : public SimulationObjectBase {
 public:
 
-    RectangleObject(): SimulationObjectBase("Rectangle"){}
+    RectangleObject(): SimulationObjectBase("Rectangle") {
+        this->compound.addBody(&this->rectangle);
+    }
 
-    explicit RectangleObject(const std::string& objectType): SimulationObjectBase(objectType){}
-
+    explicit RectangleObject(const std::string& objectType): SimulationObjectBase(objectType) {
+        this->compound.addBody(&this->rectangle);
+    }
 
     void applyConfig() override {
-        this->rectangle.config.initial_position = this->config["initial_position"].as<Vector2D>();
-        this->rectangle.config.initial_rotation = this->config["initial_rotation"].as<float>();
+        this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
     }
 
     std::vector<SimulationBody *> getBodies() override {
