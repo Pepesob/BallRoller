@@ -40,6 +40,10 @@ set(BALLROLLER_SOURCE_FILES
         simulation/objects/BodyCompound.hpp
         simulation/objects/TeleporterObject.cpp
         simulation/objects/TeleporterObject.hpp
+        stage/MainMenuStage.cpp
+        stage/MainMenuStage.hpp
+        simulation/base_drawers/TextureLoader.cpp
+        simulation/base_drawers/TextureLoader.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

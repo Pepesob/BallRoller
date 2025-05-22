@@ -22,10 +22,17 @@
         return true;                                                      \
     }();                                                                  \
 
+class Drawer;
+class SimulationObjectBase;
+
 void register_sprites();
 
+struct SimulationSprite {
+    SimulationObjectBase* object=nullptr;
+    Drawer* drawer=nullptr;
 
-
+    void free() const;
+};
 
 
 class SimulationObjectFactory {

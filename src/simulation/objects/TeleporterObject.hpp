@@ -3,6 +3,7 @@
 #include "BodyCompound.hpp"
 #include "MainBallObject.hpp"
 #include "SimulationObjectBase.hpp"
+#include "simulation/base_drawers/TextureLoader.hpp"
 
 class TeleporterObject: public SimulationObjectBase {
 public:
@@ -48,7 +49,7 @@ public:
     }
 
     float distance = 1;
-    int teleport_cd = 60*5;
+    int teleport_cd = 60*1;
     uint64_t cd_count = teleport_cd + 1;
     RectangleBody teleportA;
     RectangleBody teleportB;
@@ -57,7 +58,7 @@ public:
 class TeleporterDrawer: public Drawer {
 public:
     explicit TeleporterDrawer(TeleporterObject& teleporter): teleporter(teleporter) {
-        drawer.texture = sf::Texture("resources/teleporter_texture.png");
+        drawer.texture = TextureLoader::getTexture(this->texture_path);
     }
 
     void draw(Screen *screen, Camera *camera) override {
@@ -75,4 +76,5 @@ public:
 private:
     TeleporterObject& teleporter;
     RectangleDrawer drawer;
+    std::string texture_path = "resources/teleporter_texture.png";
 };

@@ -5,6 +5,8 @@
 #include "Drawer.hpp"
 #include "simulation/physics/SimulationBody.hpp"
 
+
+
 class RectangleDrawer: public Drawer {
 public:
     void draw(Screen* screen, Camera* camera) override;
@@ -12,7 +14,7 @@ public:
     Vector2D size{};
     Vector2D position{};
     float rotation=0;
-    sf::Texture texture;
+    sf::Texture* texture;
     sf::RectangleShape shape;
 };
 
@@ -25,7 +27,7 @@ public:
     Vector2D position{};
     float rotation=0;
     sf::CircleShape circle;
-    sf::Texture texture;
+    sf::Texture* texture;
 };
 
 class RectangleBodyDrawer: public Drawer {

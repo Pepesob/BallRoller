@@ -12,6 +12,7 @@
 #include "simulation/physics/Simulation.hpp"
 #include "SimulationObjectBase.hpp"
 #include "simulation/base_drawers/BodyDrawer.hpp"
+#include "simulation/base_drawers/TextureLoader.hpp"
 
 
 class MainBallObject : public SimulationObjectBase {
@@ -50,7 +51,7 @@ public:
     explicit MainBallObjectDrawer(MainBallObject& main_ball): main_ball(main_ball) {
         this->main_ball = main_ball;
         drawer.radius = main_ball.ball.config.radius;
-        drawer.texture = sf::Texture("resources/pokeball_texture.png");
+        drawer.texture = TextureLoader::getTexture(this->texture_path);
     }
 
     void draw(Screen *screen, Camera *camera) override {
@@ -62,6 +63,7 @@ public:
 private:
     MainBallObject& main_ball;
     CircleDrawer drawer;
+    std::string texture_path = "resources/pokeball_texture.png";
 };
 
 

@@ -11,9 +11,15 @@ std::unordered_map<std::string, std::function<SimulationSprite()>> SimulationObj
 void register_sprites() {
     REGISTER_SIMULATION_SPRITE("MainBall", MainBallObject, MainBallObjectDrawer);
     REGISTER_SIMULATION_SPRITE("Rectangle", RectangleObject, RectangleObjectDrawer);
-    REGISTER_SIMULATION_SPRITE("Accelerator", AcceleratorObject, RectangleObjectDrawer);
-    REGISTER_SIMULATION_SPRITE("Goal", GoalObject, RectangleObjectDrawer);
+    REGISTER_SIMULATION_SPRITE("Accelerator", AcceleratorObject, AcceleratorObjectDrawer);
+    REGISTER_SIMULATION_SPRITE("Goal", GoalObject, GoalObjectDrawer);
     REGISTER_SIMULATION_SPRITE("Teleporter", TeleporterObject, TeleporterDrawer);
 
     // add custom sprites here
 }
+
+void SimulationSprite::free() const {
+    delete object;
+    delete drawer;
+}
+

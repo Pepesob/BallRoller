@@ -41,6 +41,7 @@ AvailableLevelObjects::AvailableLevelObjects(const YAML::Node &node) {
 
 bool AvailableLevelObjects::place(const std::string &tag, Vector2D position, float rotation) {
     if (available_objects.contains(tag) && available_objects[tag] > 0) {
+        // this->placed_objects_infos.push_back({tag, position, rotation});
         const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
         sprite.object->config["initial_position"] = position;
         sprite.object->config["initial_rotation"] = rotation;
@@ -54,6 +55,7 @@ bool AvailableLevelObjects::place(const std::string &tag, Vector2D position, flo
 
 bool AvailableLevelObjects::place(const std::string &tag, const YAML::Node& config) {
     if (available_objects.contains(tag) && available_objects[tag] > 0) {
+        // this->placed_objects_infos.push_back({tag, config["initial_position"].as<Vector2D>(), config["initial_rotation"].as<float>()});
         const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
         sprite.object->config = config;
         sprite.object->applyConfig();
@@ -63,6 +65,24 @@ bool AvailableLevelObjects::place(const std::string &tag, const YAML::Node& conf
     }
     return false;
 }
+
+void AvailableLevelObjects::remove(int index) {
+    const std::string tag = this->placed_objects[index].object->objectType;
+    this->available_objects[tag]++;
+    (this->placed_objects.begin() + index)->free();
+    this->placed_objects.erase(this->placed_objects.begin() + index);
+
+}
+
+// void AvailableLevelObjects::reset() {
+//     for (const auto& info: this->placed_objects_infos) {
+//         const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(info.tag);
+//         sprite.object->config["initial_position"] = info.position;
+//         sprite.object->config["initial_rotation"] = info.rotation;
+//         sprite.object->applyConfig();
+//         this->placed_objects.push_back(sprite);
+//     }
+// }
 
 std::vector<std::string> & AvailableLevelObjects::getAvailableObjects() {
     return this->available_object_tags;

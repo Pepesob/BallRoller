@@ -77,7 +77,7 @@ void Screen::handleWindowEvents() {
     }
     while (const std::optional event = this->window->pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
-            this->destroyWindow();
+            std::exit(EXIT_SUCCESS);
         }
         else if (const auto* resized = event->getIf<sf::Event::Resized>()) {
             this->width = resized->size.x;

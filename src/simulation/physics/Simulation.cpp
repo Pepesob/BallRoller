@@ -1,7 +1,5 @@
 #include "Simulation.hpp"
 
-#include <fstream>
-
 #include "simulation/objects/SimulationObjectBase.hpp"
 
 void collisionNotify(B2dSimulation &simulation) {
@@ -80,23 +78,12 @@ void B2dBodyBuilder::visitCircle(CircleBody &circle) {
     circle.rotation = circle.config.initial_rotation;
 }
 
-void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::string &filename) {
-    YAML::Emitter out;
-    out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
-    for (const auto& obj : objects) {
-        out << obj.object->config;
-    }
-    std::ofstream fout(filename);
-    fout << out.c_str();
-}
 
 
 
 B2dSimulation::B2dSimulation(Vector2D gravity) {
     this->gravity = gravity;
-    b2WorldDef worldDef = b2DefaultWorldDef();
-    worldDef.gravity = {this->gravity.x, this->gravity.y};
-    this->world_id = b2CreateWorld(&worldDef);
+    this->createWorld();
 }
 
 B2dSimulation::B2dSimulation(const YAML::Node &config) {
@@ -104,6 +91,10 @@ B2dSimulation::B2dSimulation(const YAML::Node &config) {
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = {this->gravity.x, this->gravity.y};
     this->world_id = b2CreateWorld(&worldDef);
+}
+
+B2dSimulation::~B2dSimulation() {
+    this->destroyWorld();
 }
 
 void B2dSimulation::step() {
@@ -240,4 +231,31 @@ Vector2D B2dSimulation::getVelocity(SimulationBody &body) {
     b2Vec2 v = b2Body_GetLinearVelocity(body_id);
     return {v.x, v.y};
 }
+
+void B2dSimulation::destroyWorld() {
+    if (!b2World_IsValid(this->world_id)) {
+        throw std::runtime_error("World does not exist");
+    }
+    for (const auto obj: this->objects) {
+        obj->simulation = nullptr;
+    }
+    for (const auto body: this->bodies) {
+        body->id = b2_nullBodyId;
+    }
+    this->objects.clear();
+    this->bodies.clear();
+    b2DestroyWorld(this->world_id);
+    this->world_id = b2_nullWorldId;
+}
+
+void B2dSimulation::createWorld() {
+    if (b2World_IsValid(this->world_id)) {
+        throw std::runtime_error("World alerady exist");
+    }
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = {this->gravity.x, this->gravity.y};
+    this->world_id = b2CreateWorld(&worldDef);
+    this->prev_time = std::chrono::steady_clock::time_point::min();
+}
+
 

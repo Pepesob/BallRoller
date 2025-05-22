@@ -8,27 +8,16 @@
 #include "Screen.hpp"
 #include "stage/ObjectPlacementStage.hpp"
 #include "LevelSetup.hpp"
-#include "stage/SimulationStage.hpp"
+#include "stage/MainMenuStage.hpp"
 
-
-void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::string &filename) {
-    YAML::Emitter out;
-    out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
-    for (const auto obj : objects) {
-        out << obj.object->config;
-    }
-    std::ofstream fout(filename);
-    fout << out.c_str();
-}
 
 void gameloop() {
     register_sprites();
 
     Screen screen(720, 720);
     Camera camera(0,0,0.3);
-    Level level("resources/levels/Level1.yaml");
     StateMachine state_machine;
-    state_machine.setInitialState(new ObjectPlacementStage(state_machine, level, &screen, &camera));
+    state_machine.setInitialState(new MainMenuStage(state_machine, &screen, &camera));
 
     screen.createWindow();
 

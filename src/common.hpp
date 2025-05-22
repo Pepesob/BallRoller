@@ -2,9 +2,6 @@
 
 #include <yaml-cpp/yaml.h>
 
-class Drawer;
-class SimulationObjectBase;
-
 struct Vector2D {
     float x;
     float y;
@@ -12,11 +9,6 @@ struct Vector2D {
     Vector2D operator+(const Vector2D& rhs) const {
         return {this->x + rhs.x, this->y + rhs.y};
     }
-};
-
-struct SimulationSprite {
-    SimulationObjectBase* object=nullptr;
-    Drawer* drawer=nullptr;
 };
 
 struct ObjectPhysicsConfig {

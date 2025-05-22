@@ -14,7 +14,17 @@ public:
     explicit AvailableLevelObjects(const YAML::Node& node);
     bool place(const std::string& tag, Vector2D position, float rotation);
     bool place(const std::string &tag, const YAML::Node& config);
+    void remove(int index);
+
+    // void reset();
+
     [[nodiscard]] std::vector<std::string>& getAvailableObjects();
+
+    struct ObjectInfo{
+        std::string tag;
+        Vector2D position;
+        float rotation;
+    };
 
     std::vector<std::string> available_object_tags;
     std::map<std::string, int> available_objects;

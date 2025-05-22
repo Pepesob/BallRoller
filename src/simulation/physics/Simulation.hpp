@@ -6,6 +6,7 @@
 #include <box2d/box2d.h>
 
 #include "common.hpp"
+#include "simulation/objects/SimulationObjectBase.hpp"
 #include "simulation/physics/SimulationBody.hpp"
 
 
@@ -19,13 +20,13 @@ T* getObjectAs(SimulationObjectBase* obj) {
     return dynamic_cast<T*>(obj);
 }
 
-inline void saveCurrentWorld(const std::vector<SimulationSprite>& objects, const std::string &filename);
-
 
 class B2dSimulation {
 public:
     explicit B2dSimulation(Vector2D gravity);
     explicit B2dSimulation(const YAML::Node& config);
+    ~B2dSimulation();
+
     void step();
     void fixedStep();
     void resetTimer();
@@ -41,10 +42,12 @@ public:
     void teleport(SimulationBody& body, Vector2D position);
     void click(Vector2D world_point);
     [[nodiscard]] Vector2D getVelocity(SimulationBody& body);
+    void destroyWorld();
+    void createWorld();
 
     std::vector<SimulationBody*> bodies;
     std::vector<SimulationObjectBase*> objects{};
-    b2WorldId world_id {};
+    b2WorldId world_id = b2_nullWorldId;
     Vector2D gravity = {0,0};
     float timeStep = 1.f/60.f;
     int subStepCount = 4;

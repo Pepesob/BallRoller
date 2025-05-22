@@ -44,6 +44,14 @@ public:
         }
     }
 
+    Vector2D getPosition() const {
+        return this->world_position;
+    }
+
+    float getRotation() const {
+        return this->compound_rotation;
+    }
+
 private:
     class InitialPositionSetterVisitor: public BodyVisitor {
     public:

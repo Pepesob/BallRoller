@@ -2,7 +2,8 @@
 
 #include "SimulationObjectBase.hpp"
 #include "simulation/base_drawers/BodyDrawer.hpp"
-
+#include "simulation/base_drawers/TextureLoader.hpp"
+#include <iostream>
 
 class RectangleObject : public SimulationObjectBase {
 public:
@@ -19,18 +20,21 @@ public:
         this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
     }
 
+    void onClick() override {
+        std::cout << "Clicked" <<std::endl;
+    }
+
     std::vector<SimulationBody *> getBodies() override {
         return {&rectangle};
     }
 
-    std::string texture_path = "resources/wood_texture.jpg";
     RectangleBody rectangle;
 };
 
 class RectangleObjectDrawer: public Drawer {
 public:
     explicit RectangleObjectDrawer(RectangleObject& rectangle): rectangle(rectangle) {
-        drawer.texture = sf::Texture(rectangle.texture_path);
+        drawer.texture = TextureLoader::getTexture(this->texture_path);
     }
 
     void draw(Screen *screen, Camera *camera) override {
@@ -40,7 +44,9 @@ public:
         this->drawer.draw(screen, camera);
     }
 
-private:
+
+
+    std::string texture_path = "resources/wood_texture.jpg";
     RectangleObject& rectangle;
     RectangleDrawer drawer;
 };

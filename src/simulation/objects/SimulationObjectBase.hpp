@@ -1,9 +1,7 @@
 #pragma once
 
 
-#include "simulation/physics/Simulation.hpp"
 #include "common.hpp"
-#include <iostream>
 
 #include "BodyCompound.hpp"
 
@@ -28,8 +26,8 @@ public:
     YAML::Node config{};
     BodyCompound compound;
     B2dSimulation* simulation = nullptr;
-
-private:
     std::string objectType;
 };
+
+
 

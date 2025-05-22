@@ -3,12 +3,14 @@
 #include "Screen.hpp"
 #include "Camera.hpp"
 
+std::map<std::string, sf::Texture*> textures;
+
 void RectangleDrawer::draw(Screen *screen, Camera *camera) {
     auto [w, h] = this->size;
     auto [x,y] = this->position;
     float zoom = camera->getZoom();
     int psf = screen->getPixelScaleFactor();
-    this->shape.setTexture(&texture);
+    this->shape.setTexture(texture);
     this->shape.setOrigin({w*psf*zoom/2.f, h*psf*zoom/2.f});
     this->shape.setSize({w*psf*zoom, h*psf*zoom});
     this->shape.setRotation(sf::radians(-this->rotation));
@@ -25,7 +27,7 @@ void CircleDrawer::draw(Screen *screen, Camera *camera) {
     circle.setRotation(sf::radians(-this->rotation));
     sf::Vector2f v = (screen->getScreenMatrix() * camera->getCameraMatrix()).transformPoint({x, y});
     circle.setPosition(v);
-    circle.setTexture(&this->texture);
+    circle.setTexture(this->texture);
     screen->getWindow()->draw(circle);
 }
 
