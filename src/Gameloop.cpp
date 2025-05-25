@@ -43,5 +43,6 @@ void gameloop() {
     }
     screen.destroyWindow();
     TextureLoader::clear();
+    SimulationObjectFactory::clear();
     std::cout << "Exiting..." << std::endl;
 }

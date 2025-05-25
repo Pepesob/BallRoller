@@ -189,8 +189,7 @@ void ObjectPlacementStage::changeObject(int index) {
         return;
     }
     this->current_tag = tag;
-    delete this->current_sprite.drawer;
-    delete this->current_sprite.object;
+    this->current_sprite.free();
     this->current_sprite = SimulationObjectFactory::createSimulationSprite(tag);
 }
 
@@ -208,7 +207,9 @@ void ObjectPlacementStage::onUpdate() {
     }
 }
 
-void ObjectPlacementStage::onNext() {}
+void ObjectPlacementStage::onNext() {
+    this->current_sprite.free();
+}
 
 void ObjectPlacementStage::handleEvents() {
     while (const std::optional event = this->screen->getWindow()->pollEvent()) {

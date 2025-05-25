@@ -61,6 +61,10 @@ public:
         return {a.begin(), a.end()};
     }
 
+    static void clear() {
+        SimulationObjectFactory::spriteCreators.clear();
+    }
+
 private:
     static std::unordered_map<std::string, std::function<SimulationSprite()>> spriteCreators;
 };
