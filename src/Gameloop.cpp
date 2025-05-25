@@ -16,8 +16,7 @@ void gameloop() {
 
     Screen screen(720, 720);
     Camera camera(0,0,0.3);
-    StateMachine state_machine;
-    state_machine.setInitialState(new MainMenuStage(state_machine, &screen, &camera));
+    StateMachine state_machine(std::make_unique<MainMenuStage>(state_machine, &screen, &camera));
 
     screen.createWindow();
 
@@ -34,8 +33,6 @@ void gameloop() {
             frames = 0;
         }
 
-        // screen.handleWindowEvents();
-        // camera.setScreenRatio(static_cast<float>(screen.getWidth()) / static_cast<float>(screen.getHeight()));
         screen.getWindow()->clear();
 
         state_machine.update();
@@ -45,5 +42,6 @@ void gameloop() {
         screen.getWindow()->display();
     }
     screen.destroyWindow();
+    TextureLoader::clear();
     std::cout << "Exiting..." << std::endl;
 }

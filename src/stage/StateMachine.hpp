@@ -1,5 +1,6 @@
 
 #pragma once
+#include <memory>
 #include <stdexcept>
 
 class StateMachine;
@@ -16,15 +17,9 @@ public:
 
 class StateMachine {
 public:
-    virtual ~StateMachine() {
-        delete this->prev_state;
-        delete this->current_state;
-        delete this->next_state;
-    }
-    StateMachine() = default;
-    explicit StateMachine(State* initial_state): current_state(initial_state) {}
+    explicit StateMachine(std::unique_ptr<State> initial_state): current_state(std::move(initial_state)) {}
 
-    virtual void update() {
+    void update() {
         switch (this->procedure) {
             case INIT: {
                 this->current_state->onInit();
@@ -37,9 +32,8 @@ public:
             }
             case NEXT: {
                 this->current_state->onNext();
-                delete this->prev_state;
-                this->prev_state = this->current_state;
-                this->current_state = this->next_state;
+                this->prev_state = std::move(this->current_state);
+                this->current_state = std::move(this->next_state);
                 this->next_state = nullptr;
                 this->procedure = INIT;
                 break;
@@ -47,17 +41,17 @@ public:
         }
     }
 
-    virtual void switchState(State* new_state) {
+    void switchState(std::unique_ptr<State> new_state) {
         if (!new_state) {
             throw std::runtime_error("New state cannot be null!");
         }
-        this->next_state = new_state;
+        this->next_state = std::move(new_state);
         this->procedure = NEXT;
     }
 
-    virtual void setInitialState(State* initial_state) {
+    void setInitialState(std::unique_ptr<State> initial_state) {
         this->procedure = INIT;
-        this->current_state = initial_state;
+        this->current_state = std::move(initial_state);
     }
 
     bool shutdown = false;
@@ -67,8 +61,8 @@ private:
         INIT, UPDATE, NEXT
     };
 
-    State* prev_state = nullptr;
-    State* current_state = nullptr;
-    State* next_state = nullptr;
+    std::unique_ptr<State> prev_state = nullptr;
+    std::unique_ptr<State> current_state = nullptr;
+    std::unique_ptr<State> next_state = nullptr;
     StateMachineProcedure procedure = INIT;
 };

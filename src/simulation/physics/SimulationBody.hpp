@@ -6,9 +6,7 @@
 #define SIMULATIONBODY_H
 
 #include <box2d/box2d.h>
-
 #include "common.hpp"
-
 
 class RectangleBody;
 class CircleBody;
@@ -20,7 +18,6 @@ public:
     virtual void visitCircle(CircleBody& circle) = 0;
     virtual void visitRectangle(RectangleBody& rectangle) = 0;
 };
-
 
 
 

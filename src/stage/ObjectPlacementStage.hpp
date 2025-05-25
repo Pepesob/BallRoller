@@ -10,7 +10,7 @@
 class ObjectPlacementStage: public State {
 
 public:
-    ObjectPlacementStage(StateMachine& state_machine, Level* level, Screen* screen, Camera* camera);
+    ObjectPlacementStage(StateMachine& state_machine, std::unique_ptr<Level> level, Screen* screen, Camera* camera);
 
     void everyFrameInput();
 
@@ -38,6 +38,8 @@ public:
 
     void handleEvents();
 
+    bool enable_saving = true;
+
 private:
     int index = -1;
 
@@ -55,6 +57,8 @@ private:
 
     sf::CircleShape highlighter;
 
-    Level* level;
+    std::unique_ptr<Level> level;
+
+    bool switch_to_simulation = false;
 };
 

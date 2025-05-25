@@ -43,8 +43,6 @@ public:
     }
 
     void applyConfig() override {
-        // this->compound.setPosition(this->config["initial_position"].as<Vector2D>());
-        // this->compound.setRotation(this->config["initial_rotation"].as<float>());
         this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
     }
 

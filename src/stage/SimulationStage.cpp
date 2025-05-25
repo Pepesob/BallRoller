@@ -5,7 +5,7 @@
 #include "SimulationStage.hpp"
 #include "ObjectPlacementStage.hpp"
 
-SimulationStage::SimulationStage(StateMachine &state_machine, Level *level, Screen *screen, Camera *camera): state_machine(state_machine), level(level) {
+SimulationStage::SimulationStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera): state_machine(state_machine), level(std::move(level)) {
     this->screen = screen;
     this->camera = camera;
 }
@@ -40,6 +40,11 @@ void SimulationStage::onUpdate() {
     this->clickTest();
     this->level->simulation->fixedStep();
     this->draw(screen, camera);
+    if (this->go_back_to_placement) {
+        level->simulation->destroyWorld();
+        level->simulation->createWorld();
+        this->state_machine.switchState(std::make_unique<ObjectPlacementStage>(this->state_machine, std::move(level), screen, camera));
+    }
 }
 
 void SimulationStage::clickTest() {
@@ -57,8 +62,6 @@ void SimulationStage::clickTest() {
 }
 
 void SimulationStage::onNext() {
-    level->simulation->destroyWorld();
-    level->simulation->createWorld();
 }
 
 void SimulationStage::draw(Screen *screen, Camera *camera) {
@@ -78,7 +81,7 @@ void SimulationStage::handleEvents() {
         // }
         if (const auto e = event->getIf<sf::Event::KeyPressed>()) {
             if (e->code == sf::Keyboard::Key::R) {
-                this->state_machine.switchState(new ObjectPlacementStage(this->state_machine, level, screen, camera));
+                this->go_back_to_placement = true;
             }
         }
     }

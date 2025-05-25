@@ -55,7 +55,7 @@ void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::s
 }
 
 
-ObjectPlacementStage::ObjectPlacementStage(StateMachine &state_machine, Level *level, Screen *screen, Camera *camera): state_machine(state_machine), level(level) {
+ObjectPlacementStage::ObjectPlacementStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera): state_machine(state_machine), level(std::move(level)) {
     this->screen = screen;
     this->camera = camera;
     this->highlighter.setRadius(5);
@@ -94,10 +94,12 @@ void ObjectPlacementStage::onKeyPressed(const sf::Event::KeyPressed &keyPressed)
             this->changeObject(this->index);
             break;
         case sf::Keyboard::Key::P:
-            this->state_machine.switchState(new SimulationStage(state_machine, level, screen, camera));
+            this->switch_to_simulation = true;
             break;
         case sf::Keyboard::Key::S:
-            saveCurrentWorld(this->level->available_objects->placed_objects, "resources/levels/Level12345.yaml");
+            if (this->enable_saving) {
+                saveCurrentWorld(this->level->available_objects->placed_objects, "resources/levels/Level12345.yaml");
+            }
             break;
         case sf::Keyboard::Key::Period:
             this->index = -1;
@@ -201,6 +203,9 @@ void ObjectPlacementStage::onUpdate() {
     this->everyFrameInput();
     this->moveObject();
     this->draw();
+    if (this->switch_to_simulation) {
+        this->state_machine.switchState(std::make_unique<SimulationStage>(state_machine, std::move(level), screen, camera));
+    }
 }
 
 void ObjectPlacementStage::onNext() {}

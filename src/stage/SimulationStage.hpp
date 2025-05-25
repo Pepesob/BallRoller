@@ -10,7 +10,7 @@
 
 class SimulationStage: public State {
 public:
-    explicit SimulationStage(StateMachine& state_machine,Level* level, Screen* screen, Camera* camera);
+    explicit SimulationStage(StateMachine& state_machine, std::unique_ptr<Level>, Screen* screen, Camera* camera);
 
     void onInit() override;
 
@@ -26,10 +26,11 @@ public:
     void handleEvents();
 
 private:
-    Level* level;
+    std::unique_ptr<Level> level;
     Screen* screen;
     Camera* camera;
     sf::Vector2i mouse_pos;
     StateMachine& state_machine;
     bool mouse_left_pressed = false;
+    bool go_back_to_placement = false;
 };
