@@ -16,11 +16,9 @@ public:
         try {
             assert(object_list.IsSequence());
             for (const YAML::Node& obj_config: object_list) {
-                SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(obj_config["objectType"].as<std::string>());
+                SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(obj_config);
                 SimulationObjectBase* obj_base = sprite.object;
                 Drawer* obj_drawer = sprite.drawer;
-                obj_base->config = obj_config;
-                obj_base->applyConfig();
                 objects.push_back(obj_base);
                 drawers.push_back(obj_drawer);
             }

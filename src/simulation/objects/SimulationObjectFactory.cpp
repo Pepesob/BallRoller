@@ -6,16 +6,16 @@
 #include "RectangleObject.hpp"
 #include "TeleporterObject.hpp"
 
-std::unordered_map<std::string, std::function<SimulationSprite()>> SimulationObjectFactory::spriteCreators;
+std::unordered_map<std::string, std::function<SimulationSprite(const YAML::Node&)>> SimulationObjectFactory::spriteCreators2;
 
 void register_sprites() {
-    REGISTER_SIMULATION_SPRITE("MainBall", MainBallObject, MainBallObjectDrawer);
-    REGISTER_SIMULATION_SPRITE("Rectangle", RectangleObject, RectangleObjectDrawer);
-    REGISTER_SIMULATION_SPRITE("Accelerator", AcceleratorObject, AcceleratorObjectDrawer);
-    REGISTER_SIMULATION_SPRITE("Goal", GoalObject, GoalObjectDrawer);
-    REGISTER_SIMULATION_SPRITE("Teleporter", TeleporterObject, TeleporterDrawer);
-
     // add custom sprites here
+
+    REGISTER_SIMULATION_SPRITE("MainBall", defaultSimulationObjectCreator<MainBallObject>, MainBallObjectDrawer);
+    REGISTER_SIMULATION_SPRITE("Rectangle", defaultSimulationObjectCreator<RectangleObject>, RectangleObjectDrawer);
+    REGISTER_SIMULATION_SPRITE("Accelerator", defaultSimulationObjectCreator<AcceleratorObject>, AcceleratorObjectDrawer);
+    REGISTER_SIMULATION_SPRITE("Goal", defaultSimulationObjectCreator<GoalObject>, GoalObjectDrawer);
+    REGISTER_SIMULATION_SPRITE("Teleporter", defaultSimulationObjectCreator<TeleporterObject>, TeleporterDrawer);
 }
 
 void SimulationSprite::free() const {

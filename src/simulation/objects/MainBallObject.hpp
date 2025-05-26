@@ -27,11 +27,6 @@ public:
         return {&ball};
     }
 
-    void applyConfig() override {
-        // this->ball.config.initial_position = this->config["initial_position"].as<Vector2D>();
-        // this->ball.config.initial_rotation = this->config["initial_rotation"].as<float>();
-        this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
-    }
 
     void step() override {
         Vector2D v = this->simulation->getVelocity(this->ball);
@@ -45,6 +40,8 @@ public:
     float max_speed = 20;
     CircleBody ball;
 };
+
+
 
 class MainBallObjectDrawer: public Drawer {
 public:

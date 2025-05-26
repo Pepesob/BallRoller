@@ -13,12 +13,15 @@ void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::s
     YAML::Emitter out;
     out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
     for (const auto& obj : objects) {
-        out << obj.object->config;
+        out << YAML::BeginMap;
+        out << YAML::Key << "objectType" << YAML::Value << obj.object->objectType;
+        out << YAML::Key << "initial_position" << YAML::Value << YAML::BeginMap;
+        out << YAML::Key << "x" << YAML::Value << obj.object->compound.getPosition().x;
+        out << YAML::Key << "y" << YAML::Value << obj.object->compound.getPosition().y << YAML::EndMap;
+        out << YAML::Key << "initial_rotation" << YAML::Value << obj.object->compound.getRotation();
+        out << YAML::EndMap;
     }
     out << YAML::EndSeq;
-    out << YAML::EndMap;
-
-    out << YAML::BeginMap;
 
     // availableObjects
     out << YAML::Key << "availableObjects" << YAML::Value << YAML::BeginSeq;

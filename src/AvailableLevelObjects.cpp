@@ -43,9 +43,7 @@ bool AvailableLevelObjects::place(const std::string &tag, Vector2D position, flo
     if (available_objects.contains(tag) && available_objects[tag] > 0) {
         // this->placed_objects_infos.push_back({tag, position, rotation});
         const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
-        sprite.object->config["initial_position"] = position;
-        sprite.object->config["initial_rotation"] = rotation;
-        sprite.object->applyConfig();
+        sprite.object->compound.setTransform(position, rotation);
         this->placed_objects.push_back(sprite);
         available_objects[tag]--;
         return true;
@@ -56,9 +54,7 @@ bool AvailableLevelObjects::place(const std::string &tag, Vector2D position, flo
 bool AvailableLevelObjects::place(const std::string &tag, const YAML::Node& config) {
     if (available_objects.contains(tag) && available_objects[tag] > 0) {
         // this->placed_objects_infos.push_back({tag, config["initial_position"].as<Vector2D>(), config["initial_rotation"].as<float>()});
-        const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(tag);
-        sprite.object->config = config;
-        sprite.object->applyConfig();
+        const SimulationSprite sprite = SimulationObjectFactory::createSimulationSprite(config);
         this->placed_objects.push_back(sprite);
         available_objects[tag]--;
         return true;

@@ -16,10 +16,6 @@ public:
         this->compound.addBody(&this->rectangle);
     }
 
-    void applyConfig() override {
-        this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
-    }
-
     void onClick() override {
         std::cout << "Clicked" <<std::endl;
     }

@@ -42,10 +42,6 @@ public:
         return {&teleportA, &teleportB};
     }
 
-    void applyConfig() override {
-        this->compound.setTransform(this->config["initial_position"].as<Vector2D>(), this->config["initial_rotation"].as<float>());
-    }
-
     float distance = 1;
     int teleport_cd = 60*1;
     uint64_t cd_count = teleport_cd + 1;
