@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Camera.hpp"
+
 void debug_lines(sf::RenderWindow* window);
 
 
@@ -13,7 +15,6 @@ public:
     void createWindow();
     void destroyWindow();
     void handleWindowEvents();
-    // TODO - thing of a way of better event handling, right now every event is passed here, it can slow down application
     void handleEvent(const std::optional<sf::Event> &event);
 
     sf::Transform& getScreenMatrix();
@@ -24,9 +25,12 @@ public:
     [[nodiscard]] int getPixelScaleFactor() const;
     [[nodiscard]] sf::RenderWindow* getWindow() const;
     [[nodiscard]] bool isWindowOpen() const;
+    void draw(Screen* screen, Camera* camera);
 
 private:
     sf::Transform screen_matrix;
+    sf::Texture background_texture;
+    sf::Sprite background;
     sf::RenderWindow* window = nullptr;
     unsigned int width, height;
     std::string window_name;

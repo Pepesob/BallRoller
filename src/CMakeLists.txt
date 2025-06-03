@@ -44,6 +44,8 @@ set(BALLROLLER_SOURCE_FILES
         stage/MainMenuStage.hpp
         simulation/base_drawers/TextureLoader.cpp
         simulation/base_drawers/TextureLoader.hpp
+        simulation/objects/SwingingRectangle.cpp
+        simulation/objects/SwingingRectangle.hpp
 )
 
 cmake_minimum_required(VERSION 3.28)

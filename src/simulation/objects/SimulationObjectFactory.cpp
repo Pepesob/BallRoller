@@ -4,6 +4,7 @@
 #include "GoalObject.hpp"
 #include "MainBallObject.hpp"
 #include "RectangleObject.hpp"
+#include "SwingingRectangle.hpp"
 #include "TeleporterObject.hpp"
 
 std::unordered_map<std::string, std::function<SimulationSprite(const YAML::Node&)>> SimulationObjectFactory::spriteCreators2;
@@ -16,6 +17,7 @@ void register_sprites() {
     REGISTER_SIMULATION_SPRITE("Accelerator", defaultSimulationObjectCreator<AcceleratorObject>, AcceleratorObjectDrawer);
     REGISTER_SIMULATION_SPRITE("Goal", defaultSimulationObjectCreator<GoalObject>, GoalObjectDrawer);
     REGISTER_SIMULATION_SPRITE("Teleporter", defaultSimulationObjectCreator<TeleporterObject>, TeleporterDrawer);
+    REGISTER_SIMULATION_SPRITE("SwingingRectangle", defaultSimulationObjectCreator<SwingingRectangleObject>, SwingingRectangleObjectDrawer);
 }
 
 void SimulationSprite::free() const {

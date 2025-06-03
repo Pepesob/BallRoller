@@ -10,7 +10,7 @@
 class ObjectPlacementStage: public State {
 
 public:
-    ObjectPlacementStage(StateMachine& state_machine, std::unique_ptr<Level> level, Screen* screen, Camera* camera);
+    ObjectPlacementStage(StateMachine& state_machine, std::unique_ptr<Level> level, Screen* screen, Camera* camera, const std::string& customLevelName="");
 
     void everyFrameInput();
 
@@ -37,9 +37,6 @@ public:
     void onNext() override;
 
     void handleEvents();
-
-    bool enable_saving = true;
-
 private:
     int index = -1;
 
@@ -60,5 +57,8 @@ private:
     std::unique_ptr<Level> level;
 
     bool switch_to_simulation = false;
+    std::string custom_level_name;
+    std::unordered_map<std::string, int> tagCounts;
+    sf::Clock deltaClock;
 };
 

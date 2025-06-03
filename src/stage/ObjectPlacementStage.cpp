@@ -8,8 +8,9 @@
 
 #include "SFML/Graphics/Transform.hpp"
 #include "AvailableLevelObjects.hpp"
+#include "MainMenuStage.hpp"
 
-void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::string &filename) {
+void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::unordered_map<std::string, int>& tagCounts, const std::string &filename) {
     YAML::Emitter out;
     out << YAML::BeginMap << YAML::Key << "setupObjects" << YAML::BeginSeq;
     for (const auto& obj : objects) {
@@ -24,23 +25,17 @@ void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::s
     out << YAML::EndSeq;
 
     // availableObjects
-    out << YAML::Key << "availableObjects" << YAML::Value << YAML::BeginSeq;
-
-    out << YAML::BeginMap;
-    out << YAML::Key << "objectType" << YAML::Value << "Accelerator";
-    out << YAML::Key << "quantity" << YAML::Value << 6;
-    out << YAML::EndMap;
-
-    out << YAML::BeginMap;
-    out << YAML::Key << "objectType" << YAML::Value << "Teleporter";
-    out << YAML::Key << "quantity" << YAML::Value << 1;
-    out << YAML::EndMap;
-
-    out << YAML::BeginMap;
-    out << YAML::Key << "objectType" << YAML::Value << "Rectangle";
-    out << YAML::Key << "quantity" << YAML::Value << 1;
-    out << YAML::EndMap;
-
+    // Save available objects from tagCounts
+    out << YAML::Key << "availableObjects" << YAML::BeginSeq;
+    for (const auto& [objectType, quantity] : tagCounts) {
+        if (quantity == 0) {
+            continue;
+        }
+        out << YAML::BeginMap;
+        out << YAML::Key << "objectType" << YAML::Value << objectType;
+        out << YAML::Key << "quantity" << YAML::Value << quantity;
+        out << YAML::EndMap;
+    }
     out << YAML::EndSeq;
 
     // simulation
@@ -58,12 +53,17 @@ void saveCurrentWorld(const std::vector<SimulationSprite> &objects, const std::s
 }
 
 
-ObjectPlacementStage::ObjectPlacementStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera): state_machine(state_machine), level(std::move(level)) {
+ObjectPlacementStage::ObjectPlacementStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera, const std::string& customLevelName): state_machine(state_machine), level(std::move(level)) {
     this->screen = screen;
     this->camera = camera;
     this->highlighter.setRadius(5);
     this->highlighter.setOrigin({5,5});
     this->highlighter.setFillColor(sf::Color::Blue);
+    this->custom_level_name = customLevelName;
+
+    for (const auto& tag : SimulationObjectFactory::getAvailableTags()) {
+        tagCounts[tag] = 0;  // default to 0
+    }
 }
 
 void ObjectPlacementStage::everyFrameInput() {
@@ -100,8 +100,9 @@ void ObjectPlacementStage::onKeyPressed(const sf::Event::KeyPressed &keyPressed)
             this->switch_to_simulation = true;
             break;
         case sf::Keyboard::Key::S:
-            if (this->enable_saving) {
-                saveCurrentWorld(this->level->available_objects->placed_objects, "resources/levels/Level12345.yaml");
+            if (!this->custom_level_name.empty()) {
+                saveCurrentWorld(this->level->available_objects->placed_objects, this->tagCounts,"resources/levels/" + this->custom_level_name);
+                this->state_machine.switchState(std::make_unique<MainMenuStage>(this->state_machine, this->screen, this->camera));
             }
             break;
         case sf::Keyboard::Key::Period:
@@ -117,6 +118,9 @@ void ObjectPlacementStage::onKeyPressed(const sf::Event::KeyPressed &keyPressed)
                 this->level->available_objects->remove(this->selected_object);
                 this->selected_object = -1;
             }
+            break;
+        case sf::Keyboard::Key::Escape:
+            this->state_machine.switchState(std::make_unique<MainMenuStage>(this->state_machine, this->screen, this->camera));
             break;
         default:
             break;
@@ -164,6 +168,7 @@ void ObjectPlacementStage::placeObject() {
 }
 
 void ObjectPlacementStage::draw() {
+    this->screen->draw(this->screen, this->camera);
     const auto objs = level->available_objects->getAvailableObjects();
     for (const auto drawer: this->level->level_setup->drawers) {
         drawer->draw(screen, camera);
@@ -197,10 +202,28 @@ void ObjectPlacementStage::changeObject(int index) {
 }
 
 void ObjectPlacementStage::onInit() {
-
+    ImGui::SFML::Init(*this->screen->getWindow());
 }
 
 void ObjectPlacementStage::onUpdate() {
+    if (!this->custom_level_name.empty()) {
+        ImGui::SFML::Update(*this->screen->getWindow(), deltaClock.restart());
+        ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Tag Configuration");
+
+        ImGui::Text("Set number of available elements:");
+        ImGui::Separator();
+
+        for (auto& [tag, count] : tagCounts) {
+            ImGui::PushID(tag.c_str()); // Prevent ID conflicts
+            ImGui::InputInt(tag.c_str(), &count);
+            ImGui::PopID();
+        }
+
+        ImGui::End();
+        ImGui::SFML::Render(*this->screen->getWindow());
+    }
     this->handleEvents();
     this->everyFrameInput();
     this->moveObject();
@@ -212,11 +235,14 @@ void ObjectPlacementStage::onUpdate() {
 
 void ObjectPlacementStage::onNext() {
     this->current_sprite.free();
+    ImGui::SFML::Shutdown();
 }
 
 void ObjectPlacementStage::handleEvents() {
     while (const std::optional event = this->screen->getWindow()->pollEvent()) {
         this->screen->handleEvent(event);
+        this->camera->handleEvent(event);
+        ImGui::SFML::ProcessEvent(*this->screen->getWindow(), event.value());
         if (const auto e = event->getIf<sf::Event::KeyPressed>()) {
             this->onKeyPressed(*e);
         }

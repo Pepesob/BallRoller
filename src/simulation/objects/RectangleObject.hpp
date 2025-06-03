@@ -16,7 +16,7 @@ public:
         this->compound.addBody(&this->rectangle);
     }
 
-    void onClick() override {
+    void onClick(SimulationBody& body) override {
         std::cout << "Clicked" <<std::endl;
     }
 

@@ -106,6 +106,12 @@ void B2dSimulation::step() {
     this->updateBodies();
 }
 
+void B2dSimulation::onInit() {
+    for (const auto obj: this->objects) {
+        obj->onInit();
+    }
+}
+
 void B2dSimulation::fixedStep() {
     if (this->prev_time == std::chrono::steady_clock::time_point::min()) {
         this->prev_time = std::chrono::steady_clock::now();
@@ -149,6 +155,23 @@ void B2dSimulation::addBody(SimulationBody &body) {
     B2dBodyBuilder builder(this->world_id);
     body.accept(builder);
     this->bodies.push_back(&body);
+}
+
+void B2dSimulation::addJoint(RevoluteJoint &joint) {
+    if (!b2Body_IsValid(joint.body1->id) || !b2Body_IsValid(joint.body2->id)) {
+        throw std::runtime_error("Bodies are not created!");
+    }
+    joint.joint_def.bodyIdA = joint.body1->id;
+    joint.joint_def.bodyIdB= joint.body2->id;
+    joint.joint_def.localAnchorA = {joint.local_pos1.x, joint.local_pos1.y};
+    joint.joint_def.localAnchorB = {joint.local_pos2.x, joint.local_pos2.y};
+
+    joint.joint_id = b2CreateRevoluteJoint(this->world_id, &joint.joint_def);
+}
+
+void B2dSimulation::removeJoint(RevoluteJoint &joint) {
+    b2DestroyJoint(joint.joint_id);
+    joint.joint_id = B2_ZERO_INIT;
 }
 
 SimulationBody & B2dSimulation::b2dGetAssociatedBody(b2BodyId body_id) const {
@@ -220,7 +243,7 @@ void B2dSimulation::clickNotify(Vector2D world_point)
         for (int i = 0; i < shape_n; i++) {
             if (b2Shape_TestPoint(shape_ids[i], { world_point.x, world_point.y})) {
                 auto obj = this->getAssociatedObject(*body);
-                obj->onClick();
+                obj->onClick(*body);
             }
         }
     }

@@ -1,5 +1,7 @@
 #include "Screen.hpp"
 
+#include <iostream>
+
 void debug_lines(sf::RenderWindow *window) {
     // Calculate 10% of window dimensions
     float cellWidth = window->getSize().x * 0.05f;
@@ -37,7 +39,7 @@ void debug_lines(sf::RenderWindow *window) {
     window->draw(redDot);
 }
 
-Screen::Screen(unsigned int width, unsigned int height) {
+Screen::Screen(unsigned int width, unsigned int height): background_texture("resources/background_texture.jpg"), background(this->background_texture) {
     this->width = width;
     this->height = height;
     this->window = nullptr;
@@ -80,12 +82,7 @@ void Screen::handleWindowEvents() {
             std::exit(EXIT_SUCCESS);
         }
         else if (const auto* resized = event->getIf<sf::Event::Resized>()) {
-            this->width = resized->size.x;
-            this->height = resized->size.y;
-            sf::View v(sf::FloatRect({0.f, 0.f}, {static_cast<float>(this->width), static_cast<float>(this->height)}));
-            this->window->setView(v);
-            this->pixel_scale_factor = this->height/2;
-            this->needs_update = true;
+            this->setSize(resized->size.x, resized->size.y);
         }
     }
 }
@@ -93,15 +90,15 @@ void Screen::handleWindowEvents() {
 void Screen::handleEvent(const std::optional<sf::Event>& event) {
     if (event->is<sf::Event::Closed>()) {
         this->destroyWindow();
+        std::exit(0);
     }
     else if (const auto* resized = event->getIf<sf::Event::Resized>()) {
-        this->width = resized->size.x;
-        this->height = resized->size.y;
-        sf::View v(sf::FloatRect({0.f, 0.f}, {static_cast<float>(this->width), static_cast<float>(this->height)}));
-        this->window->setView(v);
-        this->pixel_scale_factor = this->height/2;
-        this->needs_update = true;
+        this->setSize(resized->size.x, resized->size.y);
     }
+    // else if (const auto* pressed = event->getIf<sf::Event::KeyPressed>()) {
+    //     if (pressed->code == sf::Keyboard::Key::Escape) {
+    //     }
+    // }
 }
 
 sf::Transform & Screen::getScreenMatrix() {
@@ -135,6 +132,9 @@ void Screen::setSize(unsigned int width, unsigned int height) {
     this->height = height;
     if (this->window != nullptr) {
         this->window->setSize({this->width, this->height});
+        sf::View v(sf::FloatRect({0.f, 0.f}, {static_cast<float>(this->width), static_cast<float>(this->height)}));
+        this->window->setView(v);
+        this->pixel_scale_factor = this->height/2;
     }
     needs_update = true;
 }
@@ -149,4 +149,12 @@ sf::RenderWindow* Screen::getWindow() const {
 
 bool Screen::isWindowOpen() const {
     return this->window != nullptr;
+}
+
+void Screen::draw(Screen *screen, Camera *camera) {
+    Vector2D v_cam = camera->getPosition();
+    sf::Vector2f v = screen->getScreenMatrix().transformPoint({v_cam.x, v_cam.y});
+    sf::Vector2f v_background = (sf::Vector2f(this->background_texture.getSize()) / 4.f + v);
+    this->background.setPosition(-v_background);
+    screen->getWindow()->draw(this->background);
 }

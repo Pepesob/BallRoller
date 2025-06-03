@@ -3,6 +3,8 @@
 //
 
 #include "SimulationStage.hpp"
+
+#include "MainMenuStage.hpp"
 #include "ObjectPlacementStage.hpp"
 
 SimulationStage::SimulationStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera): state_machine(state_machine), level(std::move(level)) {
@@ -17,6 +19,7 @@ void SimulationStage::onInit() {
     for (auto obj: this->level->level_setup->objects) {
         this->level->simulation->addObject(*obj);
     }
+    this->level->simulation->onInit();
 }
 
 void SimulationStage::onUpdate() {
@@ -65,6 +68,7 @@ void SimulationStage::onNext() {
 }
 
 void SimulationStage::draw(Screen *screen, Camera *camera) {
+    this->screen->draw(this->screen, this->camera);
     for (const auto drawer: this->level->level_setup->drawers) {
         drawer->draw(screen, camera);
     }
@@ -76,12 +80,16 @@ void SimulationStage::draw(Screen *screen, Camera *camera) {
 void SimulationStage::handleEvents() {
     while (const std::optional event = this->screen->getWindow()->pollEvent()) {
         this->screen->handleEvent(event);
+        this->camera->handleEvent(event);
         // if (const auto e = event->getIf<sf::Event::KeyPressed>()) {
         //     this->onKeyPressed(*e);
         // }
         if (const auto e = event->getIf<sf::Event::KeyPressed>()) {
             if (e->code == sf::Keyboard::Key::R) {
                 this->go_back_to_placement = true;
+            }
+            if (e->code == sf::Keyboard::Key::Escape) {
+                this->state_machine.switchState(std::make_unique<MainMenuStage>(this->state_machine, this->screen, this->camera));
             }
         }
     }

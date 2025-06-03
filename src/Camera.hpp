@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "common.hpp"
+
 
 class Camera {
 public:
@@ -10,6 +12,7 @@ public:
 
     sf::Transform &getCameraMatrix();
     void setPosition(float x, float y);
+    Vector2D getPosition();
     void move(float x, float y);
     void setScreenRatio(float ratio);
     void updateCameraMatrix();
@@ -20,6 +23,9 @@ public:
     void handleEvent(const std::optional<sf::Event> &event);
 
 private:
+    void validatePosition();
+    void validateZoom();
+
     sf::Transform camera_matrix;
 
     float x;
@@ -28,6 +34,17 @@ private:
     float screen_ratio;
     bool needs_update;
 
+    float max_x = 2;
+    float max_y = 2;
+
+    float min_x = -2;
+    float min_y = -2;
+
+    float min_zoom = 0.1;
+    float max_zoom = 2;
+
     sf::Vector2i prev_mouse_pos;
 };
+
+
 

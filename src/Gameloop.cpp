@@ -37,7 +37,7 @@ void gameloop() {
 
         state_machine.update();
 
-        debug_lines(screen.getWindow());
+        // debug_lines(screen.getWindow());
 
         screen.getWindow()->display();
     }

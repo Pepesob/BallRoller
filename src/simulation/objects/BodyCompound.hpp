@@ -1,8 +1,26 @@
 
 
 #pragma once
+
 #include "common.hpp"
 #include "simulation/physics/SimulationBody.hpp"
+
+
+class RevoluteJoint {
+public:
+    RevoluteJoint() {
+        this->joint_def = b2DefaultRevoluteJointDef();
+        this->joint_def.lowerAngle = 0.0f;
+        this->joint_def.upperAngle = 2.0f * 3.14159265358979323846;
+    }
+
+    SimulationBody* body1{};
+    SimulationBody* body2{};
+    Vector2D local_pos1{};
+    Vector2D local_pos2{};
+    b2RevoluteJointDef joint_def{};
+    b2JointId joint_id{};
+};
 
 
 class BodyCompound {
