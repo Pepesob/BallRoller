@@ -35,8 +35,6 @@ T* defaultSimulationObjectCreator(const YAML::Node& config) {
     return obj;
 }
 
-void register_sprites();
-
 struct SimulationSprite {
     SimulationObjectBase* object=nullptr;
     Drawer* drawer=nullptr;
@@ -44,44 +42,18 @@ struct SimulationSprite {
     void free() const;
 };
 
+void register_sprites();
+
 
 class SimulationObjectFactory {
-
 public:
-    [[nodiscard]] static SimulationSprite createSimulationSprite(const std::string& name) {
-        if (!spriteCreators2.contains(name)) {
-            throw std::invalid_argument("Object type not recognised: " + name);
-        }
-        return SimulationObjectFactory::spriteCreators2[name](YAML::Node());
-    }
-
-    [[nodiscard]] static SimulationSprite createSimulationSprite(const YAML::Node& config) {
-        const std::string name = config["objectType"].as<std::string>();
-        if (!spriteCreators2.contains(name)) {
-            throw std::invalid_argument("Object type not recognised: " + name);
-        }
-        return SimulationObjectFactory::spriteCreators2[name](config);
-    }
-
-    static void registerSpriteCreator(const std::string& name, const std::function<SimulationSprite(const YAML::Node&)>& creator) {
-        if (spriteCreators2.contains(name)) {
-            throw std::invalid_argument("Object already registered: " + name);
-        }
-        spriteCreators2[name] = creator;
-    }
-
-    static bool isSpriteTagValid(const std::string& tag) {
-        return spriteCreators2.contains(tag);
-    }
-
-    static std::vector<std::string> getAvailableTags() {
-        auto a = std::views::keys(spriteCreators2);
-        return {a.begin(), a.end()};
-    }
-
-    static void clear() {
-        SimulationObjectFactory::spriteCreators2.clear();
-    }
+    [[nodiscard]] static SimulationSprite createSimulationSprite(const std::string& name);
+    [[nodiscard]] static SimulationSprite createSimulationSprite(const YAML::Node& config);
+    static void registerSpriteCreator(const std::string& name,
+        const std::function<SimulationSprite(const YAML::Node&)>& creator);
+    static bool isSpriteTagValid(const std::string& tag);
+    static std::vector<std::string> getAvailableTags();
+    static void clear();
 
 private:
     static std::unordered_map<std::string, std::function<SimulationSprite(const YAML::Node&)>> spriteCreators2;

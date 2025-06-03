@@ -25,3 +25,39 @@ void SimulationSprite::free() const {
     delete drawer;
 }
 
+SimulationSprite SimulationObjectFactory::createSimulationSprite(const std::string &name) {
+    if (!spriteCreators2.contains(name)) {
+        throw std::invalid_argument("Object type not recognised: " + name);
+    }
+    return SimulationObjectFactory::spriteCreators2[name](YAML::Node());
+}
+
+SimulationSprite SimulationObjectFactory::createSimulationSprite(const YAML::Node &config) {
+    const std::string name = config["objectType"].as<std::string>();
+    if (!spriteCreators2.contains(name)) {
+        throw std::invalid_argument("Object type not recognised: " + name);
+    }
+    return SimulationObjectFactory::spriteCreators2[name](config);
+}
+
+void SimulationObjectFactory::registerSpriteCreator(const std::string &name,
+    const std::function<SimulationSprite(const YAML::Node &)> &creator) {
+    if (spriteCreators2.contains(name)) {
+        throw std::invalid_argument("Object already registered: " + name);
+    }
+    spriteCreators2[name] = creator;
+}
+
+bool SimulationObjectFactory::isSpriteTagValid(const std::string &tag) {
+    return spriteCreators2.contains(tag);
+}
+
+std::vector<std::string> SimulationObjectFactory::getAvailableTags() {
+    auto a = std::views::keys(spriteCreators2);
+    return {a.begin(), a.end()};
+}
+
+void SimulationObjectFactory::clear() {
+    SimulationObjectFactory::spriteCreators2.clear();
+}
+

@@ -36,7 +36,7 @@ void SimulationStage::onUpdate() {
         camera->move(dx.x/screen->getPixelScaleFactor(), -dx.y/screen->getPixelScaleFactor());
     }
     else if (this->level->simulation->goalReached){
-        this->state_machine.shutdown = true;
+        this->state_machine.switchState(std::make_unique<MainMenuStage>(this->state_machine, this->screen, this->camera));
     }
     this->mouse_pos = sf::Mouse::getPosition(*this->screen->getWindow());
 
