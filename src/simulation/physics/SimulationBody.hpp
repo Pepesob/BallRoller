@@ -28,6 +28,7 @@ struct SimulationBodyConfig {
     float friction = 0.5f;
     float restitution = 0.5f;
     float density = 1.f;
+    float angular_damping = 1.f;
     bool isSensor = false;
 };
 

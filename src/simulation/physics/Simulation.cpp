@@ -46,6 +46,7 @@ b2BodyId B2dBodyBuilder::b2dCreateBody(const SimulationBodyConfig &config, b2Wor
     bodyDef.position = {config.initial_position.x, config.initial_position.y};
     bodyDef.rotation = b2MakeRot(config.initial_rotation);
     bodyDef.type = static_cast<b2BodyType>(config.bodyType);
+    bodyDef.angularDamping = config.angular_damping;
     return b2CreateBody(world_id, &bodyDef);
 }
 
@@ -157,6 +158,12 @@ void B2dSimulation::addBody(SimulationBody &body) {
     this->bodies.push_back(&body);
 }
 
+void B2dSimulation::removeBody(SimulationBody &body) {
+    std::erase(this->bodies, &body);
+    b2DestroyBody(body.id);
+    body.id = {};
+}
+
 void B2dSimulation::addJoint(RevoluteJoint &joint) {
     if (!b2Body_IsValid(joint.body1->id) || !b2Body_IsValid(joint.body2->id)) {
         throw std::runtime_error("Bodies are not created!");
@@ -261,6 +268,7 @@ void B2dSimulation::destroyWorld() {
     }
     for (const auto obj: this->objects) {
         obj->simulation = nullptr;
+        obj->reset();
     }
     for (const auto body: this->bodies) {
         body->id = b2_nullBodyId;

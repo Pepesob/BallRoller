@@ -16,6 +16,7 @@ public:
     SwingingRectangleObject(): SimulationObjectBase("SwingingRectangle") {
         this->rectangle.config.size = {1, 0.1};
         this->rectangle.config.bodyType = b2_dynamicBody;
+        this->rectangle.config.angular_damping = 0.95f;
         this->bolt1.config.radius = 0.1;
         this->bolt1.config.initial_position = {-0.5, 0};
         this->bolt1.config.isSensor = true;
@@ -47,8 +48,13 @@ public:
     void onClick(SimulationBody& body) override {
         if (!bolt_removed) {
             this->simulation->removeJoint(this->joint1);
+            this->simulation->removeBody(this->bolt1);
             bolt_removed = true;
         }
+    }
+
+    void reset() override {
+        bolt_removed = false;
     }
 
     std::vector<SimulationBody *> getBodies() override {

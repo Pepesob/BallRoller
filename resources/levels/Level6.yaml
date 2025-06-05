@@ -1,0 +1,57 @@
+setupObjects:
+  - objectType: SwingingRectangle
+    initial_position:
+      x: -0.666666508
+      y: 0.407407284
+    initial_rotation: 0
+  - objectType: Accelerator
+    initial_position:
+      x: -0.481481314
+      y: -0.601851702
+    initial_rotation: 0
+  - objectType: Accelerator
+    initial_position:
+      x: -0.0833332539
+      y: -0.601851702
+    initial_rotation: 0
+  - objectType: Rectangle
+    initial_position:
+      x: 1.36111116
+      y: 0.416666508
+    initial_rotation: 0
+  - objectType: Goal
+    initial_position:
+      x: 0.768519402
+      y: 8.25925827
+    initial_rotation: 0
+  - objectType: SwingingRectangle
+    initial_position:
+      x: 1.46218681
+      y: 1.21294975
+    initial_rotation: -6.29472637
+  - objectType: MainBall
+    initial_position:
+      x: 1.44557095
+      y: 1.8111167
+    initial_rotation: -6.29472637
+  - objectType: Goal
+    initial_position:
+      x: -0.216002941
+      y: 8.25802422
+    initial_rotation: 0
+  - objectType: Goal
+    initial_position:
+      x: 1.76127005
+      y: 8.25802422
+    initial_rotation: 0
+  - objectType: Rectangle
+    initial_position:
+      x: 2.14343214
+      y: 1.62834358
+    initial_rotation: -1.56101692
+availableObjects:
+  []
+simulation:
+  gravity:
+    x: 0
+    y: -6

@@ -68,7 +68,6 @@ void Camera::setZoom(float zoom) {
 }
 
 void Camera::setDeltaZoom(float deltaZoom) {
-    std::cout << this->zoom << std::endl;
     this->needs_update = true;
     this->zoom *= deltaZoom;
     this->validateZoom();

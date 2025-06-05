@@ -1,0 +1,180 @@
+setupObjects:
+  - objectType: Rectangle
+    initial_position:
+      x: -0.92592597
+      y: 8.24073982
+    initial_rotation: 0
+  - objectType: Rectangle
+    initial_position:
+      x: 0.0370368958
+      y: 8.24073982
+    initial_rotation: 0
+  - objectType: Rectangle
+    initial_position:
+      x: -0.916666746
+      y: 7.14814758
+    initial_rotation: 0
+  - objectType: Rectangle
+    initial_position:
+      x: 0.0833332539
+      y: 6.17592525
+    initial_rotation: 0
+  - objectType: Rectangle
+    initial_position:
+      x: -1.39814818
+      y: 7.78703594
+    initial_rotation: -1.60901916
+  - objectType: Rectangle
+    initial_position:
+      x: -1.41666675
+      y: 6.81481409
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.43518519
+      y: 5.84259224
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.4444443
+      y: 4.89814806
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.45370352
+      y: 3.97222209
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.47222209
+      y: 3
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.48148131
+      y: 2.04629707
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.48148131
+      y: 1.07407498
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.49999988
+      y: 0.101852894
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.518518209
+      y: 7.76852036
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.509258986
+      y: 6.83333492
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.499999762
+      y: 5.83333492
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.481481314
+      y: 4.86111307
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.481481314
+      y: 3.87963152
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.47222209
+      y: 2.91666961
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.481481314
+      y: 1.97222519
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.47222209
+      y: 1.04629946
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: 0.462962627
+      y: 0.0925955772
+    initial_rotation: -1.59001827
+  - objectType: Rectangle
+    initial_position:
+      x: -1.0092591
+      y: 5.07407856
+    initial_rotation: -3.16095328
+  - objectType: Rectangle
+    initial_position:
+      x: 0.0185184479
+      y: 4.01852322
+    initial_rotation: -3.16095328
+  - objectType: Rectangle
+    initial_position:
+      x: -1.0092591
+      y: 2.75926471
+    initial_rotation: -3.16095328
+  - objectType: Rectangle
+    initial_position:
+      x: 0.0185186863
+      y: 1.57407951
+    initial_rotation: -3.16095328
+  - objectType: Rectangle
+    initial_position:
+      x: -1.01851833
+      y: 0.47222805
+    initial_rotation: -3.16095328
+  - objectType: Goal
+    initial_position:
+      x: -0.907407284
+      y: -0.148142338
+    initial_rotation: -6.29172659
+  - objectType: Rectangle
+    initial_position:
+      x: -1.50925899
+      y: -0.222216606
+    initial_rotation: -7.85361338
+  - objectType: Rectangle
+    initial_position:
+      x: 0.453703642
+      y: -0.222216606
+    initial_rotation: -7.85361338
+  - objectType: Rectangle
+    initial_position:
+      x: -1.0370369
+      y: -0.722216606
+    initial_rotation: -9.44618702
+  - objectType: Rectangle
+    initial_position:
+      x: -0.231481314
+      y: -0.722216606
+    initial_rotation: -9.42517853
+  - objectType: Rectangle
+    initial_position:
+      x: -0.00925922394
+      y: -0.703698158
+    initial_rotation: -9.42517853
+  - objectType: MainBall
+    initial_position:
+      x: -1.0881958
+      y: 7.9801178
+    initial_rotation: -12.6494818
+availableObjects:
+  - objectType: Rectangle
+    quantity: 10
+  - objectType: Accelerator
+    quantity: 2
+simulation:
+  gravity:
+    x: 0
+    y: -6

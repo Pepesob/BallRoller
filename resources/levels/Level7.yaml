@@ -1,0 +1,428 @@
+setupObjects:
+  - objectType: Rectangle
+    initial_position:
+      x: -2.64814782
+      y: 1.81481469
+    initial_rotation: -1.62001967
+  - objectType: Rectangle
+    initial_position:
+      x: -2.14814806
+      y: 2.26851845
+    initial_rotation: -3.15595365
+  - objectType: Rectangle
+    initial_position:
+      x: -2.22222185
+      y: 1.29629612
+    initial_rotation: -3.15595365
+  - objectType: Rectangle
+    initial_position:
+      x: -1.70370352
+      y: 1.7592591
+    initial_rotation: -4.740839
+  - objectType: MainBall
+    initial_position:
+      x: -2.19444418
+      y: 1.97222209
+    initial_rotation: -6.14873695
+  - objectType: Rectangle
+    initial_position:
+      x: -1.71296275
+      y: 0.75
+    initial_rotation: -7.86661243
+  - objectType: Rectangle
+    initial_position:
+      x: -1.19444442
+      y: 1.2870369
+    initial_rotation: -9.44518661
+  - objectType: Rectangle
+    initial_position:
+      x: -0.22222209
+      y: 1.26851845
+    initial_rotation: -9.44518661
+  - objectType: Rectangle
+    initial_position:
+      x: 0.64814806
+      y: 1.26851845
+    initial_rotation: -9.44518661
+  - objectType: Rectangle
+    initial_position:
+      x: -0.0833332539
+      y: 1.52777767
+    initial_rotation: -8.84794521
+  - objectType: Rectangle
+    initial_position:
+      x: 0.70370388
+      y: 2.06481457
+    initial_rotation: -8.84794521
+  - objectType: Accelerator
+    initial_position:
+      x: -1.11111093
+      y: 1.62962949
+    initial_rotation: -12.5754519
+  - objectType: Accelerator
+    initial_position:
+      x: -1.22222209
+      y: 0.555555582
+    initial_rotation: -12.5754519
+  - objectType: Rectangle
+    initial_position:
+      x: -1.23148131
+      y: 0.203703642
+    initial_rotation: -12.5754519
+  - objectType: Rectangle
+    initial_position:
+      x: -0.351851702
+      y: 0.203703642
+    initial_rotation: -12.5754519
+  - objectType: Rectangle
+    initial_position:
+      x: 0.592592478
+      y: 0.212962866
+    initial_rotation: -12.5754519
+  - objectType: Rectangle
+    initial_position:
+      x: 1.10185194
+      y: 0.740740776
+    initial_rotation: -14.1670952
+  - objectType: Rectangle
+    initial_position:
+      x: 1.12037039
+      y: 1.84259236
+    initial_rotation: -14.1670952
+  - objectType: Accelerator
+    initial_position:
+      x: 0.69444418
+      y: 1.59259248
+    initial_rotation: -12.6164684
+  - objectType: Rectangle
+    initial_position:
+      x: 1.60185194
+      y: 2.32407379
+    initial_rotation: -12.600462
+  - objectType: Rectangle
+    initial_position:
+      x: 2.04629612
+      y: 1.83333313
+    initial_rotation: -14.1230774
+  - objectType: Rectangle
+    initial_position:
+      x: 2.05555534
+      y: 0.870370388
+    initial_rotation: -14.1230774
+  - objectType: Rectangle
+    initial_position:
+      x: 2.07407379
+      y: 0.657407284
+    initial_rotation: -14.1230774
+  - objectType: Rectangle
+    initial_position:
+      x: 1.60185194
+      y: 1.24074054
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.60185194
+      y: 1.13888884
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.60185194
+      y: 1.02777767
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.57407379
+      y: 0.89814806
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.58333302
+      y: 0.740740776
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.57407379
+      y: 0.583333254
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.59259224
+      y: 0.47222209
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.57407379
+      y: 0.379629612
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.59259224
+      y: 0.277777672
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.57407379
+      y: 0.212962866
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.57407379
+      y: 0.638888836
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.59259224
+      y: 0.814814806
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.62037039
+      y: 0.990740538
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 1.59259224
+      y: 0.509259224
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 2.43518496
+      y: 2.33333302
+    initial_rotation: -15.7077179
+  - objectType: Rectangle
+    initial_position:
+      x: 2.91666651
+      y: 1.8518517
+    initial_rotation: -17.2851295
+  - objectType: Rectangle
+    initial_position:
+      x: 2.92592573
+      y: 0.888888836
+    initial_rotation: -17.2851295
+  - objectType: Rectangle
+    initial_position:
+      x: 2.91666651
+      y: -0.0833332539
+    initial_rotation: -17.2851295
+  - objectType: Rectangle
+    initial_position:
+      x: 2.91666651
+      y: -1.0370369
+    initial_rotation: -17.2851295
+  - objectType: Rectangle
+    initial_position:
+      x: 2.07407379
+      y: -0.287037134
+    initial_rotation: -17.2851295
+  - objectType: Rectangle
+    initial_position:
+      x: 2.05555534
+      y: -1.05555534
+    initial_rotation: -17.2851295
+  - objectType: Rectangle
+    initial_position:
+      x: 1.5370369
+      y: -0.814814568
+    initial_rotation: -18.8682594
+  - objectType: Rectangle
+    initial_position:
+      x: 0.57407403
+      y: -0.777777672
+    initial_rotation: -18.8682594
+  - objectType: Rectangle
+    initial_position:
+      x: -0.39814806
+      y: -0.768518448
+    initial_rotation: -18.8682594
+  - objectType: Rectangle
+    initial_position:
+      x: -1.23148131
+      y: -0.768518448
+    initial_rotation: -18.8682594
+  - objectType: Rectangle
+    initial_position:
+      x: -2.08333302
+      y: -0.759259224
+    initial_rotation: -18.8682594
+  - objectType: Rectangle
+    initial_position:
+      x: -2.67592573
+      y: 0.805555582
+    initial_rotation: -20.4403954
+  - objectType: Rectangle
+    initial_position:
+      x: -2.69444418
+      y: -0.0925924778
+    initial_rotation: -20.4403954
+  - objectType: Rectangle
+    initial_position:
+      x: -2.71296263
+      y: -0.268518448
+    initial_rotation: -20.4403954
+  - objectType: Rectangle
+    initial_position:
+      x: -2.23148131
+      y: -0.759259224
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.18518496
+      y: 1.21296287
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.2037034
+      y: 1.15740728
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.19444418
+      y: 1.04629612
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.19444418
+      y: 0.935185194
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.19444418
+      y: 0.814814806
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.2037034
+      y: 0.703703642
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.17592573
+      y: 0.583333254
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.15740728
+      y: 0.509259224
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.16666651
+      y: 0.379629612
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.17592573
+      y: 0.231481552
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.17592573
+      y: 0.0740740299
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.17592573
+      y: -0.0370371342
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.21296263
+      y: -0.157407284
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.16666651
+      y: -0.259259224
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.18518496
+      y: -0.342592478
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.18518496
+      y: -0.444444418
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.17592573
+      y: -0.564814806
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.18518496
+      y: -0.666666508
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.18518496
+      y: 0.138888836
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.21296263
+      y: 0.296296358
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.21296263
+      y: 0.453703642
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: -2.19444418
+      y: 0.592592478
+    initial_rotation: -22.0295219
+  - objectType: Rectangle
+    initial_position:
+      x: 2.5
+      y: -1.59259224
+    initial_rotation: -21.9895439
+  - objectType: Rectangle
+    initial_position:
+      x: 1.55555534
+      y: -1.61111116
+    initial_rotation: -21.9895439
+  - objectType: Rectangle
+    initial_position:
+      x: 0.57407403
+      y: -1.62037039
+    initial_rotation: -21.9895439
+  - objectType: Rectangle
+    initial_position:
+      x: -0.416666508
+      y: -1.64814806
+    initial_rotation: -21.9895439
+  - objectType: Rectangle
+    initial_position:
+      x: -1.37037027
+      y: -1.66666651
+    initial_rotation: -21.9895439
+  - objectType: Rectangle
+    initial_position:
+      x: -2.18518496
+      y: -1.66666651
+    initial_rotation: -21.9895439
+  - objectType: Rectangle
+    initial_position:
+      x: -2.74999976
+      y: -1.17592573
+    initial_rotation: -23.5906639
+  - objectType: Goal
+    initial_position:
+      x: -2.3888886
+      y: -1.2870369
+    initial_rotation: -25.1318169
+  - objectType: Accelerator
+    initial_position:
+      x: 1.54629612
+      y: -1.25
+    initial_rotation: -21.987545
+availableObjects:
+  - objectType: Teleporter
+    quantity: 6
+simulation:
+  gravity:
+    x: 0
+    y: -6

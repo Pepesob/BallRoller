@@ -206,6 +206,10 @@ void ObjectPlacementStage::onInit() {
 }
 
 void ObjectPlacementStage::onUpdate() {
+    this->handleEvents();
+    this->everyFrameInput();
+    this->moveObject();
+    this->draw();
     if (!this->custom_level_name.empty()) {
         ImGui::SFML::Update(*this->screen->getWindow(), deltaClock.restart());
         ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
@@ -224,12 +228,8 @@ void ObjectPlacementStage::onUpdate() {
         ImGui::End();
         ImGui::SFML::Render(*this->screen->getWindow());
     }
-    this->handleEvents();
-    this->everyFrameInput();
-    this->moveObject();
-    this->draw();
     if (this->switch_to_simulation) {
-        this->state_machine.switchState(std::make_unique<SimulationStage>(state_machine, std::move(level), screen, camera));
+        this->state_machine.switchState(std::make_unique<SimulationStage>(state_machine, std::move(level), screen, camera, this->custom_level_name));
     }
 }
 

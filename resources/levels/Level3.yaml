@@ -1,0 +1,78 @@
+setupObjects:
+  - objectType: Rectangle
+    initial_position:
+      x: -0.982470274
+      y: -1.18604589
+    initial_rotation: -3.13995481
+  - objectType: Rectangle
+    initial_position:
+      x: -0.0177018642
+      y: -1.17719483
+    initial_rotation: -3.13995481
+  - objectType: Goal
+    initial_position:
+      x: 0.504512072
+      y: -0.610725164
+    initial_rotation: -6.28072739
+  - objectType: Rectangle
+    initial_position:
+      x: -0.194723606
+      y: -0.601874113
+    initial_rotation: -7.87661171
+  - objectType: Rectangle
+    initial_position:
+      x: 1.12408805
+      y: -0.58417201
+    initial_rotation: -10.9928122
+  - objectType: Rectangle
+    initial_position:
+      x: 0.256681681
+      y: -0.0531067848
+    initial_rotation: -12.5714502
+  - objectType: Rectangle
+    initial_position:
+      x: 0.672682762
+      y: -0.0354046822
+    initial_rotation: -12.5714502
+  - objectType: Rectangle
+    initial_position:
+      x: 0.681533813
+      y: -1.15949225
+    initial_rotation: -15.6927118
+  - objectType: Rectangle
+    initial_position:
+      x: 1.12408805
+      y: -0.690384865
+    initial_rotation: -17.2951241
+  - objectType: Rectangle
+    initial_position:
+      x: -0.637277842
+      y: -0.0442557335
+    initial_rotation: -18.8532677
+  - objectType: Rectangle
+    initial_position:
+      x: -1.00017238
+      y: -0.0442557335
+    initial_rotation: -18.8532677
+  - objectType: Rectangle
+    initial_position:
+      x: -1.45157778
+      y: -0.486809969
+    initial_rotation: -20.4443932
+  - objectType: Rectangle
+    initial_position:
+      x: -1.46042895
+      y: -0.743491411
+    initial_rotation: -20.4443932
+  - objectType: MainBall
+    initial_position:
+      x: -0.832001925
+      y: -0.265532732
+    initial_rotation: -18.8592644
+availableObjects:
+  - objectType: Teleporter
+    quantity: 2
+simulation:
+  gravity:
+    x: 0
+    y: -6

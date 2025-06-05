@@ -28,9 +28,9 @@ public:
     }
 
     ~Level() {
+        delete this->simulation;
         delete this->level_setup;
         delete this->available_objects;
-        delete this->simulation;
     }
 
     YAML::Node levelInfo;

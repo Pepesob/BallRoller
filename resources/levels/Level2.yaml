@@ -70,7 +70,7 @@ setupObjects:
       y: -0.25
     initial_rotation: -12.5694494
 availableObjects:
-  - objectType: Rectangle
+  - objectType: Accelerator
     quantity: 2
 simulation:
   gravity:

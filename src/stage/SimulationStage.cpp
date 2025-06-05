@@ -7,7 +7,7 @@
 #include "MainMenuStage.hpp"
 #include "ObjectPlacementStage.hpp"
 
-SimulationStage::SimulationStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera): state_machine(state_machine), level(std::move(level)) {
+SimulationStage::SimulationStage(StateMachine &state_machine, std::unique_ptr<Level> level, Screen *screen, Camera *camera, const std::string &new_level_name): level(std::move(level)), state_machine(state_machine), new_level_name(new_level_name) {
     this->screen = screen;
     this->camera = camera;
 }
@@ -46,7 +46,7 @@ void SimulationStage::onUpdate() {
     if (this->go_back_to_placement) {
         level->simulation->destroyWorld();
         level->simulation->createWorld();
-        this->state_machine.switchState(std::make_unique<ObjectPlacementStage>(this->state_machine, std::move(level), screen, camera));
+        this->state_machine.switchState(std::make_unique<ObjectPlacementStage>(this->state_machine, std::move(level), screen, camera, this->new_level_name));
     }
 }
 

@@ -16,6 +16,7 @@ public:
     virtual void onCollisionEnd(B2dSimulation& simulation, SimulationBody& this_body, SimulationBody& other_body) {}
     virtual void onClick(SimulationBody& this_body) {};
     virtual void step() {}
+    virtual void reset() {}
     virtual std::vector<SimulationBody*> getBodies() = 0;
 
     BodyCompound compound;

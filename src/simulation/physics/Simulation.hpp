@@ -33,6 +33,7 @@ public:
     void resetTimer();
     void addObject(SimulationObjectBase& obj);
     void addBody(SimulationBody& body);
+    void removeBody(SimulationBody& body);
     void addJoint(RevoluteJoint& joint);
     void removeJoint(RevoluteJoint& joint);
     [[nodiscard]] SimulationBody& b2dGetAssociatedBody(b2BodyId body_id) const;

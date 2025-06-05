@@ -22,6 +22,7 @@ void gameloop() {
 
     auto prev_time = std::chrono::steady_clock::now();
 
+
     long long int frames = 0;
     while (!state_machine.shutdown) {
         // std::this_thread::sleep_for(std::chrono::milliseconds(1000/30));
